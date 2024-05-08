@@ -15,11 +15,10 @@ apkmirror-arch = "arm64-v8a"
 
 [Music-Ex]
 build-mode = "both"
-version = "latest"
-apkmirror-dlurl = "https://apkmirror.com/apk/google-inc/youtube-music/"
+archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.youtube.music"
+arch = "arm64-v8a"
 patches-source = "rufusin/revanced-patches"
 integrations-source = "rufusin/revanced-integrations"
-apkmirror-arch = "arm64-v8a"
 included-patches = "'Permanent shuffle' 'Permanent repeat'"
 excluded-patches = "'Custom branding name YouTube Music'"
 
