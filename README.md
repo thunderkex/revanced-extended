@@ -1,8 +1,8 @@
 #### ⚠️ Do not download modules from 3rd party sources like random websites you found on Google. There are many that uses my modules and impersonates ReVanced.
 
 # ReVanced Magisk Module
-[![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/rvc_magisk)
-[![CI](https://github.com/j-hc/revanced-magisk-module/actions/workflows/ci.yml/badge.svg?event=schedule)](https://github.com/j-hc/revanced-magisk-module/actions/workflows/ci.yml)
+[![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/thunderkexSupport)
+[![CI](https://github.com/thunderkex/revanced-extended/actions/workflows/ci.yml/badge.svg?event=schedule)](https://github.com/thunderkex/revanced-extended/actions/workflows/ci.yml)
 
 Extensive ReVanced builder  
 
@@ -12,7 +12,7 @@ Use [**zygisk-detach**](https://github.com/j-hc/zygisk-detach) to detach YouTube
 
 <details><summary><big>Features</big></summary>
 <ul>
- <li>Support all present and future ReVanced and <a href="https://github.com/inotia00/revanced-patches">ReVanced Extended</a> apps</li>
+ <li>Support all present and future ReVanced and <a href="https://github.com/rufusin/revanced-patches">ReVanced Extended</a> apps</li>
  <li> Can build Magisk modules and non-root APKs</li>
  <li> Updated daily with the latest versions of apps and patches</li>
  <li> Optimize APKs and modules for size</li>
@@ -42,12 +42,12 @@ also see here [`CONFIG.md`](./CONFIG.md)
 ## Building Locally
 ### On Termux
 ```console
-bash <(curl -sSf https://raw.githubusercontent.com/j-hc/revanced-magisk-module/main/build-termux.sh)
+bash <(curl -sSf https://raw.githubusercontent.com/thunderkex/revanced-extended/main/build-termux.sh)
 ```
 
 ### On Desktop
 ```console
-$ git clone https://github.com/j-hc/revanced-magisk-module
+$ git clone https://github.com/thunderkex/revanced-extended/
 $ cd revanced-magisk-module
 $ ./build.sh
 ```
