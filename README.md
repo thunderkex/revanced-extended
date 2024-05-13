@@ -4,6 +4,12 @@
 [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/thunderkexSupport)
 [![CI](https://github.com/thunderkex/revanced-extended/actions/workflows/ci.yml/badge.svg?event=schedule)](https://github.com/thunderkex/revanced-extended/actions/workflows/ci.yml)
 
+<details><summary><big>Build With This Patch</big></summary>
+<ul>
+ <li><a href="https://github.com/rufusin/revanced-patches">Rufusin</a> : Youtube & Youtube Music</li>
+ <li><a href="https://github.com/crimera/piko">Crimera</a> : Twitter/X piko</li>
+</details>
+
 Extensive ReVanced builder  
 
 Get the [latest CI release](https://github.com/j-hc/revanced-magisk-module/releases).
