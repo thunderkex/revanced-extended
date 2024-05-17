@@ -33,7 +33,7 @@ excluded-patches = "'Custom branding name YouTube Music' 'Hide captions button' 
 
 [Music-Ex-inotia00]
 build-mode = "both"
-archive-dlurl = "https://apkmirror.com/apk/google-inc/youtube-music/"
+archive-dlurl = "https://apkmirror.com/apk/google-inc/youtube-music"
 arch = "arm64-v8a"
 patches-source = "inotia00/revanced-patches"
 integrations-source = "inotia00/revanced-integrations"
