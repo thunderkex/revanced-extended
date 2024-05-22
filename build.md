@@ -1,4 +1,8 @@
-Twitter-piko: 10.41.0-release.1  
+Music-Ex-inotia00: 6.50.51  
+YouTube-Ex-rufusin: 19.16.39  
+YouTube-Ex-inotia00: 19.16.39  
+Music-Ex-rufusin: 7.01.52  
+Twitter-piko: 10.42.0-release.0  
 
 Install [Microg](https://github.com/ReVanced/GmsCore/releases) for non-root YouTube and YT Music APKs  
 Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to detach root ReVanced YouTube and YT Music from Play Store  
