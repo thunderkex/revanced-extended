@@ -1,3 +1,7 @@
+YouTube-Ex-inotia00: 19.20.34  
+YouTube-Ex-rufusin: 19.16.39  
+Music-Ex-inotia00: 7.02.51  
+Music-Ex-rufusin: 7.02.51  
 Twitter-piko: 10.42.0-release.0  
 
 Install [Microg](https://github.com/ReVanced/GmsCore/releases) for non-root YouTube and YT Music APKs  
