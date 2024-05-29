@@ -8,6 +8,9 @@
 <ul>
  <li><a href="https://github.com/rufusin/revanced-patches">Rufusin</a> : Youtube & Youtube Music</li>
  <li><a href="https://github.com/crimera/piko">Crimera</a> : Twitter/X piko</li>
+ <li><a href="https://github.com/inotia00/revanced-patches">inotia00</a> : Youtube & Youtube Music</li>
+ 
+ 
 </details>
 
 Extensive ReVanced builder  
