@@ -20,7 +20,7 @@ jobs:
           java-version: "23-ea"
 
       - name: Checkout
-        uses: actions/checkout@v4.1.6
+        uses: actions/checkout@v4.1.7
         with:
           fetch-depth: 0
           submodules: true
