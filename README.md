@@ -1,7 +1,7 @@
 **ReVanced Magisk Module** 🎉
 
 *<h align="center">
-[![Total Downloads](https://img.shields.io/github/downloads/thunderkex/revanced-extended/total?style=badge)](https://github.com/j-hc/revanced-magisk-module/releases)
+[![Total Downloads](https://img.shields.io/github/downloads/thunderkex/revanced-extended/total?style=badge)](https://github.com/thunderkex/revanced-extended/releases)
 [![Latest Downloads](https://img.shields.io/github/downloads/thunderkex/revanced-extended/latest/total?style=badge)](https://github.com/thunderkex/revanced-extended/releases/latest)
 [![Latest Release](https://img.shields.io/github/v/release/thunderkex/revanced-extended?style=badge)](https://github.com/thunderkex/revanced-extended/releases/latest)
 [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=badge&logo=telegram&logoColor=white)](https://t.me/thunderkexSupport)
@@ -24,7 +24,7 @@ Do not download modules from 3rd party sources like random websites you found on
 This is an extensive ReVanced builder that helps you create custom Magisk modules and non-root APKs with ease! 🎉
 
 **Get Started!** 🚀
-Get the [latest CI release](https://github.com/j-hc/revanced-magisk-module/releases).
+Get the [latest CI release](https://github.com/thunderkex/revanced-extended/releases).
 
 **Important:** If you're using Magisk modules, use [**zygisk-detach**](https://github.com/j-hc/zygisk-detach) to detach YouTube and YT Music from Play Store. 📲
 
@@ -66,7 +66,7 @@ bash <(curl -sSf https://raw.githubusercontent.com/thunderkex/revanced-extended/
 ### On Desktop
 ```console
 $ git clone https://github.com/thunderkex/revanced-extended/
-$ cd revanced-magisk-module
+$ cd revanced-extended
 $./build.sh
 ```
 
