@@ -1,3 +1,6 @@
+Music-Ex-rufusin: 7.05.52  
+Music-Ex-inotia00: 7.05.52  
+YouTube-Ex-rufusin: 19.16.39  
 YouTube-Ex-inotia00: 19.21.40  
 
 Install [Microg](https://github.com/ReVanced/GmsCore/releases) for non-root YouTube and YT Music APKs  
