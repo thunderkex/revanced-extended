@@ -6,6 +6,7 @@
 [![Latest Release](https://img.shields.io/github/v/release/thunderkex/revanced-extended?style=badge)](https://github.com/thunderkex/revanced-extended/releases/latest)
 [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=badge&logo=telegram&logoColor=white)](https://t.me/thunderkexSupport)
 [![CI](https://github.com/thunderkex/revanced-extended/actions/workflows/ci.yml/badge.svg?event=schedule)](https://github.com/thunderkex/revanced-extended/actions/workflows/ci.yml)
+[![Telegram Channel](https://img.shields.io/badge/Telegram-Channel-2CA5E0?style=badge&logo=telegram&logoColor=white)](https://t.me/revancedextendedapp)
 </h>*
 
 **⚠️ Warning: Safety First!** 🚨
