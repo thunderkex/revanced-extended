@@ -1,4 +1,5 @@
 Reddit-Extended: 2024.17.0  
+Music-Ex-inotia00: 7.16.53  
 YouTube-Ex-inotia00: 19.16.39  
 
 Install [Microg](https://github.com/ReVanced/GmsCore/releases) for non-root YouTube and YT Music APKs  
