@@ -1,4 +1,4 @@
-**ReVanced Magisk Module** 🎉
+**ReVanced eXtended Magisk Module** 🎉
 
 *<h align="center">
 [![Total Downloads](https://img.shields.io/github/downloads/thunderkex/revanced-extended/total?style=badge)](https://github.com/thunderkex/revanced-extended/releases)
@@ -10,19 +10,19 @@
 </h>*
 
 **⚠️ Warning: Safety First!** 🚨
-Do not download modules from 3rd party sources like random websites you found on Google. There are many that use my modules and impersonate ReVanced. Stay safe and only download from trusted sources! 😊
+Do not download modules from 3rd party sources like random websites you found on Google. There are many that use my modules and impersonate ReVanced eXtended. Stay safe and only download from trusted sources! 😊
 
 **Build with These Awesome Patches!** 🤩
 <details><summary><big>Click to see the patches!</big></summary>
 <ul>
-  <li><a href="https://github.com/rufusin/revanced-patches">Rufusin</a> : Youtube & Youtube Music 📹</li>
   <li><a href="https://github.com/crimera/piko">Crimera</a> : Twitter/X piko 🐦</li>
   <li><a href="https://github.com/inotia00/revanced-patches">inotia00</a> : Youtube & Youtube Music 🎵</li>
+  <li><a href="https://github.com/ReVanced/revanced-patches">ReVanced</a> : TikTok 🎵</li>
 </ul>
 </details>
 
-**What is ReVanced Extended Magisk Module?** 🤔
-This is an extensive ReVanced builder that helps you create custom Magisk modules and non-root APKs with ease! 🎉
+**What is ReVanced eXtended Extended Magisk Module?** 🤔
+This is an extensive ReVanced eXtended builder that helps you create custom Magisk modules and non-root APKs with ease! 🎉
 
 **Get Started!** 🚀
 Get the [latest CI release](https://github.com/thunderkex/revanced-extended/releases).
@@ -32,7 +32,7 @@ Get the [latest CI release](https://github.com/thunderkex/revanced-extended/rele
 **Features Galore!** 🎊
 <details><summary><big>Click to see the features!</big></summary>
 <ul>
-  <li>Support all present and future ReVanced and <a href="https://github.com/rufusin/revanced-patches">ReVanced Extended</a> apps 📈</li>
+  <li>Support all present and future ReVanced eXtended and <a href="https://github.com/rufusin/ReVanced eXtended-patches">ReVanced eXtended Extended</a> apps 📈</li>
   <li>Can build Magisk modules and non-root APKs 📦</li>
   <li>Updated daily with the latest versions of apps and patches 📆</li>
   <li>Optimize APKs and modules for size 💻</li>
@@ -51,7 +51,7 @@ Get the [latest CI release](https://github.com/thunderkex/revanced-extended/rele
 Want to include or exclude patches or patch other apps? [**See the list of patches**](https://j-hc.github.io/rvmm-config-gen/).
 
 * Star the repo ⭐️
-* Use the repo as a [template](https://github.com/new?template_name=revanced-magisk-module&template_owner=j-hc)
+* Use the repo as a [template](https://github.com/new?template_name=ReVanced eXtended-magisk-module&template_owner=j-hc)
 * Customize [`config.toml`](./config.toml) using [rvmm-config-gen](https://j-hc.github.io/rvmm-config-gen/)
 * Run the build [workflow](../../actions/workflows/build.yml)
 * Grab your modules and APKs from [releases](../../releases)

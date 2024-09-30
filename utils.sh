@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-MODULE_TEMPLATE_DIR="revanced-magisk"
-TEMP_DIR="temp"
-BIN_DIR="bin"
-BUILD_DIR="build"
+MODULE_TEMPLATE_DIR="revanced-extended"
+CWD=$(pwd)
+TEMP_DIR=${CWD}/"temp"
+BIN_DIR=${CWD}/"bin"
+BUILD_DIR=${CWD}/"build"
 
 if [ "${GITHUB_TOKEN-}" ]; then GH_HEADER="Authorization: token ${GITHUB_TOKEN}"; else GH_HEADER=; fi
 NEXT_VER_CODE=${NEXT_VER_CODE:-$(date +'%Y%m%d')}
-REBUILD=${REBUILD:-false}
 OS=$(uname -o)
 
 toml_prep() { __TOML__=$(tr -d '\t\r' <<<"$1" | tr "'" '"' | grep -o '^[^#]*' | grep -v '^$' | sed -r 's/(\".*\")|\s*/\1/g; 1i []'); }
@@ -37,6 +37,7 @@ abort() {
 
 get_rv_prebuilts() {
 	local cli_src=$1 cli_ver=$2 integrations_src=$3 integrations_ver=$4 patches_src=$5 patches_ver=$6
+	local integs_file=""
 	pr "Getting prebuilts (${patches_src%/*})" >&2
 	local cl_dir=${patches_src%/*}
 	cl_dir=${TEMP_DIR}/${cl_dir,,}-rv
@@ -65,7 +66,7 @@ get_rv_prebuilts() {
 		fi
 
 		local url file tag_name name
-		file=$(find "$dir" -name "revanced-${tag,,}-${name_ver#v}.${ext}" -type f 2>/dev/null)
+		file=$(find "$dir" -name "ReVanced eXtended-${tag,,}-${name_ver#v}.${ext}" -type f 2>/dev/null)
 		if [ -z "$file" ]; then
 			local resp asset name
 			resp=$(gh_req "$rv_rel" -) || return 1
@@ -141,7 +142,7 @@ get_prebuilts() {
 config_update() {
 	if [ ! -f build.md ]; then abort "build.md not available"; fi
 	declare -A sources
-	: >$TEMP_DIR/skipped
+	: >"$TEMP_DIR"/skipped
 	local conf=""
 	# shellcheck disable=SC2154
 	conf+=$(sed '1d' <<<"$main_config_t")
@@ -251,6 +252,7 @@ isoneof() {
 
 merge_splits() {
 	local bundle=$1 output=$2
+	pr "Merging splits"
 	gh_dl "$TEMP_DIR/apkeditor.jar" "https://github.com/REAndroid/APKEditor/releases/download/V1.3.9/APKEditor-1.3.9.jar" >/dev/null || return 1
 	if ! OP=$(java -jar "$TEMP_DIR/apkeditor.jar" merge -i "${bundle}" -o "${bundle}.mzip" -clean-meta -f 2>&1); then
 		epr "$OP"
@@ -260,11 +262,16 @@ merge_splits() {
 	mkdir "${bundle}-zip"
 	unzip -qo "${bundle}.mzip" -d "${bundle}-zip"
 	cd "${bundle}-zip" || abort
-	zip -0rq "../../${bundle}.zip" .
-	cd ../.. || abort
-	pr "Merging splits"
-	patch_apk "${bundle}.zip" "${output}" "--exclusive" "${args[cli]}" "${args[ptjar]}"
-	local ret=$?
+	zip -0rq "${bundle}.zip" .
+	cd "$CWD" || abort
+	# if building apk, sign the merged apk properly
+	if isoneof "module" "${build_mode_arr[@]}"; then
+		patch_apk "${bundle}.zip" "${output}" "--exclusive" "${args[cli]}" "${args[ptjar]}"
+		local ret=$?
+	else
+		cp "${bundle}.zip" "${output}"
+		local ret=$?
+	fi
 	rm -r "${bundle}-zip" "${bundle}.zip" "${bundle}.mzip" || :
 	return $ret
 }
@@ -291,22 +298,27 @@ apk_mirror_search() {
 }
 dl_apkmirror() {
 	local url=$1 version=${2// /-} output=$3 arch=$4 dpi=$5 is_bundle=false
-	if [ "$arch" = "arm-v7a" ]; then arch="armeabi-v7a"; fi
-	local resp node app_table dlurl=""
-	url="${url}/${url##*/}-${version//./-}-release/"
-	resp=$(req "$url" -) || return 1
-	node=$($HTMLQ "div.table-row.headerFont:nth-last-child(1)" -r "span:nth-child(n+3)" <<<"$resp")
-	if [ "$node" ]; then
-		if ! dlurl=$(apk_mirror_search "$resp" "$dpi" "${arch}" "APK"); then
-			if ! dlurl=$(apk_mirror_search "$resp" "$dpi" "${arch}" "BUNDLE"); then
-				return 1
-			else is_bundle=true; fi
+	if [ -f "${output}.apkm" ]; then
+		is_bundle=true
+	else
+		if [ "$arch" = "arm-v7a" ]; then arch="armeabi-v7a"; fi
+		local resp node app_table dlurl=""
+		url="${url}/${url##*/}-${version//./-}-release/"
+		resp=$(req "$url" -) || return 1
+		node=$($HTMLQ "div.table-row.headerFont:nth-last-child(1)" -r "span:nth-child(n+3)" <<<"$resp")
+		if [ "$node" ]; then
+			if ! dlurl=$(apk_mirror_search "$resp" "$dpi" "${arch}" "APK"); then
+				if ! dlurl=$(apk_mirror_search "$resp" "$dpi" "${arch}" "BUNDLE"); then
+					return 1
+				else is_bundle=true; fi
+			fi
+			[ -z "$dlurl" ] && return 1
+			resp=$(req "$dlurl" -)
 		fi
-		[ -z "$dlurl" ] && return 1
-		resp=$(req "$dlurl" -)
+		url=$(echo "$resp" | $HTMLQ --base https://www.apkmirror.com --attribute href "a.btn") || return 1
+		url=$(req "$url" - | $HTMLQ --base https://www.apkmirror.com --attribute href "span > a[rel = nofollow]") || return 1
 	fi
-	url=$(echo "$resp" | $HTMLQ --base https://www.apkmirror.com --attribute href "a.btn") || return 1
-	url=$(req "$url" - | $HTMLQ --base https://www.apkmirror.com --attribute href "span > a[rel = nofollow]") || return 1
+
 	if [ "$is_bundle" = true ]; then
 		req "$url" "${output}.apkm"
 		merge_splits "${output}.apkm" "${output}"
@@ -412,7 +424,7 @@ check_sig() {
 
 build_rv() {
 	eval "declare -A args=${1#*=}"
-	local version build_mode_arr pkg_name
+	local version pkg_name
 	local mode_arg=${args[build_mode]} version_mode=${args[version]}
 	local app_name=${args[app_name]}
 	local app_name_l=${app_name,,}
@@ -464,6 +476,15 @@ build_rv() {
 		epr "empty version, not building ${table}."
 		return 0
 	fi
+
+	if [ "$mode_arg" = module ]; then
+		build_mode_arr=(module)
+	elif [ "$mode_arg" = apk ]; then
+		build_mode_arr=(apk)
+	elif [ "$mode_arg" = both ]; then
+		build_mode_arr=(apk module)
+	fi
+
 	pr "Choosing version '${version}' for ${table}"
 	local version_f=${version// /}
 	version_f=${version_f#v}
@@ -494,13 +515,6 @@ build_rv() {
 		p_patcher_args=("${p_patcher_args[@]//-[ei] ${microg_patch}/}")
 	fi
 
-	if [ "$mode_arg" = module ]; then
-		build_mode_arr=(module)
-	elif [ "$mode_arg" = apk ]; then
-		build_mode_arr=(apk)
-	elif [ "$mode_arg" = both ]; then
-		build_mode_arr=(apk module)
-	fi
 	local patcher_args patched_apk build_mode
 	local rv_brand_f=${args[rv_brand],,}
 	rv_brand_f=${rv_brand_f// /-}
@@ -529,20 +543,18 @@ build_rv() {
 				fi
 			fi
 		fi
-		if [ ! -f "$patched_apk" ] || [ "$REBUILD" = true ]; then
-			if ! patch_apk "$stock_apk" "$patched_apk" "${patcher_args[*]}" "${args[cli]}" "${args[ptjar]}"; then
-				epr "Building '${table}' failed!"
-				return 0
-			fi
+		if ! patch_apk "$stock_apk" "$patched_apk" "${patcher_args[*]}" "${args[cli]}" "${args[ptjar]}"; then
+			epr "Building '${table}' failed!"
+			return 0
 		fi
 		if [ "$build_mode" = apk ]; then
 			local apk_output="${BUILD_DIR}/${app_name_l}-${rv_brand_f}-v${version_f}-${arch_f}.apk"
-			cp -f "$patched_apk" "$apk_output"
+			mv -f "$patched_apk" "$apk_output"
 			pr "Built ${table} (non-root): '${apk_output}'"
 			continue
 		fi
 		local base_template
-		base_template=$(mktemp -d -p $TEMP_DIR)
+		base_template=$(mktemp -d -p "$TEMP_DIR")
 		cp -a $MODULE_TEMPLATE_DIR/. "$base_template"
 		local upj="${table,,}-update.json"
 
@@ -556,14 +568,12 @@ build_rv() {
 			"$base_template"
 
 		local module_output="${app_name_l}-${rv_brand_f}-magisk-v${version_f}-${arch_f}.zip"
-		if [ ! -f "$module_output" ] || [ "$REBUILD" = true ]; then
-			pr "Packing module ${table}"
-			cp -f "$patched_apk" "${base_template}/base.apk"
-			if [ "${args[include_stock]}" = true ]; then cp -f "$stock_apk" "${base_template}/${pkg_name}.apk"; fi
-			pushd >/dev/null "$base_template" || abort "Module template dir not found"
-			zip -"$COMPRESSION_LEVEL" -FSqr "../../${BUILD_DIR}/${module_output}" .
-			popd >/dev/null || :
-		fi
+		pr "Packing module ${table}"
+		cp -f "$patched_apk" "${base_template}/base.apk"
+		if [ "${args[include_stock]}" = true ]; then cp -f "$stock_apk" "${base_template}/${pkg_name}.apk"; fi
+		pushd >/dev/null "$base_template" || abort "Module template dir not found"
+		zip -"$COMPRESSION_LEVEL" -FSqr "${BUILD_DIR}/${module_output}" .
+		popd >/dev/null || :
 		pr "Built ${table} (root): '${BUILD_DIR}/${module_output}'"
 	done
 }
@@ -587,7 +597,7 @@ module_prop() {
 name=${2}
 version=v${3}
 versionCode=${NEXT_VER_CODE}
-author=Thunderkex
+author=j-hc
 description=${4}" >"${6}/module.prop"
 
 	if [ "$ENABLE_MAGISK_UPDATE" = true ]; then echo "updateJson=${5}" >>"${6}/module.prop"; fi
