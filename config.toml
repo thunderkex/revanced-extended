@@ -16,6 +16,14 @@ patches-source = "crimera/piko"
 included-patches = "'Hide For You' 'Hide Live Threads' 'Disable chirp font' 'Remove view count' 'Hide Banner' 'Hide FAB' 'Hide FAB Menu Buttons' 'Hide Promoted Trends' 'Hide Community Notes' 'Google Ads Patch'"
 integrations-source = "crimera/revanced-integrations"
 
+[Twitter-piko-dev]
+apkmirror-dlurl = "https://apkmirror.com/apk/twitter-inc/twitter/"
+archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
+patches-source = "crimera/piko"
+included-patches = "'Hide For You' 'Hide Live Threads' 'Disable chirp font' 'Remove view count' 'Hide Banner' 'Hide FAB' 'Hide FAB Menu Buttons' 'Hide Promoted Trends' 'Hide Community Notes' 'Google Ads Patch'"
+integrations-source = "crimera/revanced-integrations"
+patches-version = "dev"
+
 [Reddit-Extended]
 apkmirror-dlurl = "https://www.apkmirror.com/apk/redditinc/reddit/"
 archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.reddit.frontpage"
@@ -23,6 +31,15 @@ patches-source = "inotia00/revanced-patches"
 integrations-source = "inotia00/revanced-integrations"
 cli-source = "inotia00/revanced-cli"
 excluded-patches = "'Custom branding name for Reddit'"
+
+[Reddit-Extended-dev]
+apkmirror-dlurl = "https://www.apkmirror.com/apk/redditinc/reddit/"
+archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.reddit.frontpage"
+patches-source = "inotia00/revanced-patches"
+integrations-source = "inotia00/revanced-integrations"
+cli-source = "inotia00/revanced-cli"
+excluded-patches = "'Custom branding name for Reddit'"
+patches-version = "dev"
 
 [YouTube-Ex-inotia00]
 build-mode = "both"
