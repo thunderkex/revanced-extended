@@ -16,22 +16,13 @@ patches-source = "crimera/piko"
 included-patches = "'Hide For You' 'Hide Live Threads' 'Disable chirp font' 'Remove view count' 'Hide Banner' 'Hide FAB' 'Hide FAB Menu Buttons' 'Hide Promoted Trends' 'Hide Community Notes' 'Google Ads Patch'"
 integrations-source = "crimera/revanced-integrations"
 
-[YouTube-Ex-rufusin]
-build-mode = "both"
-apkmirror-dlurl = "https://apkmirror.com/apk/google-inc/youtube/"
-patches-source = "rufusin/revanced-patches"
-integrations-source = "rufusin/revanced-integrations"
-excluded-patches = "'Custom branding name YouTube' 'Custom branding icon YouTube' 'Enable compact controls overlay' 'Disable QUIC protocol' 'Disable auto captions' 'Disable HDR video' 'Enable zen mode' 'Hide account menu' 'Hide autoplay button' 'Hide autoplay preview' 'Hide captions button' 'Hide description components' 'Hide handle' 'Hide latest videos button' 'Hide load more button' 'Hide mix playlists' 'Hide previous next button' 'Custom seekbar color' 'Translations'"
-arch = "arm64-v8a"
-apkmirror-arch = "arm64-v8a"
-
-[Music-Ex-rufusin]
-build-mode = "both"
-archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.youtube.music"
-arch = "arm64-v8a"
-patches-source = "rufusin/revanced-patches"
-integrations-source = "rufusin/revanced-integrations"
-excluded-patches = "'Custom branding icon YouTube Music' 'Custom branding name YouTube Music' 'Hide captions button' 'Replace cast button' 'Hide cast button' 'Hide account menu' 'Hide mix playlists' 'Hide new playlist button'"
+[Twitter-piko-dev]
+apkmirror-dlurl = "https://apkmirror.com/apk/twitter-inc/twitter/"
+archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
+patches-source = "crimera/piko"
+included-patches = "'Hide For You' 'Hide Live Threads' 'Disable chirp font' 'Remove view count' 'Hide Banner' 'Hide FAB' 'Hide FAB Menu Buttons' 'Hide Promoted Trends' 'Hide Community Notes' 'Google Ads Patch'"
+integrations-source = "crimera/revanced-integrations"
+patches-version = "dev"
 
 [Reddit-Extended]
 apkmirror-dlurl = "https://www.apkmirror.com/apk/redditinc/reddit/"
@@ -40,6 +31,15 @@ patches-source = "inotia00/revanced-patches"
 integrations-source = "inotia00/revanced-integrations"
 cli-source = "inotia00/revanced-cli"
 excluded-patches = "'Custom branding name for Reddit'"
+
+[Reddit-Extended-dev]
+apkmirror-dlurl = "https://www.apkmirror.com/apk/redditinc/reddit/"
+archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.reddit.frontpage"
+patches-source = "inotia00/revanced-patches"
+integrations-source = "inotia00/revanced-integrations"
+cli-source = "inotia00/revanced-cli"
+excluded-patches = "'Custom branding name for Reddit'"
+patches-version = "dev"
 
 [YouTube-Ex-inotia00]
 build-mode = "both"
