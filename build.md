@@ -3,8 +3,8 @@ Twitter-piko-dev: 10.60.0-release.0
 Reddit-Extended: 2024.17.0  
 Reddit-Extended-dev: 2024.17.0  
 YouTube-Ex-inotia00: 19.16.39  
-Music-Ex-inotia00: 7.16.53  
 TikTok: 36.5.4  
+Music-Ex-inotia00: 7.16.53  
 
 Install [Microg](https://github.com/revanced/GmsCore/releases) for non-root YouTube and YT Music APKs  
 Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to detach root revanced YouTube and YT Music from Play Store  
