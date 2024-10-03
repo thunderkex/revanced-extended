@@ -1,11 +1,11 @@
-TikTok-Ex: 36.5.4  
 X-piko: 10.60.0-release.0  
 X-piko-dev: 10.60.0-release.0  
-YouTube-Ex: 19.16.39  
-YouTube-Ex-Dev: 19.16.39  
 Reddit-Ex: 2024.17.0  
 Reddit-Ex-dev: 2024.17.0  
-Music-Ex-inotia00: 7.16.53  
+YouTube-Ex: 19.16.39  
+YouTube-Ex-Dev: 19.16.39  
+Music-Ex: 7.16.53  
+TikTok-Ex: 36.5.4  
 Music-Ex-dev: 7.16.53  
 
 Install [Microg](https://github.com/ReVanced/GmsCore/releases) for non-root YouTube and YT Music APKs  
