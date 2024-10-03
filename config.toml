@@ -60,7 +60,7 @@ arch = "arm64-v8a"
 apkmirror-arch = "arm64-v8a"
 patches-version = "dev"
 
-[Music-Ex-inotia00]
+[Music-Ex]
 build-mode = "both"
 archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.youtube.music"
 arch = "arm64-v8a"
