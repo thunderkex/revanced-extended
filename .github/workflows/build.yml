@@ -84,6 +84,8 @@ jobs:
           tag: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
           file_glob: true
           overwrite: true
+          prerelease: false
+          make_latest: true
 
       - name: Update changelog and Magisk update json
         id: update_config
