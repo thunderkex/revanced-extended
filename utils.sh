@@ -99,7 +99,11 @@ get_rv_prebuilts() {
 			tag_name=v${tag_name%.*}
 		fi
 		if [ "$tag" = "Patches" ]; then
-			if [ $grab_cl = true ]; then echo -e "[🖇 - Changelog](https://github.com/${src}/releases/tag/${tag_name})\n" >>"${cl_dir}/changelog.md"; fi
+			if [ $grab_cl = true ]; then
+				if ! grep -q "$tag_name" "${cl_dir}/changelog.md" 2>/dev/null; then
+					echo -e "[🖇 - Changelog](https://github.com/${src}/releases/tag/${tag_name})\n" >>"${cl_dir}/changelog.md"
+				fi
+			fi
 			if [ "$REMOVE_RV_INTEGRATIONS_CHECKS" = true ]; then
 				if ! (
 					mkdir -p "${file}-zip" || return 1

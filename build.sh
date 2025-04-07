@@ -168,7 +168,7 @@ log "\n-Install [MicroG-RE](https://github.com/WSTxda/MicroG-RE/releases) for no
 log "-Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) module to detach patched apps from being updated by Play Store\n"
 log "$(cat "$TEMP_DIR"/*-rv/changelog.md)"
 
-SKIPPED=$(cat "$TEMP_DIR"/skipped 2>/dev/null || :)
+SKIPPED=$(cat "$TEMP_DIR"/skipped 2>/dev/null | sort -u || :)
 if [ -n "$SKIPPED" ]; then
 	log "\nSkipped:"
 	log "$SKIPPED"
