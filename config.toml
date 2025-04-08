@@ -30,7 +30,9 @@ arch = "arm64-v8a"
 included-patches = "'SIM spoof'"
 
 [Spotify]
+# apkmirror-dlurl = "https://www.apkmirror.com/apk/spotify-ab/"
 uptodown-dlurl = "https://spotify.en.uptodown.com/android"
+arch = "arm64-v8a"
 
 [Reddit-Ex]
 uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
