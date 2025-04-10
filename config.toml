@@ -26,36 +26,17 @@ enabled = false
 [TikTok]
 uptodown-dlurl = "https://tiktok.en.uptodown.com/android"
 apkmirror-dlurl = "https://apkmirror.com/apk/tiktok-pte-ltd/tik-tok-including-musical-ly"
-arch = "arm64-v8a"
-included-patches = "'SIM spoof'"
 
 [Spotify]
 # apkmirror-dlurl = "https://www.apkmirror.com/apk/spotify-ab/"
 uptodown-dlurl = "https://spotify.en.uptodown.com/android"
+patches-source = "anddea/revanced-patches"
 arch = "arm64-v8a"
-
-[Reddit-Ex]
-uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
-apkmirror-dlurl = "https://apkmirror.com/apk/redditinc/reddit"
-patches-source = "inotia00/revanced-patches"
-cli-source = "inotia00/revanced-cli"
-arch = "arm64-v8a"
-excluded-patches = "'Custom branding name for Reddit'"
-
-[Reddit-Ex-dev]
-uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
-apkmirror-dlurl = "https://apkmirror.com/apk/redditinc/reddit"
-patches-source = "inotia00/revanced-patches"
-cli-source = "inotia00/revanced-cli"
-excluded-patches = "'Custom branding name for Reddit'"
-arch = "arm64-v8a"
-patches-version = "dev"
 
 [YouTube-Ex]
 uptodown-dlurl = "https://youtube.en.uptodown.com/android"
 apkmirror-dlurl = "https://apkmirror.com/apk/google-inc/youtube"
-patches-source = "inotia00/revanced-patches"
-cli-source = "inotia00/revanced-cli"
+patches-source = "anddea/revanced-patches"
 arch = "arm64-v8a"
 included-patches = "'MaterialYou' 'Return YouTube Username'"
 excluded-patches = "'Custom branding icon for YouTube' 'Custom branding name for YouTube' 'Theme'"
@@ -64,8 +45,7 @@ build-mode = "both"
 [YouTube-Ex-Dev]
 uptodown-dlurl = "https://youtube.en.uptodown.com/android"
 apkmirror-dlurl = "https://apkmirror.com/apk/google-inc/youtube"
-patches-source = "inotia00/revanced-patches"
-cli-source = "inotia00/revanced-cli"
+patches-source = "anddea/revanced-patches"
 arch = "arm64-v8a"
 included-patches = "'MaterialYou' 'Return YouTube Username'"
 excluded-patches = "'Custom branding icon for YouTube' 'Custom branding name for YouTube' 'Theme'"
@@ -75,8 +55,7 @@ patches-version = "dev"
 [Music-Ex]
 uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
 apkmirror-dlurl = "https://apkmirror.com/apk/google-inc/youtube-music"
-patches-source = "inotia00/revanced-patches"
-cli-source = "inotia00/revanced-cli"
+patches-source = "anddea/revanced-patches"
 arch = "arm64-v8a"
 excluded-patches = "'Custom branding icon for YouTube Music' 'Custom branding name for YouTube Music' 'Return YouTube Username'"
 build-mode = "both"
@@ -84,8 +63,7 @@ build-mode = "both"
 [Music-Ex-dev]
 uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
 apkmirror-dlurl = "https://apkmirror.com/apk/google-inc/youtube-music"
-patches-source = "inotia00/revanced-patches"
-cli-source = "inotia00/revanced-cli"
+patches-source = "anddea/revanced-patches"
 arch = "arm64-v8a"
 excluded-patches = "'Custom branding icon for YouTube Music' 'Custom branding name for YouTube Music' 'Return YouTube Username'"
 build-mode = "both"
