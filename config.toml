@@ -27,6 +27,26 @@ enabled = false
 uptodown-dlurl = "https://tiktok.en.uptodown.com/android"
 apkmirror-dlurl = "https://apkmirror.com/apk/tiktok-pte-ltd/tik-tok-including-musical-ly"
 
+[Facebook]
+uptodown-dlurl = "https://facebook.en.uptodown.com/android"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-2/facebook"
+
+[Instagram]
+uptodown-dlurl = "https://instagram.en.uptodown.com/android"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/instagram-instagram"
+
+[Gphotos]
+uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/photos"
+
+[Soundcloud]
+uptodown-dlurl = "https://soundcloud.en.uptodown.com/android"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/soundcloud/soundcloud-soundcloud"
+
+[Lightroom]
+uptodown-dlurl = "https://adobe-lightroom-mobile.en.uptodown.com/android"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/adobe/lightroom"
+
 [Spotify]
 # apkmirror-dlurl = "https://www.apkmirror.com/apk/spotify-ab/"
 uptodown-dlurl = "https://spotify.en.uptodown.com/android"
