@@ -1,7 +1,7 @@
 enable-magisk-update = true
 parallel-jobs = 1
 compression-level = 9
-
+riplib = true
 # add 'enabled = false' for not patching a specific app or remove it from the config
 # see https://github.com/j-hc/revanced-magisk-module/blob/main/CONFIG.md for more detailed explanations
 
@@ -26,6 +26,8 @@ enabled = false
 [TikTok]
 uptodown-dlurl = "https://tiktok.en.uptodown.com/android"
 apkmirror-dlurl = "https://apkmirror.com/apk/tiktok-pte-ltd/tik-tok-including-musical-ly"
+included-patches = "'SIM spoof'"
+arch = "arm64-v8a"
 
 [Facebook]
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
@@ -49,47 +51,48 @@ arch = "arm64-v8a"
 
 [Lightroom]
 uptodown-dlurl = "https://adobe-lightroom-mobile.en.uptodown.com/android"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/adobe/lightroom"
+# apkmirror-dlurl = "https://www.apkmirror.com/apk/adobe/lightroom"
 arch = "arm64-v8a"
 
 [Spotify]
 # apkmirror-dlurl = "https://www.apkmirror.com/apk/spotify-ab/"
 uptodown-dlurl = "https://spotify.en.uptodown.com/android"
 patches-source = "anddea/revanced-patches"
+version = "9.0.36.683"
 arch = "arm64-v8a"
 
 [YouTube-Ex]
 uptodown-dlurl = "https://youtube.en.uptodown.com/android"
 apkmirror-dlurl = "https://apkmirror.com/apk/google-inc/youtube"
 patches-source = "anddea/revanced-patches"
-arch = "arm64-v8a"
 included-patches = "'MaterialYou' 'Return YouTube Username'"
 excluded-patches = "'Custom branding icon for YouTube' 'Custom branding name for YouTube' 'Theme'"
 build-mode = "both"
+arch = "arm64-v8a"  
 
 [YouTube-Ex-Dev]
 uptodown-dlurl = "https://youtube.en.uptodown.com/android"
 apkmirror-dlurl = "https://apkmirror.com/apk/google-inc/youtube"
 patches-source = "anddea/revanced-patches"
-arch = "arm64-v8a"
 included-patches = "'MaterialYou' 'Return YouTube Username'"
 excluded-patches = "'Custom branding icon for YouTube' 'Custom branding name for YouTube' 'Theme'"
 build-mode = "both"
 patches-version = "dev"
+arch = "arm64-v8a"  
 
 [Music-Ex]
 uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
 apkmirror-dlurl = "https://apkmirror.com/apk/google-inc/youtube-music"
 patches-source = "anddea/revanced-patches"
-arch = "arm64-v8a"
 excluded-patches = "'Custom branding icon for YouTube Music' 'Custom branding name for YouTube Music' 'Return YouTube Username'"
 build-mode = "both"
+arch = "arm64-v8a"  
 
 [Music-Ex-dev]
 uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
 apkmirror-dlurl = "https://apkmirror.com/apk/google-inc/youtube-music"
 patches-source = "anddea/revanced-patches"
-arch = "arm64-v8a"
 excluded-patches = "'Custom branding icon for YouTube Music' 'Custom branding name for YouTube Music' 'Return YouTube Username'"
 build-mode = "both"
 patches-version = "dev"
+arch = "arm64-v8a"  
