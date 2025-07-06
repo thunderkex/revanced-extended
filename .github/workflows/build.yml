@@ -71,7 +71,7 @@ jobs:
           echo "DATE=$(date +%Y%m%d)" >> "$GITHUB_OUTPUT"
 
       - name: Upload modules to release
-        uses: svenstaro/upload-release-action@2.11.1
+        uses: svenstaro/upload-release-action@2.11.2
         with:
           body: ${{ steps.get_output.outputs.BUILD_LOG }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
