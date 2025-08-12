@@ -152,7 +152,7 @@ jobs:
           POST="https://api.telegram.org/bot${TG_TOKEN}/sendMessage"
           curl -X POST --data-urlencode "parse_mode=Markdown" --data-urlencode "disable_web_page_preview=true" --data-urlencode "text=${MSG}" --data-urlencode "message_thread_id=26772" --data-urlencode "chat_id=${CHAT_ID}" "$POST"
 
-      - uses: stefanzweifel/git-auto-commit-action@v5.2.0
+      - uses: stefanzweifel/git-auto-commit-action@v6.0.1
         with:
           branch: update
           skip_checkout: true
