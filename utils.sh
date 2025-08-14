@@ -1,26 +1,51 @@
 #!/usr/bin/env bash
 
-MODULE_TEMPLATE_DIR="revanced-magisk"
-CWD=$(pwd)
-TEMP_DIR="temp"
-BIN_DIR="bin"
-BUILD_DIR="build"
+# =============================================================================
+# ReVanced Extended Build Utilities
+# Modern, structured utility functions for building ReVanced modules
+# =============================================================================
 
-if [ "${GITHUB_TOKEN-}" ]; then GH_HEADER="Authorization: token ${GITHUB_TOKEN}"; else GH_HEADER=; fi
-NEXT_VER_CODE=${NEXT_VER_CODE:-$(date +'%Y%m%d')}
-OS=$(uname -o)
+set -euo pipefail
 
+# -----------------------------------------------------------------------------
+# Configuration Constants
+# -----------------------------------------------------------------------------
+readonly MODULE_TEMPLATE_DIR="revanced-magisk"
+readonly CWD=$(pwd)
+readonly TEMP_DIR="temp"
+readonly BIN_DIR="bin"
+readonly BUILD_DIR="build"
+readonly OS=$(uname -o)
+
+# Environment variables
+readonly GITHUB_TOKEN=${GITHUB_TOKEN:-}
+readonly NEXT_VER_CODE=${NEXT_VER_CODE:-$(date +'%Y%m%d')}
+readonly GH_HEADER=${GITHUB_TOKEN:+"Authorization: token $GITHUB_TOKEN"}
+
+# -----------------------------------------------------------------------------
+# TOML/JSON Configuration Functions
+# -----------------------------------------------------------------------------
 toml_prep() {
 	if [ ! -f "$1" ]; then return 1; fi
-	if [ "${1##*.}" == toml ]; then
-		__TOML__=$($TOML --output json --file "$1" .)
-	elif [ "${1##*.}" == json ]; then
-		__TOML__=$(cat "$1")
-	else abort "config extension not supported"; fi
+	case "${1##*.}" in
+		toml) __TOML__=$($TOML --output json --file "$1" .) ;;
+		json) __TOML__=$(cat "$1") ;;
+		*) abort "config extension not supported" ;;
+	esac
 }
-toml_get_table_names() { jq -r -e 'to_entries[] | select(.value | type == "object") | .key' <<<"$__TOML__"; }
-toml_get_table_main() { jq -r -e 'to_entries | map(select(.value | type != "object")) | from_entries' <<<"$__TOML__"; }
-toml_get_table() { jq -r -e ".\"${1}\"" <<<"$__TOML__"; }
+
+toml_get_table_names() { 
+	jq -r -e 'to_entries[] | select(.value | type == "object") | .key' <<<"$__TOML__" 
+}
+
+toml_get_table_main() { 
+	jq -r -e 'to_entries | map(select(.value | type != "object")) | from_entries' <<<"$__TOML__" 
+}
+
+toml_get_table() { 
+	jq -r -e ".\"${1}\"" <<<"$__TOML__" 
+}
+
 toml_get() {
 	local op
 	op=$(jq -r ".\"${2}\" | values" <<<"$1")
@@ -32,157 +57,57 @@ toml_get() {
 	else return 1; fi
 }
 
-pr() { echo -e "\033[0;32m[+] ${1}\033[0m"; }
+# -----------------------------------------------------------------------------
+# Logging and Error Handling
+# -----------------------------------------------------------------------------
+pr() { 
+	echo -e "\033[0;32m[+] ${1}\033[0m" 
+}
+
 epr() {
 	echo >&2 -e "\033[0;31m[-] ${1}\033[0m"
-	if [ "${GITHUB_REPOSITORY-}" ]; then echo -e "::error::utils.sh [-] ${1}\n"; fi
+	if [ "${GITHUB_REPOSITORY-}" ]; then 
+		echo -e "::error::utils.sh [-] ${1}\n"
+	fi
 }
+
 abort() {
 	epr "ABORT: ${1-}"
 	exit 1
 }
 
-get_rv_prebuilts() {
-	local cli_src=$1 cli_ver=$2 patches_src=$3 patches_ver=$4
-	pr "Getting prebuilts (${patches_src%/*})" >&2
-	local cl_dir=${patches_src%/*}
-	cl_dir=${TEMP_DIR}/${cl_dir,,}-rv
-	[ -d "$cl_dir" ] || mkdir "$cl_dir"
-	for src_ver in "$cli_src CLI $cli_ver revanced-cli" "$patches_src Patches $patches_ver patches"; do
-		set -- $src_ver
-		local src=$1 tag=$2 ver=${3-} fprefix=$4
-		local ext
-		if [ "$tag" = "CLI" ]; then
-			ext="jar"
-			local grab_cl=false
-		elif [ "$tag" = "Patches" ]; then
-			ext="rvp"
-			local grab_cl=true
-		else abort unreachable; fi
-		local dir=${src%/*}
-		dir=${TEMP_DIR}/${dir,,}-rv
-		[ -d "$dir" ] || mkdir "$dir"
+log() { 
+	echo -e "$1  " >>"build.md" 
+}
 
-		local rv_rel="https://api.github.com/repos/${src}/releases" name_ver
-		if [ "$ver" = "dev" ]; then
-			name_ver="*-dev*"
-		elif [ "$ver" = "latest" ]; then
-			rv_rel+="/latest"
-			name_ver="*"
-		else
-			rv_rel+="/tags/${ver}"
-			name_ver="$ver"
-		fi
+# -----------------------------------------------------------------------------
+# Validation Functions
+# -----------------------------------------------------------------------------
+semver_validate() {
+	local a="${1%-*}"
+	local ac="${a//[.0-9]/}"
+	[ ${#ac} = 0 ]
+}
 
-		local url file tag_name name
-		file=$(find "$dir" -name "${fprefix}-${name_ver#v}.${ext}" -type f 2>/dev/null)
-		if [ -z "$file" ]; then
-			local resp asset name
-			resp=$(gh_req "$rv_rel" -) || return 1
-			if [ "$ver" = "dev" ]; then resp=$(jq -r '.[0]' <<<"$resp"); fi
-			tag_name=$(jq -r '.tag_name' <<<"$resp")
-			asset=$(jq -e -r ".assets[] | select(.name | endswith(\"$ext\"))" <<<"$resp") || return 1
-			url=$(jq -r .url <<<"$asset")
-			name=$(jq -r .name <<<"$asset")
-			file="${dir}/${name}"
-			gh_dl "$file" "$url" >&2 || return 1
-			echo "$tag: $(cut -d/ -f1 <<<"$src")/${name}  " >>"${cl_dir}/changelog.md"
-		else
-			grab_cl=false
-			local for_err=$file
-			if [ "$ver" = "latest" ]; then
-				file=$(grep -v '/[^/]*dev[^/]*$' <<<"$file" | head -1)
-			else file=$(grep "/[^/]*${ver#v}[^/]*\$" <<<"$file" | head -1); fi
-			if [ -z "$file" ]; then abort "filter fail: '$for_err' with '$ver'"; fi
-			name=$(basename "$file")
-			tag_name=$(cut -d'-' -f3- <<<"$name")
-			tag_name=v${tag_name%.*}
-		fi
-		if [ "$tag" = "Patches" ]; then
-			if [ $grab_cl = true ]; then
-				if ! grep -q "$tag_name" "${cl_dir}/changelog.md" 2>/dev/null; then
-					echo -e "[🖇 - Changelog](https://github.com/${src}/releases/tag/${tag_name})\n" >>"${cl_dir}/changelog.md"
-				fi
-			fi
-			if [ "$REMOVE_RV_INTEGRATIONS_CHECKS" = true ]; then
-				if ! (
-					mkdir -p "${file}-zip" || return 1
-					unzip -qo "${file}" -d "${file}-zip" || return 1
-					java -cp "${BIN_DIR}/paccer.jar:${BIN_DIR}/dexlib2.jar" com.jhc.Main "${file}-zip/extensions/shared.rve" "${file}-zip/extensions/shared-patched.rve" || return 1
-					mv -f "${file}-zip/extensions/shared-patched.rve" "${file}-zip/extensions/shared.rve" || return 1
-					rm "${file}" || return 1
-					cd "${file}-zip" || abort
-					zip -0rq "${CWD}/${file}" . || return 1
-				) >&2; then
-					echo >&2 "Patching revanced-integrations failed"
-				fi
-				rm -r "${file}-zip" || :
-			fi
-		fi
-		echo -n "$file "
+isoneof() {
+	local i=$1 v
+	shift
+	for v; do 
+		[ "$v" = "$i" ] && return 0
 	done
-	echo
+	return 1
 }
 
-set_prebuilts() {
-	APKSIGNER="${BIN_DIR}/apksigner.jar"
-	local arch
-	arch=$(uname -m)
-	if [ "$arch" = aarch64 ]; then arch=arm64; elif [ "${arch:0:5}" = "armv7" ]; then arch=arm; fi
-	HTMLQ="${BIN_DIR}/htmlq/htmlq-${arch}"
-	AAPT2="${BIN_DIR}/aapt2/aapt2-${arch}"
-	TOML="${BIN_DIR}/toml/tq-${arch}"
+get_highest_ver() {
+	local vers m
+	vers=$(tee)
+	m=$(head -1 <<<"$vers")
+	if ! semver_validate "$m"; then echo "$m"; else sort -rV <<<"$vers" | head -1; fi
 }
 
-config_update() {
-	if [ ! -f build.md ]; then abort "build.md not available"; fi
-	declare -A sources
-	: >"$TEMP_DIR"/skipped
-	local upped=()
-	local prcfg=false
-	for table_name in $(toml_get_table_names); do
-		if [ -z "$table_name" ]; then continue; fi
-		t=$(toml_get_table "$table_name")
-		enabled=$(toml_get "$t" enabled) || enabled=true
-		if [ "$enabled" = false ]; then continue; fi
-		PATCHES_SRC=$(toml_get "$t" patches-source) || PATCHES_SRC=$DEF_PATCHES_SRC
-		PATCHES_VER=$(toml_get "$t" patches-version) || PATCHES_VER=$DEF_PATCHES_VER
-		if [[ -v sources["$PATCHES_SRC/$PATCHES_VER"] ]]; then
-			if [ "${sources["$PATCHES_SRC/$PATCHES_VER"]}" = 1 ]; then upped+=("$table_name"); fi
-		else
-			sources["$PATCHES_SRC/$PATCHES_VER"]=0
-			local rv_rel="https://api.github.com/repos/${PATCHES_SRC}/releases"
-			if [ "$PATCHES_VER" = "dev" ]; then
-				last_patches=$(gh_req "$rv_rel" - | jq -e -r '.[0]')
-			elif [ "$PATCHES_VER" = "latest" ]; then
-				last_patches=$(gh_req "$rv_rel/latest" -)
-			else
-				last_patches=$(gh_req "$rv_rel/tags/${ver}" -)
-			fi
-			if ! last_patches=$(jq -e -r '.assets[] | select(.name | endswith("rvp")) | .name' <<<"$last_patches"); then
-				abort oops
-			fi
-			if [ "$last_patches" ]; then
-				if ! OP=$(grep "^Patches: ${PATCHES_SRC%%/*}/" build.md | grep "$last_patches"); then
-					sources["$PATCHES_SRC/$PATCHES_VER"]=1
-					prcfg=true
-					upped+=("$table_name")
-				else
-					echo "$OP" >>"$TEMP_DIR"/skipped
-				fi
-			fi
-		fi
-	done
-	if [ "$prcfg" = true ]; then
-		local query=""
-		for table in "${upped[@]}"; do
-			if [ -n "$query" ]; then query+=" or "; fi
-			query+=".key == \"$table\""
-		done
-		jq "to_entries | map(select(${query} or (.value | type != \"object\"))) | from_entries" <<<"$__TOML__"
-	fi
-}
-
+# -----------------------------------------------------------------------------
+# Network Request Functions
+# -----------------------------------------------------------------------------
 _req() {
 	local ip="$1" op="$2"
 	shift 2
@@ -206,8 +131,15 @@ _req() {
 		mv -f "$dlp" "$op"
 	fi
 }
-req() { _req "$1" "$2" -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:108.0) Gecko/20100101 Firefox/108.0"; }
-gh_req() { _req "$1" "$2" -H "$GH_HEADER"; }
+
+req() { 
+	_req "$1" "$2" -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:108.0) Gecko/20100101 Firefox/108.0"
+}
+
+gh_req() { 
+	_req "$1" "$2" -H "$GH_HEADER"
+}
+
 gh_dl() {
 	if [ ! -f "$1" ]; then
 		pr "Getting '$1' from '$2'"
@@ -215,21 +147,206 @@ gh_dl() {
 	fi
 }
 
-log() { echo -e "$1  " >>"build.md"; }
-get_highest_ver() {
-	local vers m
-	vers=$(tee)
-	m=$(head -1 <<<"$vers")
-	if ! semver_validate "$m"; then echo "$m"; else sort -rV <<<"$vers" | head -1; fi
+# -----------------------------------------------------------------------------
+# ReVanced Prebuilts Management
+# -----------------------------------------------------------------------------
+get_rv_prebuilts() {
+	local cli_src=$1 cli_ver=$2 patches_src=$3 patches_ver=$4
+	pr "Getting prebuilts (${patches_src%/*})" >&2
+	
+	local cl_dir=${patches_src%/*}
+	cl_dir=${TEMP_DIR}/${cl_dir,,}-rv
+	[ -d "$cl_dir" ] || mkdir "$cl_dir"
+	
+	for src_ver in "$cli_src CLI $cli_ver revanced-cli" "$patches_src Patches $patches_ver patches"; do
+		set -- $src_ver
+		local src=$1 tag=$2 ver=${3-} fprefix=$4
+		local ext grab_cl
+		
+		if [ "$tag" = "CLI" ]; then
+			ext="jar"
+			grab_cl=false
+		elif [ "$tag" = "Patches" ]; then
+			ext="rvp"
+			grab_cl=true
+		else 
+			abort "unreachable: invalid tag '$tag'"
+		fi
+		
+		local dir=${src%/*}
+		dir=${TEMP_DIR}/${dir,,}-rv
+		[ -d "$dir" ] || mkdir "$dir"
+
+		local rv_rel="https://api.github.com/repos/${src}/releases" name_ver
+		case "$ver" in
+			"dev") 
+				name_ver="*-dev*" 
+				;;
+			"latest") 
+				rv_rel+="/latest"
+				name_ver="*" 
+				;;
+			*) 
+				rv_rel+="/tags/${ver}"
+				name_ver="$ver" 
+				;;
+		esac
+
+		local url file tag_name name
+		file=$(find "$dir" -name "${fprefix}-${name_ver#v}.${ext}" -type f 2>/dev/null)
+		
+		if [ -z "$file" ]; then
+			local resp asset
+			resp=$(gh_req "$rv_rel" -) || return 1
+			if [ "$ver" = "dev" ]; then 
+				resp=$(jq -r '.[0]' <<<"$resp")
+			fi
+			tag_name=$(jq -r '.tag_name' <<<"$resp")
+			asset=$(jq -e -r ".assets[] | select(.name | endswith(\"$ext\"))" <<<"$resp") || return 1
+			url=$(jq -r .url <<<"$asset")
+			name=$(jq -r .name <<<"$asset")
+			file="${dir}/${name}"
+			gh_dl "$file" "$url" >&2 || return 1
+			echo "$tag: $(cut -d/ -f1 <<<"$src")/${name}  " >>"${cl_dir}/changelog.md"
+		else
+			grab_cl=false
+			local for_err=$file
+			if [ "$ver" = "latest" ]; then
+				file=$(grep -v '/[^/]*dev[^/]*$' <<<"$file" | head -1)
+			else 
+				file=$(grep "/[^/]*${ver#v}[^/]*\$" <<<"$file" | head -1)
+			fi
+			if [ -z "$file" ]; then 
+				abort "filter fail: '$for_err' with '$ver'"
+			fi
+			name=$(basename "$file")
+			tag_name=$(cut -d'-' -f3- <<<"$name")
+			tag_name=v${tag_name%.*}
+		fi
+		
+		# Handle patches post-processing
+		if [ "$tag" = "Patches" ]; then
+			if [ $grab_cl = true ]; then
+				if ! grep -q "$tag_name" "${cl_dir}/changelog.md" 2>/dev/null; then
+					echo -e "[🖇 - Changelog](https://github.com/${src}/releases/tag/${tag_name})\n" >>"${cl_dir}/changelog.md"
+				fi
+			fi
+			process_patches_file "$file"
+		fi
+		echo -n "$file "
+	done
+	echo
 }
-semver_validate() {
-	local a="${1%-*}"
-	local ac="${a//[.0-9]/}"
-	[ ${#ac} = 0 ]
+
+process_patches_file() {
+	local file="$1"
+	
+	if [ "$REMOVE_RV_INTEGRATIONS_CHECKS" != true ]; then
+		return 0
+	fi
+	
+	if ! (
+		mkdir -p "${file}-zip" || return 1
+		unzip -qo "${file}" -d "${file}-zip" || return 1
+		java -cp "${BIN_DIR}/paccer.jar:${BIN_DIR}/dexlib2.jar" com.jhc.Main "${file}-zip/extensions/shared.rve" "${file}-zip/extensions/shared-patched.rve" || return 1
+		mv -f "${file}-zip/extensions/shared-patched.rve" "${file}-zip/extensions/shared.rve" || return 1
+		rm "${file}" || return 1
+		cd "${file}-zip" || abort
+		zip -0rq "${CWD}/${file}" . || return 1
+	) >&2; then
+		echo >&2 "Patching revanced-integrations failed"
+	fi
+	rm -r "${file}-zip" || :
 }
+
+# -----------------------------------------------------------------------------
+# System Setup Functions
+# -----------------------------------------------------------------------------
+set_prebuilts() {
+	APKSIGNER="${BIN_DIR}/apksigner.jar"
+	local arch
+	arch=$(uname -m)
+	case "$arch" in
+		aarch64) arch=arm64 ;;
+		armv7*) arch=arm ;;
+	esac
+	HTMLQ="${BIN_DIR}/htmlq/htmlq-${arch}"
+	AAPT2="${BIN_DIR}/aapt2/aapt2-${arch}"
+	TOML="${BIN_DIR}/toml/tq-${arch}"
+}
+
+# -----------------------------------------------------------------------------
+# Configuration Update Functions
+# -----------------------------------------------------------------------------
+config_update() {
+	if [ ! -f build.md ]; then abort "build.md not available"; fi
+	declare -A sources
+	: >"$TEMP_DIR"/skipped
+	local upped=()
+	local prcfg=false
+	
+	for table_name in $(toml_get_table_names); do
+		if [ -z "$table_name" ]; then continue; fi
+		t=$(toml_get_table "$table_name")
+		enabled=$(toml_get "$t" enabled) || enabled=true
+		if [ "$enabled" = false ]; then continue; fi
+		
+		PATCHES_SRC=$(toml_get "$t" patches-source) || PATCHES_SRC=$DEF_PATCHES_SRC
+		PATCHES_VER=$(toml_get "$t" patches-version) || PATCHES_VER=$DEF_PATCHES_VER
+		
+		if [[ -v sources["$PATCHES_SRC/$PATCHES_VER"] ]]; then
+			if [ "${sources["$PATCHES_SRC/$PATCHES_VER"]}" = 1 ]; then 
+				upped+=("$table_name")
+			fi
+		else
+			sources["$PATCHES_SRC/$PATCHES_VER"]=0
+			local rv_rel="https://api.github.com/repos/${PATCHES_SRC}/releases"
+			
+			case "$PATCHES_VER" in
+				"dev") 
+					last_patches=$(gh_req "$rv_rel" - | jq -e -r '.[0]') 
+					;;
+				"latest") 
+					last_patches=$(gh_req "$rv_rel/latest" -) 
+					;;
+				*) 
+					last_patches=$(gh_req "$rv_rel/tags/${PATCHES_VER}" -) 
+					;;
+			esac
+			
+			if ! last_patches=$(jq -e -r '.assets[] | select(.name | endswith("rvp")) | .name' <<<"$last_patches"); then
+				abort "Failed to get patches release information"
+			fi
+			
+			if [ "$last_patches" ]; then
+				if ! OP=$(grep "^Patches: ${PATCHES_SRC%%/*}/" build.md | grep "$last_patches"); then
+					sources["$PATCHES_SRC/$PATCHES_VER"]=1
+					prcfg=true
+					upped+=("$table_name")
+				else
+					echo "$OP" >>"$TEMP_DIR"/skipped
+				fi
+			fi
+		fi
+	done
+	
+	if [ "$prcfg" = true ]; then
+		local query=""
+		for table in "${upped[@]}"; do
+			if [ -n "$query" ]; then query+=" or "; fi
+			query+=".key == \"$table\""
+		done
+		jq "to_entries | map(select(${query} or (.value | type != \"object\"))) | from_entries" <<<"$__TOML__"
+	fi
+}
+
+# -----------------------------------------------------------------------------
+# Utility Helper Functions
+# -----------------------------------------------------------------------------
 get_patch_last_supported_ver() {
-	local list_patches=$1 pkg_name=$2 inc_sel=$3 _exc_sel=$4 _exclusive=$5 # TODO: resolve using all of these
+	local list_patches=$1 pkg_name=$2 inc_sel=$3 _exc_sel=$4 _exclusive=$5 rv_cli_jar=$6 rv_patches_jar=$7
 	local op
+	
 	if [ "$inc_sel" ]; then
 		if ! op=$(awk '{$1=$1}1' <<<"$list_patches"); then
 			epr "list-patches: '$op'"
@@ -247,23 +364,46 @@ get_patch_last_supported_ver() {
 			return
 		fi
 	fi
+	
 	if ! op=$(java -jar "$rv_cli_jar" list-versions "$rv_patches_jar" -f "$pkg_name" 2>&1 | tail -n +3 | awk '{$1=$1}1'); then
 		epr "list-versions: '$op'"
 		return 1
 	fi
+	
 	if [ "$op" = "Any" ]; then return; fi
-	pcount=$(head -1 <<<"$op") pcount=${pcount#*(} pcount=${pcount% *}
-	if [ -z "$pcount" ]; then abort "unreachable: '$pcount'"; fi
+	
+	local pcount
+	pcount=$(head -1 <<<"$op")
+	pcount=${pcount#*(}
+	pcount=${pcount% *}
+	
+	if [ -z "$pcount" ]; then 
+		abort "unreachable: '$pcount'"
+	fi
+	
 	grep -F "($pcount patch" <<<"$op" | sed 's/ (.* patch.*//' | get_highest_ver || return 1
 }
 
-isoneof() {
-	local i=$1 v
-	shift
-	for v; do [ "$v" = "$i" ] && return 0; done
-	return 1
+list_args() { 
+	tr -d '\t\r' <<<"$1" | tr -s ' ' | sed 's/" "/"\n"/g' | sed 's/\([^"]\)"\([^"]\)/\1'\''\2/g' | grep -v '^$' || :
 }
 
+join_args() { 
+	list_args "$1" | sed "s/^/${2} /" | paste -sd " " - || :
+}
+
+check_sig() {
+	local file=$1 pkg_name=$2
+	local sig
+	if grep -q "$pkg_name" sig.txt; then
+		sig=$(java -jar "$APKSIGNER" verify --print-certs "$file" | grep ^Signer | grep SHA-256 | tail -1 | awk '{print $NF}')
+		grep -qFx "$sig $pkg_name" sig.txt
+	fi
+}
+
+# -----------------------------------------------------------------------------
+# APK Processing Functions
+# -----------------------------------------------------------------------------
 merge_splits() {
 	local bundle=$1 output=$2
 	pr "Merging splits"
@@ -291,6 +431,18 @@ merge_splits() {
 	return $ret
 }
 
+patch_apk() {
+	local stock_input=$1 patched_apk=$2 patcher_args=$3 rv_cli_jar=$4 rv_patches_jar=$5
+	local cmd="env -u GITHUB_REPOSITORY java -jar $rv_cli_jar patch $stock_input --purge -o $patched_apk -p $rv_patches_jar --keystore=ks.keystore \
+--keystore-entry-password=123456789 --keystore-password=123456789 --signer=jhc --keystore-entry-alias=jhc $patcher_args"
+	if [ "$OS" = Android ]; then cmd+=" --custom-aapt2-binary=${AAPT2}"; fi
+	pr "$cmd"
+	if eval "$cmd"; then [ -f "$patched_apk" ]; else
+		rm "$patched_apk" 2>/dev/null || :
+		return 1
+	fi
+}
+
 # -------------------- apkmirror --------------------
 apk_mirror_search() {
 	local resp="$1" dpi="$2" arch="$3" apk_bundle="$4"
@@ -311,6 +463,7 @@ apk_mirror_search() {
 	done
 	return 1
 }
+
 dl_apkmirror() {
 	local url=$1 version=${2// /-} output=$3 arch=$4 dpi=$5 is_bundle=false
 	if [ -f "${output}.apkm" ]; then
@@ -343,6 +496,7 @@ dl_apkmirror() {
 		req "$url" "${output}" || return 1
 	fi
 }
+
 get_apkmirror_vers() {
 	local vers apkm_resp
 	apkm_resp=$(req "https://www.apkmirror.com/uploads/?appcategory=${__APKMIRROR_CAT__}" -)
@@ -359,7 +513,11 @@ get_apkmirror_vers() {
 		echo "$vers"
 	fi
 }
-get_apkmirror_pkg_name() { sed -n 's;.*id=\(.*\)" class="accent_color.*;\1;p' <<<"$__APKMIRROR_RESP__"; }
+
+get_apkmirror_pkg_name() { 
+	sed -n 's;.*id=\(.*\)" class="accent_color.*;\1;p' <<<"$__APKMIRROR_RESP__"
+}
+
 get_apkmirror_resp() {
 	__APKMIRROR_RESP__=$(req "${1}" -)
 	__APKMIRROR_CAT__="${1##*/}"
@@ -370,7 +528,11 @@ get_uptodown_resp() {
 	__UPTODOWN_RESP__=$(req "${1}/versions" -)
 	__UPTODOWN_RESP_PKG__=$(req "${1}/download" -)
 }
-get_uptodown_vers() { $HTMLQ --text ".version" <<<"$__UPTODOWN_RESP__"; }
+
+get_uptodown_vers() { 
+	$HTMLQ --text ".version" <<<"$__UPTODOWN_RESP__"
+}
+
 dl_uptodown() {
 	local uptodown_dlurl=$1 version=$2 output=$3 arch=$4 _dpi=$5
 	local apparch
@@ -416,46 +578,78 @@ dl_uptodown() {
 		req "https://dw.uptodown.com/dwn/${data_url}" "$output"
 	fi
 }
-get_uptodown_pkg_name() { $HTMLQ --text "tr.full:nth-child(1) > td:nth-child(3)" <<<"$__UPTODOWN_RESP_PKG__"; }
+
+get_uptodown_pkg_name() { 
+	$HTMLQ --text "tr.full:nth-child(1) > td:nth-child(3)" <<<"$__UPTODOWN_RESP_PKG__"
+}
 
 # -------------------- archive --------------------
 dl_archive() {
 	local url=$1 version=$2 output=$3 arch=$4
-	local path version=${version// /}
+	local path version_f=${version// /}
 	path=$(grep "${version_f#v}-${arch// /}" <<<"$__ARCHIVE_RESP__") || return 1
 	req "${url}/${path}" "$output"
 }
+
 get_archive_resp() {
 	local r
 	r=$(req "$1" -)
-	if [ -z "$r" ]; then return 1; else __ARCHIVE_RESP__=$(sed -n 's;^<a href="\(.*\)"[^"]*;\1;p' <<<"$r"); fi
+	if [ -z "$r" ]; then 
+		return 1
+	else 
+		__ARCHIVE_RESP__=$(sed -n 's;^<a href="\(.*\)"[^"]*;\1;p' <<<"$r")
+	fi
 	__ARCHIVE_PKG_NAME__=$(awk -F/ '{print $NF}' <<<"$1")
 }
-get_archive_vers() { sed 's/^[^-]*-//;s/-\(all\|arm64-v8a\|arm-v7a\)\.apk//g' <<<"$__ARCHIVE_RESP__"; }
-get_archive_pkg_name() { echo "$__ARCHIVE_PKG_NAME__"; }
+
+get_archive_vers() { 
+	sed 's/^[^-]*-//;s/-\(all\|arm64-v8a\|arm-v7a\)\.apk//g' <<<"$__ARCHIVE_RESP__"
+}
+
+get_archive_pkg_name() { 
+	echo "$__ARCHIVE_PKG_NAME__"
+}
 # --------------------------------------------------
 
-patch_apk() {
-	local stock_input=$1 patched_apk=$2 patcher_args=$3 rv_cli_jar=$4 rv_patches_jar=$5
-	local cmd="env -u GITHUB_REPOSITORY java -jar $rv_cli_jar patch $stock_input --purge -o $patched_apk -p $rv_patches_jar --keystore=ks.keystore \
---keystore-entry-password=123456789 --keystore-password=123456789 --signer=jhc --keystore-entry-alias=jhc $patcher_args"
-	if [ "$OS" = Android ]; then cmd+=" --custom-aapt2-binary=${AAPT2}"; fi
-	pr "$cmd"
-	if eval "$cmd"; then [ -f "$patched_apk" ]; else
-		rm "$patched_apk" 2>/dev/null || :
-		return 1
+# -----------------------------------------------------------------------------
+# Module Configuration Functions
+# -----------------------------------------------------------------------------
+module_config() {
+	local base_template="$1" pkg_name="$2" version="$3" arch="$4"
+	local ma=""
+	
+	case "$arch" in
+		"arm64-v8a") ma="arm64" ;;
+		"arm-v7a") ma="arm" ;;
+	esac
+	
+	cat > "$base_template/config" << EOF
+PKG_NAME=$pkg_name
+PKG_VER=$version
+MODULE_ARCH=$ma
+EOF
+}
+
+module_prop() {
+	local id="$1" name="$2" version="$3" description="$4" update_url="$5" base_template="$6"
+	
+	cat > "$base_template/module.prop" << EOF
+id=$id
+name=$name
+version=v$version ($NEXT_VER_CODE)
+versionCode=$NEXT_VER_CODE
+author=Thunderkex
+description=$description
+EOF
+
+	if [ "$ENABLE_MAGISK_UPDATE" = true ]; then 
+		echo "updateJson=$update_url" >> "$base_template/module.prop"
 	fi
 }
 
-check_sig() {
-	local file=$1 pkg_name=$2
-	local sig
-	if grep -q "$pkg_name" sig.txt; then
-		sig=$(java -jar "$APKSIGNER" verify --print-certs "$file" | grep ^Signer | grep SHA-256 | tail -1 | awk '{print $NF}')
-		grep -qFx "$sig $pkg_name" sig.txt
-	fi
-}
+# --------------------------------------------------
 
+# -------------------- apkmirror --------------------
 build_rv() {
 	eval "declare -A args=${1#*=}"
 	local version="" pkg_name=""
@@ -490,12 +684,12 @@ build_rv() {
 		return 0
 	fi
 	local list_patches
-	list_patches=$(java -jar "$rv_cli_jar" list-patches "$rv_patches_jar" -f "$pkg_name" -v -p 2>&1)
+	list_patches=$(java -jar "${args[cli]}" list-patches "${args[ptjar]}" -f "$pkg_name" -v -p 2>&1)
 
 	local get_latest_ver=false
 	if [ "$version_mode" = auto ]; then
 		if ! version=$(get_patch_last_supported_ver "$list_patches" "$pkg_name" \
-			"${args[included_patches]}" "${args[excluded_patches]}" "${args[exclusive_patches]}"); then
+			"${args[included_patches]}" "${args[excluded_patches]}" "${args[exclusive_patches]}" "${args[cli]}" "${args[ptjar]}"); then
 			exit 1
 		elif [ -z "$version" ]; then get_latest_ver=true; fi
 	elif isoneof "$version_mode" latest beta; then
@@ -602,7 +796,7 @@ build_rv() {
 
 		module_config "$base_template" "$pkg_name" "$version" "$arch"
 
-		local rv_patches_ver="${rv_patches_jar##*-}"
+		local rv_patches_ver="${args[ptjar]##*-}"
 		module_prop \
 			"${args[module_prop_name]}" \
 			"${app_name} ${args[rv_brand]}" \
@@ -620,29 +814,4 @@ build_rv() {
 		popd >/dev/null || :
 		pr "Built ${table} (root): '${BUILD_DIR}/${module_output}'"
 	done
-}
-
-list_args() { tr -d '\t\r' <<<"$1" | tr -s ' ' | sed 's/" "/"\n"/g' | sed 's/\([^"]\)"\([^"]\)/\1'\''\2/g' | grep -v '^$' || :; }
-join_args() { list_args "$1" | sed "s/^/${2} /" | paste -sd " " - || :; }
-
-module_config() {
-	local ma=""
-	if [ "$4" = "arm64-v8a" ]; then
-		ma="arm64"
-	elif [ "$4" = "arm-v7a" ]; then
-		ma="arm"
-	fi
-	echo "PKG_NAME=$2
-PKG_VER=$3
-MODULE_ARCH=$ma" >"$1/config"
-}
-module_prop() {
-	echo "id=${1}
-name=${2}
-version=v${3} (${NEXT_VER_CODE})
-versionCode=${NEXT_VER_CODE}
-author=Thunderkex
-description=${4}" >"${6}/module.prop"
-
-	if [ "$ENABLE_MAGISK_UPDATE" = true ]; then echo "updateJson=${5}" >>"${6}/module.prop"; fi
 }

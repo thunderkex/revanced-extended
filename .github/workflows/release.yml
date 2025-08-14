@@ -1,0 +1,130 @@
+name: Release Management
+
+on:
+  workflow_call:
+    inputs:
+      version-code:
+        description: 'Version code for the release'
+        type: string
+        required: true
+      release-date:
+        description: 'Release date string'
+        type: string
+        required: true
+      build-log:
+        description: 'Build log content'
+        type: string
+        required: true
+
+env:
+  RELEASE_NAME: ReVanced eXtended v${{ inputs.release-date }}
+  RELEASE_TAG: ${{ inputs.version-code }}
+
+jobs:
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Prepare Release Artifacts
+        run: |
+          # Ensure build directory exists
+          if [ ! -d "build" ]; then
+            echo "Build directory not found, creating empty directory"
+            mkdir -p build
+            echo "No artifacts to release" > build/README.txt
+          fi
+          
+          # List all artifacts
+          echo "Release artifacts:"
+          find build -type f -name "*" | sort
+
+      - name: Upload Release
+        uses: svenstaro/upload-release-action@2.11.2
+        with:
+          body: ${{ inputs.build-log }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./build/*
+          release_name: ${{ env.RELEASE_NAME }}
+          tag: ${{ env.RELEASE_TAG }}
+          file_glob: true
+          overwrite: true
+          prerelease: false
+          make_latest: true
+
+      - name: Generate Release Summary
+        run: |
+          echo "## Release Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Release**: ${{ env.RELEASE_NAME }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tag**: ${{ env.RELEASE_TAG }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Artifacts**: $(find build -type f | wc -l) files" >> $GITHUB_STEP_SUMMARY
+          echo "- **Release URL**: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ env.RELEASE_TAG }}" >> $GITHUB_STEP_SUMMARY
+
+  update-metadata:
+    name: Update Magisk Metadata
+    needs: create-release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout Update Branch
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git checkout -f update 2>/dev/null || git switch --discard-changes --orphan update
+
+      - name: Generate Magisk Update JSONs
+        run: |
+          # Function to generate update JSON
+          get_update_json() {
+            cat << EOF
+          {
+            "version": "$1",
+            "versionCode": ${{ inputs.version-code }},
+            "zipUrl": "$2",
+            "changelog": "https://raw.githubusercontent.com/${{ github.repository }}/update/build.md"
+          }
+          EOF
+          }
+
+          # Process Magisk modules
+          cd build 2>/dev/null || { echo "No build directory found"; exit 0; }
+          
+          for OUTPUT in *magisk*.zip; do
+            [ "$OUTPUT" = "*magisk*.zip" ] && continue
+            
+            # Extract module properties
+            if ZIP_CONTENT=$(unzip -p "$OUTPUT" module.prop 2>/dev/null); then
+              if UPDATE_JSON=$(echo "$ZIP_CONTENT" | grep updateJson | cut -d'=' -f2); then
+                VER=$(echo "$ZIP_CONTENT" | grep version= | cut -d'=' -f2)
+                DOWNLOAD_URL="${{ github.server_url }}/${{ github.repository }}/releases/download/${{ inputs.version-code }}/${OUTPUT}"
+                
+                # Generate update JSON file
+                get_update_json "$VER" "$DOWNLOAD_URL" > "../${UPDATE_JSON##*/}"
+                echo "Generated update JSON for: $OUTPUT"
+              fi
+            fi
+          done
+          
+          cd ..
+          
+          # Ensure at least one update file exists
+          find . -name "*-update.json" -type f | head -1 || echo '{}' > dummy-update.json
+
+      - name: Commit Metadata Updates
+        uses: stefanzweifel/git-auto-commit-action@v6.0.1
+        with:
+          branch: update
+          skip_checkout: true
+          file_pattern: build.md *-update.json
+          commit_message: "chore: update metadata for version ${{ inputs.version-code }}"
+          commit_user_name: github-actions[bot]
+          commit_user_email: github-actions[bot]@users.noreply.github.com

@@ -1,0 +1,48 @@
+name: Setup Environment
+
+on:
+  workflow_call:
+    inputs:
+      java-version:
+        description: 'Java version to setup'
+        type: string
+        required: false
+        default: '21'
+      java-distribution:
+        description: 'Java distribution to use'
+        type: string
+        required: false
+        default: 'temurin'
+    outputs:
+      cache-hit:
+        description: 'Whether gradle cache was hit'
+        value: ${{ jobs.setup.outputs.cache-hit }}
+
+jobs:
+  setup:
+    name: Setup Build Environment
+    runs-on: ubuntu-latest
+    outputs:
+      cache-hit: ${{ steps.gradle-cache.outputs.cache-hit }}
+    
+    steps:
+      - name: Setup Java
+        uses: actions/setup-java@v4.7.1
+        with:
+          distribution: ${{ inputs.java-distribution }}
+          java-version: ${{ inputs.java-version }}
+
+      - name: Setup Gradle Cache
+        id: gradle-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: gradle-
+
+      - name: Validate Environment
+        run: |
+          echo "Java version: $(java -version 2>&1 | head -1)"
+          echo "Gradle cache hit: ${{ steps.gradle-cache.outputs.cache-hit }}"

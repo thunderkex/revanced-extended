@@ -1,25 +1,61 @@
 name: Build Modules
+
 on:
   workflow_call:
     inputs:
       from_ci:
+        description: 'Whether called from CI workflow'
         type: boolean
         required: false
         default: true
-
   workflow_dispatch:
+    inputs:
+      force_rebuild:
+        description: 'Force rebuild even if artifacts exist'
+        type: boolean
+        required: false
+        default: false
+
+env:
+  JAVA_VERSION: '21'
+  JAVA_DISTRIBUTION: 'temurin'
 
 jobs:
-  run:
-    permissions: write-all
+  setup:
+    name: Setup Environment
     runs-on: ubuntu-latest
+    outputs:
+      version_code: ${{ steps.version.outputs.version_code }}
+      date: ${{ steps.date.outputs.date }}
     steps:
-      - uses: actions/setup-java@v4.7.1
-        with:
-          distribution: "temurin"
-          java-version: "21"
+      - name: Generate Version Code
+        id: version
+        run: echo "version_code=$(date +%Y%m%d%H%M)" >> $GITHUB_OUTPUT
 
-      - uses: actions/cache@v4
+      - name: Generate Date
+        id: date
+        run: echo "date=$(date +%y.%m.%d)" >> $GITHUB_OUTPUT
+
+  build:
+    name: Build ReVanced Modules
+    needs: setup
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+    outputs:
+      build_log: ${{ steps.output.outputs.build_log }}
+      artifacts_path: ${{ steps.prepare.outputs.artifacts_path }}
+    
+    steps:
+      - name: Setup Java
+        uses: actions/setup-java@v4.7.1
+        with:
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Setup Gradle Cache
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
@@ -27,134 +63,149 @@ jobs:
           key: gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: gradle-
 
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v5.0.0
         with:
           fetch-depth: 0
           submodules: true
 
-      - name: Update config
+      - name: Update Configuration
         if: ${{ inputs.from_ci }}
         run: |
-          if git checkout origin/update build.md; then
+          if git checkout origin/update build.md 2>/dev/null; then
             UPDATE_CFG=$(./build.sh config.toml --config-update)
-            if [ "$UPDATE_CFG" ]; then
+            if [ -n "$UPDATE_CFG" ]; then
               echo "$UPDATE_CFG" > config.json
+              echo "✅ Configuration updated"
+            else
+              echo "ℹ️ No configuration updates needed"
             fi
+          else
+            echo "ℹ️ No previous build found, will use default config"
           fi
 
-      - name: Get next version code
-        id: next_ver_code
+      - name: Build Modules and APKs
         run: |
-          echo "NEXT_VER_CODE=$(date +%Y%m%d%H%M)" >> $GITHUB_OUTPUT
-
-      - name: Build modules/APKs
-        run: if [ -f "config.json" ]; then ./build.sh config.json; else ./build.sh config.toml; fi
+          echo "🚀 Starting build process..."
+          
+          if [ -f "config.json" ]; then 
+            echo "📄 Using updated configuration"
+            ./build.sh config.json
+          else 
+            echo "📄 Using default configuration"
+            ./build.sh config.toml
+          fi
+          
+          echo "✅ Build process completed"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: $GITHUB_REPOSITORY
-          NEXT_VER_CODE: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          NEXT_VER_CODE: ${{ needs.setup.outputs.version_code }}
 
-      - name: Get output
-        id: get_output
+      - name: Prepare Build Output
+        id: output
         run: |
-          echo "DATE=$(date +%y.%m.%d)" >> "$GITHUB_OUTPUT"
+          # Generate build log output
           DELIM="$(openssl rand -hex 8)"
-          echo "BUILD_LOG<<${DELIM}" >> "$GITHUB_OUTPUT"
+          echo "build_log<<${DELIM}" >> "$GITHUB_OUTPUT"
           cat build.md >> "$GITHUB_OUTPUT"
           echo "${DELIM}" >> "$GITHUB_OUTPUT"
+          
+          # Backup build log for other jobs
           cp -f build.md build.tmp
+          
+          echo "📊 Build artifacts prepared"
 
-      - name: Get Date
-        id: date
+      - name: Prepare Artifacts
+        id: prepare
         run: |
-          echo "DATE=$(date +%Y%m%d)" >> "$GITHUB_OUTPUT"
+          echo "artifacts_path=./build" >> "$GITHUB_OUTPUT"
+          
+          if [ -d "build" ] && [ "$(ls -A build)" ]; then
+            echo "📦 Build artifacts:"
+            find build -type f -name "*.apk" -o -name "*.zip" | sort | while read file; do
+              echo "  - $(basename "$file") ($(du -h "$file" | cut -f1))"
+            done
+          else
+            echo "⚠️ No build artifacts found"
+          fi
 
-      - name: Upload modules to release
-        uses: svenstaro/upload-release-action@2.11.2
-        with:
-          body: ${{ steps.get_output.outputs.BUILD_LOG }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./build/*
-          release_name: ReVanced eXtended v${{ steps.get_output.outputs.DATE }}
-          tag: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
-          file_glob: true
-          overwrite: true
-          prerelease: false
-          make_latest: true
+  release:
+    name: Create Release
+    needs: [setup, build]
+    uses: ./.github/workflows/release.yml
+    permissions:
+      contents: write
+    secrets: inherit
+    with:
+      version-code: ${{ needs.setup.outputs.version_code }}
+      release-date: ${{ needs.setup.outputs.date }}
+      build-log: ${{ needs.build.outputs.build_log }}
 
-      - name: Update changelog and Magisk update json
-        id: update_config
+  notify:
+    name: Send Notifications
+    needs: [setup, build, release]
+    runs-on: ubuntu-latest
+    env:
+      TG_TOKEN: ${{ secrets.TG_TOKEN }}
+      CHAT_ID: ${{ secrets.CHAT_ID }}
+    
+    steps:
+      - name: Send Telegram Notification
+        if: env.TG_TOKEN != ''
         run: |
-          git checkout -f update || git switch --discard-changes --orphan update
-          cp -f build.tmp build.md
-          get_update_json() {
-            echo "{
-            \"version\": \"$1\",
-            \"versionCode\": ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }},
-            \"zipUrl\": \"$2\",
-            \"changelog\": \"https://raw.githubusercontent.com/$GITHUB_REPOSITORY/update/build.md\"
-          }"
-          }
+          cd build 2>/dev/null || { echo "❌ Build folder not found"; exit 1; }
 
-          cd build || { echo "build folder not found"; exit 1; }
-          for OUTPUT in *magisk*.zip; do
-            [ "$OUTPUT" = "*magisk*.zip" ] && continue
-            ZIP_S=$(unzip -p "$OUTPUT" module.prop)
-            if ! UPDATE_JSON=$(echo "$ZIP_S" | grep updateJson); then continue; fi
-            UPDATE_JSON="${UPDATE_JSON##*/}"
-            VER=$(echo "$ZIP_S" | grep version=)
-            VER="${VER##*=}"
-            DLURL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}/${OUTPUT}"
-            get_update_json "$VER" "$DLURL" >"../$UPDATE_JSON"
-          done
-          cd ..
-
-          find . -name "*-update.json" | grep . || : >dummy-update.json
-
-      - name: Report to Telegram
-        env:
-          TG_TOKEN: ${{ secrets.TG_TOKEN }}
-          CHAT_ID: ${{ secrets.CHAT_ID }}
-        if: env.TG_TOKEN != null
-        run: |
-          cd build || { echo "build folder not found"; exit 1; }
-
+          # Prepare message components
           NL=$'\n'
           APKS=""
           MODULES=""
           CHAT_ID=${CHAT_ID}
+          
           for OUTPUT in *; do
-            DL_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}/${OUTPUT}"
+            DL_URL="${{ github.server_url }}/${{ github.repository }}/releases/download/${{ needs.setup.outputs.version_code }}/${OUTPUT}"
             if [[ $OUTPUT = *.apk ]]; then
               APKS+="${NL}📦[${OUTPUT}](${DL_URL})"
             elif [[ $OUTPUT = *.zip ]]; then
               MODULES+="${NL}📦[${OUTPUT}](${DL_URL})"
             fi
           done
+          
+          # Clean up message formatting
           MODULES=${MODULES#"$NL"}
           APKS=${APKS#"$NL"}
 
+          # Format build log for Telegram
           BODY="$(sed 's/^\* \*\*/↪ \*\*/g; s/^\* `/↪ \*\*/g; s/`/\*/g; s/^\* /\↪/g; s/\*\*/\*/g; s/###//g; s/^- /↪ /g; /^==/d;' ../build.md)"
-          MSG="*New build!*
+          
+          # Compose final message
+          MSG="🚀 *New ReVanced eXtended Build!*
 
           ${BODY}
-          *[arm64-v8a]*
-          *▼ Download Links:*
-          Modules:
+          
+          *📱 Architecture: [arm64-v8a]*
+          
+          *📥 Download Links:*
+          
+          📂 *Modules:*
           ${MODULES}
 
-          APKs:
+          📱 *APKs:*
           ${APKS}
-          "
-          echo "'$MSG'"
+          
+          ⭐ _Powered by ReVanced Extended_"
+          
+          # Truncate message if too long
           MSG=${MSG:0:9450}
-          POST="https://api.telegram.org/bot${TG_TOKEN}/sendMessage"
-          curl -X POST --data-urlencode "parse_mode=Markdown" --data-urlencode "disable_web_page_preview=true" --data-urlencode "text=${MSG}" --data-urlencode "message_thread_id=26772" --data-urlencode "chat_id=${CHAT_ID}" "$POST"
-
-      - uses: stefanzweifel/git-auto-commit-action@v6.0.1
-        with:
-          branch: update
-          skip_checkout: true
-          file_pattern: build.md *-update.json
-          commit_message: Bump version ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
+          
+          # Send to Telegram
+          POST_URL="https://api.telegram.org/bot${TG_TOKEN}/sendMessage"
+          curl -s -X POST \
+            --data-urlencode "parse_mode=Markdown" \
+            --data-urlencode "disable_web_page_preview=true" \
+            --data-urlencode "text=${MSG}" \
+            --data-urlencode "message_thread_id=26772" \
+            --data-urlencode "chat_id=${CHAT_ID}" \
+            "$POST_URL" \
+          && echo "✅ Telegram notification sent successfully" \
+          || echo "❌ Failed to send Telegram notification"

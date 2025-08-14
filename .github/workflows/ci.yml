@@ -1,56 +1,97 @@
-name: CI
+name: Continuous Integration
+
 on:
   workflow_dispatch:
+    inputs:
+      force_build:
+        description: 'Force build even if no updates detected'
+        required: false
+        default: false
+        type: boolean
   schedule:
-    - cron: "0 16 * * *"
+    - cron: "0 16 * * *"  # Daily at 4 PM UTC
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  CLEANUP_RETENTION_DAYS: 10
+
 jobs:
-  check:
-    permissions: write-all
+  detect-changes:
+    name: Detect Changes
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
+    outputs:
+      should_build: ${{ steps.check.outputs.should_build }}
+      
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
+      - name: Checkout Repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Should build?
-        id: should_build
-        shell: bash
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check for Updates
+        id: check
         run: |
-          if ! git checkout origin/update build.md; then
-            echo "first time building!"
-            echo "SHOULD_BUILD=1" >> $GITHUB_OUTPUT
+          should_build="false"
+          
+          # Force build if manually triggered with force_build input
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.force_build }}" == "true" ]]; then
+            echo "Force build requested"
+            should_build="true"
+          # Check if this is first build
+          elif ! git checkout origin/update build.md 2>/dev/null; then
+            echo "First time building - no previous build.md found"
+            should_build="true"
+          # Check for configuration updates
           else
-            UPDATE_CFG=$(./build.sh config.toml --config-update)
-            if [ "$UPDATE_CFG" ]; then
-              echo "'$UPDATE_CFG'"
-              echo "SHOULD_BUILD=1" >> $GITHUB_OUTPUT
+            echo "Checking for configuration updates..."
+            if UPDATE_CFG=$(./build.sh config.toml --config-update 2>/dev/null); then
+              if [[ -n "$UPDATE_CFG" ]]; then
+                echo "Configuration updates detected"
+                echo "Updates: $UPDATE_CFG"
+                should_build="true"
+              else
+                echo "No updates detected"
+              fi
             else
-              echo "SHOULD_BUILD=0" >> $GITHUB_OUTPUT
+              echo "Failed to check for updates, forcing build"
+              should_build="true"
             fi
           fi
+          
+          echo "should_build=$should_build" >> $GITHUB_OUTPUT
+          echo "Build required: $should_build"
 
-      - name: Clear older runs
+      - name: Cleanup Old Workflow Runs
+        if: success()
+        run: |
+          echo "Cleaning up old workflow runs..."
+          gh run list \
+            --workflow "${{ github.workflow }}" \
+            --limit 100 \
+            --json databaseId \
+            --jq '.[10:][].databaseId' \
+          | xargs -I{} gh api \
+            --method DELETE \
+            "repos/${{ github.repository }}/actions/runs/{}" \
+          || echo "Cleanup completed with some errors (expected)"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh run list --workflow "${{ github.workflow }}" -L400 --json databaseId -q '.[].databaseId' | 
-          tail -n+10 | 
-          xargs -I{} gh api "repos/${{ github.repository }}/actions/runs/{}" -X DELETE || true
-
-    outputs:
-      SHOULD_BUILD: ${{ steps.should_build.outputs.SHOULD_BUILD }}
 
   build:
-    permissions: write-all
-    needs: check
-    if: needs.check.outputs.SHOULD_BUILD == '1'
+    name: Build Modules
+    needs: detect-changes
+    if: needs.detect-changes.outputs.should_build == 'true'
     uses: ./.github/workflows/build.yml
+    permissions:
+      contents: write
+      actions: read
     secrets: inherit
+    with:
+      from_ci: true
