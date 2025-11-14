@@ -1,7 +1,7 @@
 **ReVanced Magisk Module** 🎉
 
 *<h align="center">
-[![Total Downloads](https://img.shields.io/github/downloads/thunderkex/revanced-extended/total?style=badge)](https://github.com/thunderkex/revanced-extended/releases)
+[![Total Downloads](https://img.shields.io/github/downloads/thunderkex/revanced-extended/total)](https://github.com/thunderkex/revanced-extended/releases)
 [![Latest Downloads](https://img.shields.io/github/downloads/thunderkex/revanced-extended/latest/total?style=badge)](https://github.com/thunderkex/revanced-extended/releases/latest)
 [![Latest Release](https://img.shields.io/github/v/release/thunderkex/revanced-extended?style=badge)](https://github.com/thunderkex/revanced-extended/releases/latest)
 [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=badge&logo=telegram&logoColor=white)](https://t.me/thunderkexSupport)
