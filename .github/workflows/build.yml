@@ -28,7 +28,7 @@ jobs:
           restore-keys: gradle-
 
       - name: Checkout
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v5.0.1
         with:
           fetch-depth: 0
           submodules: true
