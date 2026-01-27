@@ -18,6 +18,7 @@ Do not download modules from 3rd party sources like random websites you found on
   <li><a href="https://github.com/crimera/piko">Crimera</a> : Twitter/X piko 🐦</li>
   <li><a href="https://github.com/inotia00/revanced-patches">inotia00</a> : Youtube & Youtube Music 🎵</li>
   <li><a href="https://github.com/ReVanced/revanced-patches">ReVanced</a> : Tiktok 🎵</li>
+  <li><a href="https://github.com/wchill/rvx-morphed">RVX Morphed</a> : : Youtube, Youtube Music, Reddit 🎵</li>
 </ul>
 </details>
 
