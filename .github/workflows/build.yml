@@ -157,7 +157,7 @@ jobs:
           curl -X POST --data-urlencode "parse_mode=Markdown" --data-urlencode "disable_web_page_preview=true" --data-urlencode "text=${MSG}" --data-urlencode "message_thread_id=26772" --data-urlencode "chat_id=${CHAT_ID}" "$POST"
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.x'
           
