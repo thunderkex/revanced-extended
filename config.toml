@@ -2,6 +2,7 @@ enable-magisk-update = true
 parallel-jobs = 1
 compression-level = 9
 riplib = true
+remove-rv-integrations-checks = true
 # add 'enabled = false' for not patching a specific app or remove it from the config
 # see https://github.com/j-hc/revanced-magisk-module/blob/main/CONFIG.md for more detailed explanations
 
@@ -12,7 +13,7 @@ archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 patches-source = "crimera/piko"
 included-patches = "'Hide For You' 'Hide Live Threads' 'Disable chirp font' 'Remove view count' 'Hide Banner' 'Hide FAB' 'Hide FAB Menu Buttons' 'Hide Promoted Trends' 'Hide Community Notes' 'Google Ads Patch'"
 integrations-source = "crimera/revanced-integrations"
-enabled = false
+enabled = true
 
 [X-piko-dev]
 apkmirror-dlurl = "https://apkmirror.com/apk/twitter-inc/twitter/"
@@ -21,49 +22,46 @@ patches-source = "crimera/piko"
 included-patches = "'Hide For You' 'Hide Live Threads' 'Disable chirp font' 'Remove view count' 'Hide Banner' 'Hide FAB' 'Hide FAB Menu Buttons' 'Hide Promoted Trends' 'Hide Community Notes' 'Google Ads Patch'"
 integrations-source = "crimera/revanced-integrations"
 patches-version = "dev"
-enabled = false
+enabled = true
 
 [TikTok]
+build-mode = "both"
 uptodown-dlurl = "https://tiktok.en.uptodown.com/android"
 apkmirror-dlurl = "https://apkmirror.com/apk/tiktok-pte-ltd/tik-tok-including-musical-ly"
 included-patches = "'SIM spoof'"
-arch = "arm64-v8a"
 enabled = false
 
 [Facebook]
+build-mode = "both"
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-2/facebook"
-arch = "arm64-v8a"
 
 [Instagram]
+build-mode = "both"
 uptodown-dlurl = "https://instagram.en.uptodown.com/android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/instagram-instagram"
-arch = "arm64-v8a"
 
 [Gphotos]
 build-mode = "both"
-arch = "both"
-version = "auto"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/photos/"
 uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
 archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
 
 [Soundcloud]
+build-mode = "both"
 uptodown-dlurl = "https://soundcloud.en.uptodown.com/android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/soundcloud/soundcloud-soundcloud"
-arch = "arm64-v8a"
 
 [Lightroom]
+build-mode = "both"
 uptodown-dlurl = "https://adobe-lightroom-mobile.en.uptodown.com/android"
 # apkmirror-dlurl = "https://www.apkmirror.com/apk/adobe/lightroom"
-arch = "arm64-v8a"
 
 [Spotify]
+build-mode = "both"
 # apkmirror-dlurl = "https://www.apkmirror.com/apk/spotify-ab/"
 uptodown-dlurl = "https://spotify.en.uptodown.com/android"
 patches-source = "anddea/revanced-patches"
-version = "9.0.36.683"
-arch = "arm64-v8a"
 
 [YouTube-Ex]
 uptodown-dlurl = "https://youtube.en.uptodown.com/android"
@@ -99,4 +97,32 @@ patches-source = "inotia00/revanced-patches"
 excluded-patches = "'Custom branding icon for YouTube Music' 'Custom branding name for YouTube Music' 'Return YouTube Username'"
 build-mode = "both"
 patches-version = "dev"
-arch = "arm64-v8a"  
+arch = "arm64-v8a" 
+
+[Youtube-Ex-morphed]
+enabled = true
+build-mode = "both"
+patches-source = "wchill/rvx-morphed"
+cli-source = "MorpheApp/morphe-cli"
+uptodown-dlurl = "https://youtube.en.uptodown.com/android"
+apkmirror-dlurl = "https://apkmirror.com/apk/google-inc/youtube"
+archive-dlurl = "https://archive.org/download/geologically/apks/com.google.android.youtube"
+
+[Music-Ex-morphed]
+enabled = true
+build-mode = "both"
+arch = "arm64-v8a"
+patches-source = "wchill/rvx-morphed"
+cli-source = "MorpheApp/morphe-cli"
+uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
+apkmirror-dlurl = "https://apkmirror.com/apk/google-inc/youtube-music"
+archive-dlurl = "https://archive.org/download/geologically/apks/com.google.android.apps.youtube.music"
+
+[reddit-Ex]
+enabled = true 
+build-mode = "both"
+patches-source = "wchill/rvx-morphed"
+cli-source = "MorpheApp/morphe-cli"
+uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
+apkmirror-dlurl = "https://apkmirror.com/apk/redditinc/reddit"
+# archive-dlurl = "https://archive.org/download/geologically/apks/com.reddit.frontpage"
