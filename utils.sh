@@ -91,7 +91,12 @@ get_prebuilts() {
 			resp=$(gh_req "$rv_rel" -) || return 1
 			tag_name=$(jq -r '.tag_name' <<<"$resp")
 			matches=$(jq -e ".assets | map(select(.name | endswith(\"$ext\")))" <<<"$resp")
-			if [ "$(jq 'length' <<<"$matches")" -ne 1 ]; then
+			local matches_count=$(jq 'length' <<<"$matches")
+			if [ "$matches_count" -eq 0 ]; then
+				epr "No assets with extension '$ext' found in release '$rv_rel'"
+				return 1
+			fi
+			if [ "$matches_count" -ne 1 ]; then
 				epr "More than 1 asset was found for this cli release. Fallbacking to the first one found..."
 			fi
 			asset=$(jq -r ".[0]" <<<"$matches")
