@@ -13,7 +13,7 @@ archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
 patches-source = "crimera/piko"
 included-patches = "'Hide For You' 'Hide Live Threads' 'Disable chirp font' 'Remove view count' 'Hide Banner' 'Hide FAB' 'Hide FAB Menu Buttons' 'Hide Promoted Trends' 'Hide Community Notes' 'Google Ads Patch'"
 integrations-source = "crimera/revanced-integrations"
-enabled = true
+enabled = false
 
 [X-piko-dev]
 apkmirror-dlurl = "https://apkmirror.com/apk/twitter-inc/twitter/"
@@ -22,7 +22,7 @@ patches-source = "crimera/piko"
 included-patches = "'Hide For You' 'Hide Live Threads' 'Disable chirp font' 'Remove view count' 'Hide Banner' 'Hide FAB' 'Hide FAB Menu Buttons' 'Hide Promoted Trends' 'Hide Community Notes' 'Google Ads Patch'"
 integrations-source = "crimera/revanced-integrations"
 patches-version = "dev"
-enabled = true
+enabled = false
 
 [TikTok]
 build-mode = "both"
