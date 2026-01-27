@@ -168,7 +168,7 @@ jobs:
         env:
           RELEASE_TAG: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-        run: python scripts/update_readme.py
+        run: python ./scripts/update_readme.py
 
       - uses: stefanzweifel/git-auto-commit-action@v7.1.0
         with:
