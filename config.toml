@@ -111,7 +111,6 @@ archive-dlurl = "https://archive.org/download/geologically/apks/com.google.andro
 [Music-Ex-morphed]
 enabled = true
 build-mode = "both"
-arch = "arm64-v8a"
 patches-source = "wchill/rvx-morphed"
 cli-source = "MorpheApp/morphe-cli"
 uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
