@@ -166,10 +166,17 @@ wait
 rm -rf temp/tmp.*
 if [ -z "$(ls -A1 "${BUILD_DIR}")" ]; then abort "All builds failed."; fi
 
-log "\n-Install [MicroG-RE](https://github.com/WSTxda/MicroG-RE/releases) for non-root YouTube and YT Music APKs"
-log "-Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) module to detach patched apps from being updated by Play Store\n"
-log "\n[revanced-extended](https://github.com/thunderkex/revanced-extended)\n"
+log "\n---\n"
+log "## 📋 Build Information\n"
+log "✨ **Successfully built ReVanced Extended apps!**\n"
+log "### 📱 Available Apps\n"
 log "$(cat "$TEMP_DIR"/*-rv/changelog.md)"
+log "\n### 🔧 Installation Notes\n"
+log "- 📥 **MicroG Required**: Install [MicroG-RE](https://github.com/WSTxda/MicroG-RE/releases) for non-root YouTube and YT Music APKs"
+log "- 🛡️ **Prevent Updates**: Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) module to detach patched apps from Play Store updates\n"
+log "### 🌟 Project Links\n"
+log "- 📦 [ReVanced Extended Repository](https://github.com/thunderkex/revanced-extended)"
+log "- 💬 [Telegram Support Group](https://t.me/thunderkexSupport)"
 
 SKIPPED=$(cat "$TEMP_DIR"/skipped 2>/dev/null | sort -u || :)
 if [ -n "$SKIPPED" ]; then

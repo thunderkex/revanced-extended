@@ -25,10 +25,81 @@ Do not download modules from 3rd party sources like random websites you found on
 **What is ReVanced Extended Magisk Module?** 🤔
 This is an extensive ReVanced builder that helps you create custom Magisk modules and non-root APKs with ease! 🎉
 
-**Get Started!** 🚀
-Get the [latest CI release](https://github.com/thunderkex/revanced-extended/releases).
+**📥 Quick Downloads** 🚀
+<div align="center">
 
-**Important:** If you're using Magisk modules, use [**zygisk-detach**](https://github.com/j-hc/zygisk-detach) to detach YouTube and YT Music from Play Store. 📲
+<!-- DOWNLOAD_LINKS_START -->
+*📅 Last updated: Auto-generated from builds | Links preserved between releases*
+
+> **Note:** Download links are preserved between builds. Links point to the release where each app was last successfully built. If an app fails to build, its previous working link remains available.
+
+### 🎬 YouTube Apps
+| App | 📦 Magisk Module | 📱 APK |
+|-----|------------------|--------|
+| **YouTube Extended Dev** | [![Download](https://img.shields.io/badge/Download-Magisk-00C853?style=for-the-badge&logo=android)](https://github.com/thunderkex/revanced-extended/releases/download/202601270258/youtube-ex-dev-revanced-magisk-v20.05.46-arm64-v8a.zip) | [![Download](https://img.shields.io/badge/Download-APK-FF6F00?style=for-the-badge&logo=android)](https://github.com/thunderkex/revanced-extended/releases/download/202601270258/youtube-ex-dev-revanced-v20.05.46-arm64-v8a.apk) |
+| **YouTube Extended Morphed** | [![Download](https://img.shields.io/badge/Download-Magisk-00C853?style=for-the-badge&logo=android)](https://github.com/thunderkex/revanced-extended/releases/download/202601270258/youtube-ex-morphed-revanced-magisk-v20.05.46-all.zip) | [![Download](https://img.shields.io/badge/Download-APK-FF6F00?style=for-the-badge&logo=android)](https://github.com/thunderkex/revanced-extended/releases/download/202601270258/youtube-ex-morphed-revanced-v20.05.46-all.apk) |
+
+### 🎵 YouTube Music Apps
+| App | 📦 Magisk Module | 📱 APK |
+|-----|------------------|--------|
+| **YouTube Music Extended Dev** | [![Download](https://img.shields.io/badge/Download-Magisk-00C853?style=for-the-badge&logo=android)](https://github.com/thunderkex/revanced-extended/releases/download/202601270258/music-ex-dev-revanced-magisk-v8.30.54-arm64-v8a.zip) | [![Download](https://img.shields.io/badge/Download-APK-FF6F00?style=for-the-badge&logo=android)](https://github.com/thunderkex/revanced-extended/releases/download/202601270258/music-ex-dev-revanced-v8.30.54-arm64-v8a.apk) |
+<!-- DOWNLOAD_LINKS_END -->
+
+### 📂 All Releases
+[![All Downloads](https://img.shields.io/badge/View_All_Downloads-2962FF?style=for-the-badge&logo=github)](https://github.com/thunderkex/revanced-extended/releases/latest)
+
+</div>
+
+**⚠️ Important Notes:**
+- 🔧 For **Magisk modules**: Use [**zygisk-detach**](https://github.com/j-hc/zygisk-detach) to prevent Play Store updates
+- 📦 For **APK installs**: Install [**MicroG-RE**](https://github.com/WSTxda/MicroG-RE/releases) for YouTube/YT Music
+- 📱 Downloads are for **arm64-v8a** (most modern devices). For other architectures, visit [all releases](https://github.com/thunderkex/revanced-extended/releases/latest)
+
+---
+
+**📦 Available Packages** 🎁
+<details><summary><big>Click to see all available apps!</big></summary>
+
+### 📱 **YouTube Apps**
+| App | Package Name | Description | Patches Source |
+|-----|--------------|-------------|----------------|
+| YouTube Extended | `com.google.android.youtube` | YouTube with RVX patches | [inotia00/anddea](https://github.com/anddea/revanced-patches) |
+| YouTube Extended Morphed | `com.google.android.youtube` | YouTube with Morphed patches | [wchill/rvx-morphed](https://github.com/wchill/rvx-morphed) |
+| YouTube Music Extended | `com.google.android.apps.youtube.music` | YT Music with RVX patches | [inotia00/anddea](https://github.com/anddea/revanced-patches) |
+| YouTube Music Morphed | `com.google.android.apps.youtube.music` | YT Music with Morphed patches | [wchill/rvx-morphed](https://github.com/wchill/rvx-morphed) |
+
+### 🐦 **Social Media Apps**
+| App | Package Name | Description | Patches Source |
+|-----|--------------|-------------|----------------|
+| X/Twitter (Piko) | `com.twitter.android` | Twitter with Piko patches | [crimera/piko](https://github.com/crimera/piko) |
+| Reddit Extended | `com.reddit.frontpage` | Reddit with Morphed patches | [wchill/rvx-morphed](https://github.com/wchill/rvx-morphed) |
+| TikTok | `com.zhiliaoapp.musically` | TikTok with ReVanced patches | [ReVanced](https://github.com/ReVanced/revanced-patches) |
+| Facebook | `com.facebook.katana` | Facebook with patches | [ReVanced](https://github.com/ReVanced/revanced-patches) |
+| Instagram | `com.instagram.android` | Instagram with patches | [ReVanced](https://github.com/ReVanced/revanced-patches) |
+
+### 🎵 **Music & Media Apps**
+| App | Package Name | Description | Patches Source |
+|-----|--------------|-------------|----------------|
+| Spotify | `com.spotify.music` | Spotify with patches | [anddea](https://github.com/anddea/revanced-patches) |
+| SoundCloud | `com.soundcloud.android` | SoundCloud with patches | [ReVanced](https://github.com/ReVanced/revanced-patches) |
+
+### 📸 **Photo & Creative Apps**
+| App | Package Name | Description | Patches Source |
+|-----|--------------|-------------|----------------|
+| Google Photos | `com.google.android.apps.photos` | Google Photos with patches | [ReVanced](https://github.com/ReVanced/revanced-patches) |
+| Lightroom | `com.adobe.lrmobile` | Adobe Lightroom with patches | [ReVanced](https://github.com/ReVanced/revanced-patches) |
+
+### 📥 **Download Options**
+Each app is available in two formats:
+- **📦 Magisk Module** (.zip) - For rooted devices, auto-updates with mount
+- **📱 APK** (.apk) - For non-root devices, requires MicroG for YouTube/YT Music
+
+### 🏗️ **Architecture Support**
+- **arm64-v8a** - Modern 64-bit ARM devices (recommended)
+- **arm-v7a** - Older 32-bit ARM devices
+- **all** - Universal builds (where applicable)
+
+</details>
 
 **Features Galore!** 🎊
 <details><summary><big>Click to see the features!</big></summary>
