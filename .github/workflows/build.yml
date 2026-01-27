@@ -18,6 +18,13 @@ jobs:
         with:
           distribution: "temurin"
           java-version: "21"
+      
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.9'
+          
+      - name: Install Python dependencies
+        run: pip install requests
 
       - uses: actions/cache@v5
         with:
@@ -82,6 +89,12 @@ jobs:
           overwrite: true
           prerelease: false
           make_latest: true
+
+      - name: Update README with download links
+        env:
+          RELEASE_TAG: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: python ./scripts/update_readme.py
 
       - name: Update changelog and Magisk update json
         id: update_config
@@ -155,20 +168,6 @@ jobs:
           MSG=${MSG:0:9450}
           POST="https://api.telegram.org/bot${TG_TOKEN}/sendMessage"
           curl -X POST --data-urlencode "parse_mode=Markdown" --data-urlencode "disable_web_page_preview=true" --data-urlencode "text=${MSG}" --data-urlencode "message_thread_id=26772" --data-urlencode "chat_id=${CHAT_ID}" "$POST"
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.x'
-          
-      - name: Install Python dependencies
-        run: pip install requests
-
-      - name: Update README with download links
-        env:
-          RELEASE_TAG: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-        run: python ./scripts/update_readme.py
 
       - uses: stefanzweifel/git-auto-commit-action@v7.1.0
         with:
