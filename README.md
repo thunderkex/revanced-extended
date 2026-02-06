@@ -58,6 +58,13 @@ Want to include or exclude patches or patch other apps? [**See the list of patch
 
 Also, check out the [CONFIG.md](./CONFIG.md) file for more info! 📄
 
+## If you are having trouble with the classic mount method of the modules
+such as,
+- **"Reflash needed"** error after reboots
+- **"Suspicious mount detected"** warnings from root detector apps
+
+You can consider using [rvmm-zygisk-mount](https://github.com/j-hc/rvmm-zygisk-mount)
+
 **Building Locally** 🛠️
 ### On Termux
 ```console
