@@ -115,6 +115,7 @@ excluded-patches = "'Custom branding icon for YouTube' 'Custom branding name for
 build-mode = "both"
 patches-version = "dev"
 arch = "arm64-v8a"  
+enabled = false
 
 [Music-Ex-dev-morphed]
 uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
@@ -126,6 +127,7 @@ excluded-patches = "'Custom branding icon for YouTube Music' 'Custom branding na
 build-mode = "both"
 patches-version = "dev"
 arch = "arm64-v8a" 
+enabled = false
 
 [Youtube-Ex-morphed]
 build-mode = "both"
@@ -157,5 +159,4 @@ patches-source = "wchill/rvx-morphed"
 cli-source = "MorpheApp/morphe-cli"
 uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
 apkmirror-dlurl = "https://apkmirror.com/apk/redditinc/reddit"
-# archive-dlurl = "https://archive.org/download/geologically/apks/com.reddit.frontpage"
-enabled = false
+archive-dlurl = "https://archive.org/download/geologically/apks/com.reddit.frontpage"
