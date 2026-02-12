@@ -19,9 +19,9 @@ default-arch = "arm64-v8a"
 
 # === Lite Build Settings ===
 # When enabled, creates stripped versions with reduced resources
-build-lite = true
+build-lite = false
 # Also build lite versions of Magisk modules
-lite-build-modules = true
+lite-build-modules = false
 # Languages to keep in lite builds (comma-separated, e.g., "en,es,zh")
 lite-languages = "en"
 # DPIs to keep in lite builds (e.g., "xxhdpi,xxxhdpi" or "nodpi")
