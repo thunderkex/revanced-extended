@@ -1,31 +1,105 @@
-name: CI
+name: CI - ReVanced Extended
+
 on:
   workflow_dispatch:
+    inputs:
+      build_arch:
+        description: 'Architecture to build'
+        required: false
+        default: 'arm64-v8a'
+        type: choice
+        options:
+          - arm64-v8a
+          - armeabi-v7a
+          - x86_64
+          - universal
+          - all
+      build_lite:
+        description: 'Build lite variants (stripped resources)'
+        required: false
+        default: false
+        type: boolean
+      force_build:
+        description: 'Force build even if no updates'
+        required: false
+        default: false
+        type: boolean
+      release_mode:
+        description: 'Release mode'
+        required: false
+        default: 'single'
+        type: choice
+        options:
+          - single    # Replace assets in latest-build (default)
+          - versioned # Create new release for each build
   schedule:
-    - cron: "0 16 * * *"
+    - cron: "0 */4 * * *"  # Every 4 hours
+  repository_dispatch:
+    types: [patch-release]  # Triggered by watch-patches workflow
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true"
+
 jobs:
   check:
     permissions: write-all
     runs-on: ubuntu-latest
+    outputs:
+      SHOULD_BUILD: ${{ steps.should_build.outputs.SHOULD_BUILD }}
+      BUILD_ARCH: ${{ steps.build_config.outputs.BUILD_ARCH }}
+      BUILD_LITE: ${{ steps.build_config.outputs.BUILD_LITE }}
+      SINGLE_RELEASE: ${{ steps.build_config.outputs.SINGLE_RELEASE }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Cache downloaded APKs
+        uses: actions/cache@v4
+        with:
+          path: |
+            temp/*.apk
+            temp/*/*.apk
+          key: apk-cache-${{ hashFiles('config.toml') }}-${{ github.run_number }}
+          restore-keys: |
+            apk-cache-${{ hashFiles('config.toml') }}-
+            apk-cache-
+
+      - name: Cache prebuilts
+        uses: actions/cache@v4
+        with:
+          path: |
+            temp/*-rv/
+            bin/
+          key: prebuilts-${{ hashFiles('config.toml') }}
+          restore-keys: prebuilts-
 
       - name: Should build?
         id: should_build
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FORCE_BUILD: ${{ github.event.inputs.force_build || 'false' }}
         run: |
+          if [ "$FORCE_BUILD" = "true" ]; then
+            echo "Force build requested"
+            echo "SHOULD_BUILD=1" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            echo "Patch release detected via dispatch"
+            echo "SHOULD_BUILD=1" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
           if ! git checkout origin/update build.md; then
-            echo "first time building!"
+            echo "First time building!"
             echo "SHOULD_BUILD=1" >> $GITHUB_OUTPUT
           else
             UPDATE_CFG=$(./build.sh config.toml --config-update)
@@ -33,24 +107,51 @@ jobs:
               echo "'$UPDATE_CFG'"
               echo "SHOULD_BUILD=1" >> $GITHUB_OUTPUT
             else
+              echo "No updates found"
               echo "SHOULD_BUILD=0" >> $GITHUB_OUTPUT
             fi
           fi
 
-      - name: Clear older runs
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Configure build parameters
+        id: build_config
         run: |
-          gh run list --workflow "${{ github.workflow }}" -L400 --json databaseId -q '.[].databaseId' | 
-          tail -n+10 | 
-          xargs -I{} gh api "repos/${{ github.repository }}/actions/runs/{}" -X DELETE || true
-
-    outputs:
-      SHOULD_BUILD: ${{ steps.should_build.outputs.SHOULD_BUILD }}
+          # Architecture config
+          INPUT_ARCH="${{ github.event.inputs.build_arch || 'arm64-v8a' }}"
+          echo "BUILD_ARCH=$INPUT_ARCH" >> $GITHUB_OUTPUT
+          
+          # Lite build config
+          echo "BUILD_LITE=${{ github.event.inputs.build_lite || 'false' }}" >> $GITHUB_OUTPUT
+          
+          # Release mode (single by default)
+          RELEASE_MODE="${{ github.event.inputs.release_mode || 'single' }}"
+          if [ "$RELEASE_MODE" = "single" ]; then
+            echo "SINGLE_RELEASE=true" >> $GITHUB_OUTPUT
+          else
+            echo "SINGLE_RELEASE=false" >> $GITHUB_OUTPUT
+          fi
 
   build:
     permissions: write-all
     needs: check
     if: needs.check.outputs.SHOULD_BUILD == '1'
     uses: ./.github/workflows/build.yml
+    with:
+      from_ci: true
+      target_arch: ${{ needs.check.outputs.BUILD_ARCH }}
+      build_lite: ${{ needs.check.outputs.BUILD_LITE == 'true' }}
+      single_release: ${{ needs.check.outputs.SINGLE_RELEASE == 'true' }}
     secrets: inherit
+
+  # Cleanup old workflow runs (keep last 15)
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: build
+    if: always()
+    steps:
+      - name: Delete old workflow runs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh run list --repo ${{ github.repository }} --workflow "${{ github.workflow }}" -L400 --json databaseId -q '.[].databaseId' | 
+          tail -n+15 | 
+          xargs -I{} gh api "repos/${{ github.repository }}/actions/runs/{}" -X DELETE 2>/dev/null || true

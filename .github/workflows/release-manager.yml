@@ -1,0 +1,159 @@
+name: Single Release Manager
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform'
+        required: true
+        default: 'status'
+        type: choice
+        options:
+          - status     # Show current release status
+          - init       # Create release if missing
+          - clean      # Remove all assets
+          - rebuild    # Clean and re-upload from artifacts
+          - delete     # Delete release (will be recreated on next build)
+
+# Prevent concurrent release operations
+concurrency:
+  group: single-release-${{ github.repository }}
+  cancel-in-progress: false
+
+env:
+  RELEASE_TAG: "latest-build"
+  RELEASE_NAME: "ReVanced Extended - Latest Build"
+
+jobs:
+  manage-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Make scripts executable
+        run: chmod +x ./scripts/release/*.sh 2>/dev/null || true
+
+      - name: Show Release Status
+        if: ${{ inputs.action == 'status' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "=========================================="
+          echo " Release Status: ${{ env.RELEASE_TAG }}"
+          echo "=========================================="
+          
+          if gh release view "${{ env.RELEASE_TAG }}" &>/dev/null; then
+            echo "✅ Release exists"
+            echo ""
+            echo "Assets:"
+            gh release view "${{ env.RELEASE_TAG }}" --json assets \
+              --jq '.assets[] | "  - \(.name) (\(.size / 1048576 | floor)MB) - \(.downloadCount) downloads"'
+            echo ""
+            echo "Total Downloads:"
+            gh release view "${{ env.RELEASE_TAG }}" --json assets \
+              --jq '[.assets[].downloadCount] | add // 0'
+          else
+            echo "❌ Release does not exist"
+            echo "Run with 'init' to create it"
+          fi
+
+      - name: Initialize Release
+        if: ${{ inputs.action == 'init' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release view "${{ env.RELEASE_TAG }}" &>/dev/null; then
+            echo "Release already exists"
+            exit 0
+          fi
+          
+          echo "Creating release..."
+          gh release create "${{ env.RELEASE_TAG }}" \
+            --title "${{ env.RELEASE_NAME }}" \
+            --notes "🚀 **ReVanced Extended - Latest Build**
+          
+          This release is automatically updated with each CI build.
+          Assets will appear here after the next successful build.
+          
+          ---
+          *Initialized: $(date -u '+%Y-%m-%d %H:%M:%S UTC')*" \
+            --latest
+          
+          echo "✅ Release created"
+
+      - name: Clean Assets
+        if: ${{ inputs.action == 'clean' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Cleaning all assets from release..."
+          
+          ASSETS=$(gh api repos/${{ github.repository }}/releases/tags/${{ env.RELEASE_TAG }} \
+            --jq '.assets[].id' 2>/dev/null || echo "")
+          
+          if [ -z "$ASSETS" ]; then
+            echo "No assets to clean"
+            exit 0
+          fi
+          
+          for ASSET_ID in $ASSETS; do
+            gh api -X DELETE repos/${{ github.repository }}/releases/assets/$ASSET_ID
+            echo "Deleted asset: $ASSET_ID"
+          done
+          
+          echo "✅ All assets removed"
+
+      - name: Delete Release
+        if: ${{ inputs.action == 'delete' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "⚠️ Deleting release..."
+          gh release delete "${{ env.RELEASE_TAG }}" --yes --cleanup-tag 2>/dev/null || true
+          echo "✅ Release deleted (will be recreated on next build)"
+
+      - name: Rebuild from Latest Artifacts
+        if: ${{ inputs.action == 'rebuild' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Downloading latest build artifacts..."
+          
+          # Find the latest successful build run
+          RUN_ID=$(gh run list --workflow=build.yml --status=success -L1 --json databaseId -q '.[0].databaseId')
+          
+          if [ -z "$RUN_ID" ]; then
+            echo "No successful builds found"
+            exit 1
+          fi
+          
+          echo "Using artifacts from run: $RUN_ID"
+          
+          mkdir -p build
+          gh run download "$RUN_ID" -D build --pattern "build-*" || {
+            echo "Failed to download artifacts"
+            exit 1
+          }
+          
+          # Flatten directory structure
+          find build -type f \( -name "*.apk" -o -name "*.zip" \) -exec mv {} build/ \;
+          find build -type d -empty -delete
+          
+          # Clean existing assets
+          ASSETS=$(gh api repos/${{ github.repository }}/releases/tags/${{ env.RELEASE_TAG }} \
+            --jq '.assets[].id' 2>/dev/null || echo "")
+          for ASSET_ID in $ASSETS; do
+            gh api -X DELETE repos/${{ github.repository }}/releases/assets/$ASSET_ID || true
+          done
+          
+          # Upload new assets
+          for file in build/*.apk build/*.zip; do
+            [ -f "$file" ] || continue
+            echo "Uploading: $(basename "$file")"
+            gh release upload "${{ env.RELEASE_TAG }}" "$file" --clobber
+          done
+          
+          echo "✅ Release rebuilt from artifacts"

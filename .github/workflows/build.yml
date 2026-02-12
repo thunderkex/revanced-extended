@@ -1,4 +1,5 @@
-name: Build Modules
+name: Build & Release
+
 on:
   workflow_call:
     inputs:
@@ -6,20 +7,58 @@ on:
         type: boolean
         required: false
         default: true
+      target_arch:
+        type: string
+        required: false
+        default: "arm64-v8a"
+        description: "Target architecture (arm64-v8a, armeabi-v7a, x86_64, universal, all)"
+      build_lite:
+        type: boolean
+        required: false
+        default: false
+        description: "Build lite variants with stripped resources"
+      single_release:
+        type: boolean
+        required: false
+        default: true
+        description: "Use single mutable release model (replace assets in latest-build)"
 
   workflow_dispatch:
+    inputs:
+      target_arch:
+        description: 'Target architecture'
+        required: false
+        default: 'arm64-v8a'
+        type: choice
+        options:
+          - arm64-v8a
+          - armeabi-v7a
+          - x86_64
+          - universal
+          - all
+      build_lite:
+        description: 'Build lite variants'
+        required: false
+        default: false
+        type: boolean
+      single_release:
+        description: 'Use single mutable release (replaces latest-build assets)'
+        required: false
+        default: true
+        type: boolean
 
 jobs:
   run:
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-java@v5.2.0
+      - uses: actions/setup-java@v4
         with:
           distribution: "temurin"
           java-version: "21"
 
-      - uses: actions/cache@v5
+      - name: Cache Gradle
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
@@ -27,8 +66,28 @@ jobs:
           key: gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: gradle-
 
+      - name: Cache downloaded APKs
+        uses: actions/cache@v4
+        with:
+          path: |
+            temp/*.apk
+            temp/*/*.apk
+            temp/*-rv/
+          key: apk-downloads-${{ hashFiles('config.toml') }}-${{ github.run_number }}
+          restore-keys: |
+            apk-downloads-${{ hashFiles('config.toml') }}-
+            apk-downloads-
+
+      - name: Cache prebuilt tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            bin/
+            temp/apkeditor.jar
+          key: prebuilt-tools-v1
+
       - name: Checkout
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: true
@@ -36,9 +95,10 @@ jobs:
       - name: Update config
         if: ${{ inputs.from_ci }}
         run: |
-          if git checkout origin/update build.md; then
-            UPDATE_CFG=$(./build.sh config.toml --config-update)
-            if [ "$UPDATE_CFG" ]; then
+          if git checkout origin/update build.md 2>/dev/null; then
+            UPDATE_CFG=$(./build.sh config.toml --config-update 2>/dev/null || true)
+            # Only create config.json if we got valid JSON output
+            if [ -n "$UPDATE_CFG" ] && echo "$UPDATE_CFG" | jq empty 2>/dev/null; then
               echo "$UPDATE_CFG" > config.json
             fi
           fi
@@ -49,16 +109,55 @@ jobs:
           echo "NEXT_VER_CODE=$(date +%Y%m%d%H%M)" >> $GITHUB_OUTPUT
 
       - name: Build modules/APKs
-        run: if [ -f "config.json" ]; then ./build.sh config.json; else ./build.sh config.toml; fi
+        run: |
+          # Set architecture from input
+          export TARGET_ARCH="${{ inputs.target_arch || 'arm64-v8a' }}"
+          export BUILD_LITE="${{ inputs.build_lite || 'false' }}"
+          
+          if [ -f "config.json" ]; then
+            ./build.sh config.json
+          else
+            ./build.sh config.toml
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: $GITHUB_REPOSITORY
+          GITHUB_REPOSITORY: ${{ github.repository }}
           NEXT_VER_CODE: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
+
+      - name: Build lite variants
+        if: ${{ inputs.build_lite == true }}
+        env:
+          BUILD_DIR: "build"
+          LITE_BUILD_MODULES: "true"
+          LITE_LANGUAGES: "en"
+          LITE_DPI: "xxhdpi"
+          LITE_COMPRESSION: "9"
+        run: |
+          if [ -d "build" ] && command -v ./scripts/utilities/build-lite.sh &>/dev/null; then
+            ./scripts/utilities/build-lite.sh
+          fi
+
+      - name: Split APKs by architecture
+        if: ${{ inputs.target_arch == 'all' }}
+        run: |
+          if command -v ./scripts/utilities/split-apk.sh &>/dev/null; then
+            ./scripts/utilities/split-apk.sh
+          fi
 
       - name: Get output
         id: get_output
         run: |
           echo "DATE=$(date +%y.%m.%d)" >> "$GITHUB_OUTPUT"
+          
+          # Generate architecture suffix for release name
+          ARCH="${{ inputs.target_arch || 'arm64-v8a' }}"
+          if [ "$ARCH" = "all" ]; then
+            ARCH_SUFFIX=""
+          else
+            ARCH_SUFFIX=" [$ARCH]"
+          fi
+          echo "ARCH_SUFFIX=$ARCH_SUFFIX" >> "$GITHUB_OUTPUT"
+          
           DELIM="$(openssl rand -hex 8)"
           echo "BUILD_LOG<<${DELIM}" >> "$GITHUB_OUTPUT"
           cat build.md >> "$GITHUB_OUTPUT"
@@ -70,24 +169,125 @@ jobs:
         run: |
           echo "DATE=$(date +%Y%m%d)" >> "$GITHUB_OUTPUT"
 
-      - name: Upload modules to release
-        uses: svenstaro/upload-release-action@2.11.3
+      - name: Rename artifacts with architecture
+        run: |
+          cd build
+          ARCH="${{ inputs.target_arch || 'arm64-v8a' }}"
+          for f in *.apk *.zip; do
+            [ -f "$f" ] || continue
+            # Skip if already has architecture in name
+            if [[ "$f" != *"$ARCH"* ]] && [ "$ARCH" != "universal" ] && [ "$ARCH" != "all" ]; then
+              base="${f%.*}"
+              ext="${f##*.}"
+              mv "$f" "${base}-${ARCH}.${ext}" 2>/dev/null || true
+            fi
+          done
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          chmod +x ./scripts/utilities/generate-changelog.sh 2>/dev/null || true
+          if [ -f "./scripts/utilities/generate-changelog.sh" ]; then
+            RELEASE_NOTES=$(./scripts/utilities/generate-changelog.sh release-notes "${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}")
+            # Save to file for multi-line output
+            echo "$RELEASE_NOTES" > release_notes.md
+            
+            # Also generate full changelog
+            ./scripts/utilities/generate-changelog.sh generate "${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}" CHANGELOG.md
+          fi
+          
+          # Fallback to build.md if script not available
+          if [ ! -f "release_notes.md" ]; then
+            cp build.md release_notes.md
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update Single Release (latest-build)
+        if: ${{ inputs.single_release != false }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          RELEASE_TAG: "latest-build"
+          RELEASE_NAME: "ReVanced Extended - Latest Build"
+          BUILD_DIR: "build"
+        run: |
+          chmod +x ./scripts/release/post-build-release.sh 2>/dev/null || true
+          if [ -f "./scripts/release/post-build-release.sh" ]; then
+            ./scripts/release/post-build-release.sh
+          else
+            echo "::warning::post-build-release.sh not found, falling back to inline release"
+            # Inline fallback - create/update single release
+            
+            # Check if release exists
+            if ! gh release view "latest-build" &>/dev/null; then
+              echo "Creating latest-build release..."
+              gh release create "latest-build" \
+                --title "ReVanced Extended - Latest Build" \
+                --notes "Initializing..." \
+                --latest
+            fi
+            
+            # Delete existing assets
+            echo "Cleaning existing assets..."
+            ASSETS=$(gh api repos/${{ github.repository }}/releases/tags/latest-build --jq '.assets[].id' 2>/dev/null || echo "")
+            for ASSET_ID in $ASSETS; do
+              gh api -X DELETE repos/${{ github.repository }}/releases/assets/$ASSET_ID || true
+            done
+            
+            # Upload new assets
+            echo "Uploading new assets..."
+            for file in build/*.apk build/*.zip; do
+              [ -f "$file" ] || continue
+              gh release upload "latest-build" "$file" --clobber || true
+            done
+            
+            # Update release body
+            gh release edit "latest-build" \
+              --title "ReVanced Extended - Latest Build" \
+              --notes-file release_notes.md \
+              --latest
+          fi
+
+      - name: Upload to versioned release (Legacy)
+        if: ${{ inputs.single_release == false }}
+        uses: svenstaro/upload-release-action@v2
         with:
-          body: ${{ steps.get_output.outputs.BUILD_LOG }}
+          body_path: release_notes.md
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ./build/*
-          release_name: ReVanced eXtended v${{ steps.get_output.outputs.DATE }}
+          release_name: ReVanced eXtended v${{ steps.get_output.outputs.DATE }}${{ steps.get_output.outputs.ARCH_SUFFIX }}
           tag: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
           file_glob: true
           overwrite: true
           prerelease: false
           make_latest: true
 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ inputs.target_arch || 'arm64-v8a' }}-${{ github.run_number }}
+          path: ./build/*
+          retention-days: 7
+
       - name: Update changelog and Magisk update json
         id: update_config
+        env:
+          SINGLE_RELEASE: ${{ inputs.single_release }}
         run: |
+          # Save CHANGELOG.md before switching branches
+          if [ -f "CHANGELOG.md" ]; then
+            cp -f CHANGELOG.md /tmp/CHANGELOG.md
+          fi
+          
           git checkout -f update || git switch --discard-changes --orphan update
           cp -f build.tmp build.md
+          
+          # Copy generated CHANGELOG.md if it was saved
+          if [ -f "/tmp/CHANGELOG.md" ]; then
+            cp -f /tmp/CHANGELOG.md ./CHANGELOG.md
+          fi
+          
           get_update_json() {
             echo "{
             \"version\": \"$1\",
@@ -105,7 +305,13 @@ jobs:
             UPDATE_JSON="${UPDATE_JSON##*/}"
             VER=$(echo "$ZIP_S" | grep version=)
             VER="${VER##*=}"
-            DLURL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}/${OUTPUT}"
+            
+            # Use single-release tag or versioned tag based on mode
+            if [ "${SINGLE_RELEASE:-true}" != "false" ]; then
+              DLURL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/latest-build/${OUTPUT}"
+            else
+              DLURL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}/${OUTPUT}"
+            fi
             get_update_json "$VER" "$DLURL" >"../$UPDATE_JSON"
           done
           cd ..
@@ -116,6 +322,7 @@ jobs:
         env:
           TG_TOKEN: ${{ secrets.TG_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
+          SINGLE_RELEASE: ${{ inputs.single_release }}
         if: env.TG_TOKEN != null
         run: |
           cd build || { echo "build folder not found"; exit 1; }
@@ -123,9 +330,17 @@ jobs:
           NL=$'\n'
           APKS=""
           MODULES=""
-          CHAT_ID=${CHAT_ID}
+          ARCH="${{ inputs.target_arch || 'arm64-v8a' }}"
+          
+          # Use appropriate release tag
+          if [ "${SINGLE_RELEASE:-true}" != "false" ]; then
+            RELEASE_TAG="latest-build"
+          else
+            RELEASE_TAG="${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}"
+          fi
+          
           for OUTPUT in *; do
-            DL_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}/${OUTPUT}"
+            DL_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${RELEASE_TAG}/${OUTPUT}"
             if [[ $OUTPUT = *.apk ]]; then
               APKS+="${NL}📦[${OUTPUT}](${DL_URL})"
             elif [[ $OUTPUT = *.zip ]]; then
@@ -139,7 +354,7 @@ jobs:
           MSG="*New build!*
 
           ${BODY}
-          *[arm64-v8a]*
+          *[$ARCH]*
           *▼ Download Links:*
           Modules:
           ${MODULES}
@@ -156,5 +371,5 @@ jobs:
         with:
           branch: update
           skip_checkout: true
-          file_pattern: build.md *-update.json
+          file_pattern: build.md CHANGELOG.md *-update.json
           commit_message: Bump version ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
