@@ -39,7 +39,7 @@
 > 💡 Enable more apps by editing `config.toml`
 
 ---
-
+# Dont use LITE variants for now
 <!-- DOWNLOADS_START -->
 ## 📥 Downloads
 
