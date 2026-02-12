@@ -164,21 +164,24 @@ get_arch_emoji() {
     esac
 }
 
-# Get app emoji
-get_app_emoji() {
-    case "$1" in
-        "YouTube") echo "▶️" ;;
-        "YouTube Music") echo "🎵" ;;
-        "Reddit") echo "🤖" ;;
-        "X (Twitter)") echo "🐦" ;;
-        "Instagram") echo "📷" ;;
-        "TikTok") echo "🎬" ;;
-        "Facebook") echo "👤" ;;
-        "Spotify") echo "🎧" ;;
-        "SoundCloud") echo "🔊" ;;
-        "Google Photos") echo "🖼️" ;;
-        *) echo "📦" ;;
+# Get app logo (shields.io badge with logo)
+get_app_logo() {
+    local app="$1"
+    local logo color
+    case "$app" in
+        "YouTube") logo="youtube"; color="FF0000" ;;
+        "YouTube Music") logo="youtubemusic"; color="FF0000" ;;
+        "Reddit") logo="reddit"; color="FF4500" ;;
+        "X (Twitter)") logo="x"; color="000000" ;;
+        "Instagram") logo="instagram"; color="E4405F" ;;
+        "TikTok") logo="tiktok"; color="000000" ;;
+        "Facebook") logo="facebook"; color="1877F2" ;;
+        "Spotify") logo="spotify"; color="1DB954" ;;
+        "SoundCloud") logo="soundcloud"; color="FF3300" ;;
+        "Google Photos") logo="googlephotos"; color="4285F4" ;;
+        *) logo="android"; color="3DDC84" ;;
     esac
+    echo "![${app}](https://img.shields.io/badge/${app// /_}-${color}?style=flat-square&logo=${logo}&logoColor=white)"
 }
 
 # Generate download badge URL
@@ -256,10 +259,10 @@ generate_downloads_section() {
     
     # Generate tables for each app
     for app in "${apps_order[@]}"; do
-        local emoji
-        emoji=$(get_app_emoji "$app")
+        local app_logo
+        app_logo=$(get_app_logo "$app")
         
-        output+="### ${emoji} ${app}\n\n"
+        output+="### ${app_logo}\n\n"
         output+="| Type | Version | Architecture | Size | Download |\n"
         output+="|:----:|:-------:|:------------:|:----:|:--------:|\n"
         
@@ -361,10 +364,10 @@ EOF
     done
     
     for app in "${apps_order[@]}"; do
-        local emoji
-        emoji=$(get_app_emoji "$app")
+        local app_logo
+        app_logo=$(get_app_logo "$app")
         
-        echo "### ${emoji} ${app}"
+        echo "### ${app_logo}"
         echo ""
         echo "| Type | Version | Architecture | Size | Download |"
         echo "|:----:|:-------:|:------------:|:----:|:--------:|"

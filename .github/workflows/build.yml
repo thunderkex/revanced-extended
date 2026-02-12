@@ -351,17 +351,8 @@ jobs:
           APKS=${APKS#"$NL"}
 
           BODY="$(sed 's/^\* \*\*/↪ \*\*/g; s/^\* `/↪ \*\*/g; s/`/\*/g; s/^\* /\↪/g; s/\*\*/\*/g; s/###//g; s/^- /↪ /g; /^==/d;' ../build.md)"
-          MSG="*New build!*
-
-          ${BODY}
-          *[$ARCH]*
-          *▼ Download Links:*
-          Modules:
-          ${MODULES}
-
-          APKs:
-          ${APKS}
-          "
+          LINE="━━━━━━━━━━━━━━━━━━━━"
+          MSG="🚀 *ReVanced Extended - New Build*${NL}${LINE}${NL}${NL}📋 *Changelog:*${NL}${BODY}${NL}${NL}🏗️ *Architecture:* \`${ARCH}\`${NL}${NL}${LINE}${NL}📥 *Downloads*${NL}${NL}🧩 *Magisk Modules:*${NL}${MODULES}${NL}${NL}📱 *APK Files:*${NL}${APKS}${NL}${LINE}"
           echo "'$MSG'"
           MSG=${MSG:0:9450}
           POST="https://api.telegram.org/bot${TG_TOKEN}/sendMessage"

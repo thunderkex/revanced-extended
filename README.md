@@ -30,10 +30,10 @@
 
 | App | Patches Source | Status |
 |:---:|:--------------|:------:|
-| 🎵 YouTube Music | [wchill/rvx-morphed](https://github.com/wchill/rvx-morphed) | ✅ Active |
-| ▶️ YouTube | [wchill/rvx-morphed](https://github.com/wchill/rvx-morphed) | ✅ Active |
-| 🤖 Reddit | [wchill/rvx-morphed](https://github.com/wchill/rvx-morphed) | ✅ Active |
-| 🐦 X (Twitter) | [crimera/piko](https://github.com/crimera/piko) | ✅ Active |
+| ![YouTube Music](https://img.shields.io/badge/YouTube_Music-FF0000?style=flat-square&logo=youtube-music&logoColor=white) | [wchill/rvx-morphed](https://github.com/wchill/rvx-morphed) | ✅ Active |
+| ![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=flat-square&logo=youtube&logoColor=white) | [wchill/rvx-morphed](https://github.com/wchill/rvx-morphed) | ✅ Active |
+| ![Reddit](https://img.shields.io/badge/Reddit-FF4500?style=flat-square&logo=reddit&logoColor=white) | [wchill/rvx-morphed](https://github.com/wchill/rvx-morphed) | ✅ Active |
+| ![X](https://img.shields.io/badge/X_(Twitter)-000000?style=flat-square&logo=x&logoColor=white) | [crimera/piko](https://github.com/crimera/piko) | ✅ Active |
 
 > 💡 Enable more apps by editing `config.toml`
 
@@ -78,7 +78,7 @@
 
 ---
 
-### 🎵 YouTube Music
+### ![YouTube Music](https://img.shields.io/badge/YouTube_Music-FF0000?style=for-the-badge&logo=youtube-music&logoColor=white)
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
@@ -87,7 +87,7 @@
 | ⚡ Module Lite | v8.30.54 | 📱 arm64-v8a | 77M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/music-ex-dev-morphed-revanced-magisk-v8.30.54-arm64-v8a-lite.zip) |
 | 🧩 Module | v8.30.54 | 📱 arm64-v8a | 72M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/music-ex-dev-morphed-revanced-magisk-v8.30.54-arm64-v8a.zip) |
 
-### 🔊 SoundCloud
+### ![SoundCloud](https://img.shields.io/badge/SoundCloud-FF5500?style=for-the-badge&logo=soundcloud&logoColor=white)
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
@@ -96,7 +96,7 @@
 | ⚡ Module Lite | v2025.05.27 | 📱 arm64-v8a | 116M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/soundcloud-revanced-magisk-v2025.05.27-release-arm64-v8a-lite.zip) |
 | 🧩 Module | v2025.05.27 | 📱 arm64-v8a | 114M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/soundcloud-revanced-magisk-v2025.05.27-release-arm64-v8a.zip) |
 
-### 🎧 Spotify
+### ![Spotify](https://img.shields.io/badge/Spotify-1DB954?style=for-the-badge&logo=spotify&logoColor=white)
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
@@ -105,7 +105,7 @@
 | ⚡ Module Lite | v9.0.90 | 📱 arm64-v8a | 150M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/spotify-revanced-magisk-v9.0.90.1229-arm64-v8a-lite.zip) |
 | 🧩 Module | v9.0.90 | 📱 arm64-v8a | 137M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/spotify-revanced-magisk-v9.0.90.1229-arm64-v8a.zip) |
 
-### ▶️ YouTube
+### ![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
