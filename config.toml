@@ -1,12 +1,49 @@
+# ====================================
+# ReVanced Extended Build Configuration
+# ====================================
+# See CONFIG.md for detailed documentation
+
+# === Global Build Settings ===
 enable-magisk-update = true
 parallel-jobs = 1
 compression-level = 9
 riplib = true
 remove-rv-integrations-checks = true
-# add 'enabled = false' for not patching a specific app or remove it from the config
-# see https://github.com/j-hc/revanced-magisk-module/blob/main/CONFIG.md for more detailed explanations
 
-# you can use rvmm-config-gen to generate a config
+# === Architecture Settings ===
+# Supported: "arm64-v8a", "armeabi-v7a", "x86_64", "universal", "all", "both"
+# "all" builds all architectures separately
+# "both" builds arm64-v8a and armeabi-v7a
+# "universal" keeps all architectures in single APK
+default-arch = "arm64-v8a"
+
+# === Lite Build Settings ===
+# When enabled, creates stripped versions with reduced resources
+build-lite = true
+# Also build lite versions of Magisk modules
+lite-build-modules = true
+# Languages to keep in lite builds (comma-separated, e.g., "en,es,zh")
+lite-languages = "en"
+# DPIs to keep in lite builds (e.g., "xxhdpi,xxxhdpi" or "nodpi")
+lite-dpi = "xxhdpi"
+# Compression level for lite builds (0-9, higher = smaller but slower)
+lite-compression = 9
+
+# === Performance Settings ===
+# Download timeout in seconds
+download-timeout = 30
+# Retry failed downloads
+download-retries = 3
+# Continue building other apps if one fails
+continue-on-error = true
+
+# ====================================
+# App Configurations
+# ====================================
+# Add 'enabled = false' to skip patching a specific app
+# See https://github.com/j-hc/revanced-magisk-module/blob/main/CONFIG.md
+
+# You can use rvmm-config-gen to generate a config
 [X-piko]
 apkmirror-dlurl = "https://apkmirror.com/apk/twitter-inc/twitter/"
 archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
@@ -91,7 +128,6 @@ patches-version = "dev"
 arch = "arm64-v8a" 
 
 [Youtube-Ex-morphed]
-enabled = true
 build-mode = "both"
 patches-source = "wchill/rvx-morphed"
 cli-source = "MorpheApp/morphe-cli"
@@ -100,6 +136,9 @@ apkmirror-dlurl = "https://apkmirror.com/apk/google-inc/youtube"
 archive-dlurl = "https://archive.org/download/geologically/apks/com.google.android.youtube"
 included-patches = "'MaterialYou' 'Return YouTube Username'"
 excluded-patches = "'Custom branding icon for YouTube' 'Custom branding name for YouTube' 'Return YouTube Username' 'Theme'"
+# Per-app build settings (override global)
+# arch = "all"           # Build all architectures for this app
+# build-lite = true      # Build lite variant for this app
 
 [Music-Ex-morphed]
 enabled = true
@@ -113,10 +152,10 @@ included-patches = "'Return YouTube Username'"
 excluded-patches = "'Custom branding icon for YouTube Music' 'Custom branding name for YouTube Music' 'Return YouTube Username'"
 
 [reddit-Ex]
-enabled = true 
 build-mode = "both"
 patches-source = "wchill/rvx-morphed"
 cli-source = "MorpheApp/morphe-cli"
 uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
 apkmirror-dlurl = "https://apkmirror.com/apk/redditinc/reddit"
 # archive-dlurl = "https://archive.org/download/geologically/apks/com.reddit.frontpage"
+enabled = false
