@@ -4,28 +4,135 @@ set -euo pipefail
 shopt -s nullglob
 trap "rm -rf temp/*tmp.* temp/*/*tmp.* temp/*-temporary-files; exit 130" INT
 
+# Color output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+# Build state tracking
+BUILD_STATE_FILE="temp/.build_state"
+FAILED_BUILDS=()
+SUCCESSFUL_BUILDS=()
+
+pr() { echo -e "${GREEN}[+] ${1}${NC}"; }
+warn() { echo -e "${YELLOW}[!] ${1}${NC}"; }
+epr() { echo -e "${RED}[-] ${1}${NC}" >&2; }
+
+# ============================================
+# Pre-flight checks
+# ============================================
+check_dependencies() {
+    local missing=()
+    
+    command -v jq >/dev/null || missing+=("jq")
+    command -v java >/dev/null || missing+=("openjdk-17")
+    command -v zip >/dev/null || missing+=("zip")
+    command -v curl >/dev/null || missing+=("curl")
+    
+    if [ ${#missing[@]} -gt 0 ]; then
+        epr "Missing dependencies: ${missing[*]}"
+        epr "Install with: apt install ${missing[*]}"
+        exit 1
+    fi
+    
+    # Check Java version
+    local java_ver
+    java_ver=$(java -version 2>&1 | head -1 | cut -d'"' -f2 | cut -d'.' -f1)
+    if [ "$java_ver" -lt 17 ] 2>/dev/null; then
+        warn "Java 17+ recommended, found version $java_ver"
+    fi
+}
+
+check_disk_space() {
+    local required_mb=2000  # 2GB minimum
+    local available_mb
+    
+    if [ "$OS" = "Android" ]; then
+        available_mb=$(df -m . | tail -1 | awk '{print $4}')
+    else
+        available_mb=$(df -BM . | tail -1 | awk '{print $4}' | tr -d 'M')
+    fi
+    
+    if [ "$available_mb" -lt "$required_mb" ] 2>/dev/null; then
+        warn "Low disk space: ${available_mb}MB available, ${required_mb}MB recommended"
+    fi
+}
+
+check_network() {
+    if ! curl -s --connect-timeout 5 https://api.github.com >/dev/null 2>&1; then
+        warn "Network connectivity issues detected"
+    fi
+}
+
+# Run pre-flight checks
+preflight_checks() {
+    pr "Running pre-flight checks..."
+    check_dependencies
+    check_disk_space
+    check_network
+}
+
 if [ "${1-}" = "clean" ]; then
-	rm -rf temp build logs build.md
+	rm -rf temp build logs build.md "$BUILD_STATE_FILE"
 	exit 0
 fi
 
 source utils.sh
 
-jq --version >/dev/null || abort "\`jq\` is not installed. install it with 'apt install jq' or equivalent"
-java --version >/dev/null || abort "\`openjdk 17\` is not installed. install it with 'apt install openjdk-17-jre' or equivalent"
-zip --version >/dev/null || abort "\`zip\` is not installed. install it with 'apt install zip' or equivalent"
+preflight_checks
 
 set_prebuilts
 
 vtf() { if ! isoneof "${1}" "true" "false"; then abort "ERROR: '${1}' is not a valid option for '${2}': only true or false is allowed"; fi; }
 
-# -- Main config --
+# ============================================
+# Resume support
+# ============================================
+save_build_state() {
+    local app_name="$1"
+    local status="$2"
+    echo "$app_name:$status" >> "$BUILD_STATE_FILE"
+}
+
+load_build_state() {
+    local app_name="$1"
+    if [ -f "$BUILD_STATE_FILE" ]; then
+        grep "^${app_name}:completed$" "$BUILD_STATE_FILE" >/dev/null 2>&1
+    else
+        return 1
+    fi
+}
+
+clear_build_state() {
+    rm -f "$BUILD_STATE_FILE"
+}
+
+# ============================================
+# Main configuration
+# ============================================
 toml_prep "${1:-config.toml}" || abort "could not find config file '${1:-config.toml}'\n\tUsage: $0 <config.toml>"
 main_config_t=$(toml_get_table_main)
 COMPRESSION_LEVEL=$(toml_get "$main_config_t" compression-level) || COMPRESSION_LEVEL="9"
 if ! PARALLEL_JOBS=$(toml_get "$main_config_t" parallel-jobs); then
 	if [ "$OS" = Android ]; then PARALLEL_JOBS=1; else PARALLEL_JOBS=$(nproc); fi
 fi
+
+# New config options
+CONTINUE_ON_ERROR=$(toml_get "$main_config_t" continue-on-error) || CONTINUE_ON_ERROR="true"
+DOWNLOAD_TIMEOUT=$(toml_get "$main_config_t" download-timeout) || DOWNLOAD_TIMEOUT="30"
+DOWNLOAD_RETRIES=$(toml_get "$main_config_t" download-retries) || DOWNLOAD_RETRIES="3"
+DEFAULT_ARCH=$(toml_get "$main_config_t" default-arch) || DEFAULT_ARCH="arm64-v8a"
+BUILD_LITE=$(toml_get "$main_config_t" build-lite) || BUILD_LITE="false"
+LITE_BUILD_MODULES=$(toml_get "$main_config_t" lite-build-modules) || LITE_BUILD_MODULES="true"
+LITE_LANGUAGES=$(toml_get "$main_config_t" lite-languages) || LITE_LANGUAGES="en"
+LITE_DPI=$(toml_get "$main_config_t" lite-dpi) || LITE_DPI="xxhdpi"
+LITE_COMPRESSION=$(toml_get "$main_config_t" lite-compression) || LITE_COMPRESSION="9"
+
+# Override from environment
+DEFAULT_ARCH="${TARGET_ARCH:-$DEFAULT_ARCH}"
+BUILD_LITE="${BUILD_LITE_ENV:-$BUILD_LITE}"
+
 REMOVE_RV_INTEGRATIONS_CHECKS=$(toml_get "$main_config_t" remove-rv-integrations-checks) || REMOVE_RV_INTEGRATIONS_CHECKS="true"
 DEF_PATCHES_VER=$(toml_get "$main_config_t" patches-version) || DEF_PATCHES_VER="latest"
 DEF_CLI_VER=$(toml_get "$main_config_t" cli-version) || DEF_CLI_VER="latest"
@@ -38,6 +145,13 @@ mkdir -p "$TEMP_DIR" "$BUILD_DIR"
 if [ "${2-}" = "--config-update" ]; then
 	config_update
 	exit 0
+fi
+
+# Resume mode
+if [ "${2-}" = "--resume" ]; then
+    pr "Resume mode enabled - skipping completed builds"
+else
+    clear_build_state
 fi
 
 : >build.md
@@ -59,8 +173,62 @@ gh_dl "${MODULE_TEMPLATE_DIR}/bin/arm/cmpr" "https://github.com/j-hc/cmpr/releas
 gh_dl "${MODULE_TEMPLATE_DIR}/bin/x86/cmpr" "https://github.com/j-hc/cmpr/releases/latest/download/cmpr-x86"
 gh_dl "${MODULE_TEMPLATE_DIR}/bin/x64/cmpr" "https://github.com/j-hc/cmpr/releases/latest/download/cmpr-x86_64"
 
+# ============================================
+# Build tracking function
+# ============================================
+build_app_wrapper() {
+    local table_name="$1"
+    local app_args_str="$2"
+    local start_time
+    start_time=$(date +%s)
+    
+    # Check if already completed (resume support)
+    if load_build_state "$table_name"; then
+        pr "Skipping $table_name (already completed)"
+        return 0
+    fi
+    
+    pr "Starting build: $table_name"
+    
+    if build_rv "$app_args_str"; then
+        local end_time
+        end_time=$(date +%s)
+        local duration=$((end_time - start_time))
+        pr "Completed $table_name in ${duration}s"
+        save_build_state "$table_name" "completed"
+        SUCCESSFUL_BUILDS+=("$table_name")
+        return 0
+    else
+        epr "Failed to build $table_name"
+        save_build_state "$table_name" "failed"
+        FAILED_BUILDS+=("$table_name")
+        if [ "$CONTINUE_ON_ERROR" = "true" ]; then
+            warn "Continuing with other builds..."
+            return 0
+        else
+            return 1
+        fi
+    fi
+}
+
 declare -A cliriplib
 idx=0
+total_apps=0
+built_apps=0
+
+# Count total enabled apps
+for table_name in $(toml_get_table_names); do
+    if [ -z "$table_name" ]; then continue; fi
+    t=$(toml_get_table "$table_name")
+    enabled=$(toml_get "$t" enabled) || enabled=true
+    if [ "$enabled" = true ]; then
+        ((total_apps++)) || true
+    fi
+done
+
+pr "Building $total_apps apps with $PARALLEL_JOBS parallel jobs"
+pr "Target architecture: $DEFAULT_ARCH"
+[ "$BUILD_LITE" = "true" ] && pr "Lite builds enabled"
 for table_name in $(toml_get_table_names); do
 	if [ -z "$table_name" ]; then continue; fi
 	t=$(toml_get_table "$table_name")
@@ -79,7 +247,12 @@ for table_name in $(toml_get_table_names); do
 	cli_ver=$(toml_get "$t" cli-version) || cli_ver=$DEF_CLI_VER
 
 	if ! PREBUILTS="$(get_prebuilts "$cli_src" "$cli_ver" "$patches_src" "$patches_ver")"; then
-		abort "could not download rv prebuilts"
+		if [ "$CONTINUE_ON_ERROR" = "true" ]; then
+			epr "Could not download prebuilts for $table_name, skipping..."
+			continue
+		else
+			abort "could not download rv prebuilts"
+		fi
 	fi
 	read -r cli_jar patches_jar <<<"$PREBUILTS"
 	app_args[cli]=$cli_jar
@@ -125,8 +298,10 @@ for table_name in $(toml_get_table_names); do
 		app_args[dl_from]=archive
 	} || app_args[archive_dlurl]=""
 	if [ -z "${app_args[dl_from]-}" ]; then abort "ERROR: no 'apkmirror_dlurl', 'uptodown_dlurl' or 'archive_dlurl' option was set for '$table_name'."; fi
-	app_args[arch]=$(toml_get "$t" arch) || app_args[arch]="all"
-	if [ "${app_args[arch]}" != "both" ] && [ "${app_args[arch]}" != "all" ] && [[ ${app_args[arch]} != "arm64-v8a"* ]] && [[ ${app_args[arch]} != "arm-v7a"* ]]; then
+	
+	# Per-app architecture override or use default/global
+	app_args[arch]=$(toml_get "$t" arch) || app_args[arch]="$DEFAULT_ARCH"
+	if [ "${app_args[arch]}" != "both" ] && [ "${app_args[arch]}" != "all" ] && [[ ${app_args[arch]} != "arm64-v8a"* ]] && [[ ${app_args[arch]} != "arm-v7a"* ]] && [ "${app_args[arch]}" != "universal" ]; then
 		abort "wrong arch '${app_args[arch]}' for '$table_name'"
 	fi
 
@@ -136,12 +311,16 @@ for table_name in $(toml_get_table_names); do
 	table_name_f=${table_name_f// /-}
 	app_args[module_prop_name]=$(toml_get "$t" module-prop-name) || app_args[module_prop_name]="${table_name_f}-jhc"
 
+	# Per-app lite build setting
+	app_args[build_lite]=$(toml_get "$t" build-lite) || app_args[build_lite]="$BUILD_LITE"
+
 	if [ "${app_args[arch]}" = both ]; then
 		app_args[table]="$table_name (arm64-v8a)"
 		app_args[arch]="arm64-v8a"
 		module_prop_name_b=${app_args[module_prop_name]}
 		app_args[module_prop_name]="${module_prop_name_b}-arm64"
 		idx=$((idx + 1))
+		((built_apps++)) || true
 		build_rv "$(declare -p app_args)" &
 		app_args[table]="$table_name (arm-v7a)"
 		app_args[arch]="arm-v7a"
@@ -151,7 +330,29 @@ for table_name in $(toml_get_table_names); do
 			idx=$((idx - 1))
 		fi
 		idx=$((idx + 1))
+		((built_apps++)) || true
 		build_rv "$(declare -p app_args)" &
+	elif [ "${app_args[arch]}" = all ]; then
+		# Build all architectures: arm64, arm, x86_64
+		for build_arch in "arm64-v8a" "arm-v7a" "x86_64"; do
+			app_args[table]="$table_name ($build_arch)"
+			app_args[arch]="$build_arch"
+			module_prop_name_b=${app_args[module_prop_name]}
+			if [ "$build_arch" = "arm64-v8a" ]; then
+				app_args[module_prop_name]="${module_prop_name_b}-arm64"
+			elif [ "$build_arch" = "arm-v7a" ]; then
+				app_args[module_prop_name]="${module_prop_name_b}-arm"
+			else
+				app_args[module_prop_name]="${module_prop_name_b}-${build_arch}"
+			fi
+			if ((idx >= PARALLEL_JOBS)); then
+				wait -n
+				idx=$((idx - 1))
+			fi
+			idx=$((idx + 1))
+			((built_apps++)) || true
+			build_rv "$(declare -p app_args)" &
+		done
 	else
 		if [ "${app_args[arch]}" = "arm64-v8a" ]; then
 			app_args[module_prop_name]="${app_args[module_prop_name]}-arm64"
@@ -159,22 +360,9 @@ for table_name in $(toml_get_table_names); do
 			app_args[module_prop_name]="${app_args[module_prop_name]}-arm"
 		fi
 		idx=$((idx + 1))
+		((built_apps++)) || true
 		build_rv "$(declare -p app_args)" &
 	fi
 done
 wait
 rm -rf temp/tmp.*
-if [ -z "$(ls -A1 "${BUILD_DIR}")" ]; then abort "All builds failed."; fi
-
-log "\n-Install [MicroG-RE](https://github.com/WSTxda/MicroG-RE/releases) for non-root YouTube and YT Music APKs"
-log "-Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) module to detach patched apps from being updated by Play Store\n"
-log "\n[revanced-extended](https://github.com/thunderkex/revanced-extended)\n"
-log "$(cat "$TEMP_DIR"/*-rv/changelog.md)"
-
-SKIPPED=$(cat "$TEMP_DIR"/skipped 2>/dev/null | sort -u || :)
-if [ -n "$SKIPPED" ]; then
-	log "\nSkipped:"
-	log "$SKIPPED"
-fi
-
-pr "Done"
