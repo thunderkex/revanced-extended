@@ -294,7 +294,7 @@ generate_downloads_section() {
                 if [[ "$IS_LITE" == "true" ]]; then
                     type_display="🪶 Lite"
                 else
-                    type_display="📦 Full"
+                    type_display="📦 APK"
                 fi
             fi
             
@@ -398,7 +398,7 @@ EOF
                 if [[ "$IS_LITE" == "true" ]]; then
                     type_display="🪶 Lite"
                 else
-                    type_display="📦 Full"
+                    type_display="📦 APK"
                 fi
             fi
             
