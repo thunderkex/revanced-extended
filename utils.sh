@@ -14,9 +14,29 @@ OS=$(uname -o)
 toml_prep() {
 	if [ ! -f "$1" ]; then return 1; fi
 	if [ "${1##*.}" == toml ]; then
-		__TOML__=$($TOML --output json --file "$1" .)
+		if [ ! -x "$TOML" ]; then
+			epr "TOML parser not found or not executable: $TOML"
+			epr "Make sure bin/toml/tq-$(uname -m) exists and is executable"
+			return 1
+		fi
+		__TOML__=$($TOML --output json --file "$1" . 2>&1) || {
+			epr "Failed to parse TOML config: $1"
+			epr "Output: $__TOML__"
+			return 1
+		}
+		# Validate JSON output
+		if ! echo "$__TOML__" | jq empty 2>/dev/null; then
+			epr "TOML parser did not produce valid JSON"
+			epr "Output: $__TOML__"
+			return 1
+		fi
 	elif [ "${1##*.}" == json ]; then
 		__TOML__=$(cat "$1")
+		# Validate JSON
+		if ! echo "$__TOML__" | jq empty 2>/dev/null; then
+			epr "Invalid JSON config: $1"
+			return 1
+		fi
 	else abort "config extension not supported"; fi
 }
 toml_get_table_names() { jq -r -e 'to_entries[] | select(.value | type == "object") | .key' <<<"$__TOML__"; }
@@ -143,10 +163,20 @@ set_prebuilts() {
 	APKSIGNER="${BIN_DIR}/apksigner.jar"
 	local arch
 	arch=$(uname -m)
-	if [ "$arch" = aarch64 ]; then arch=arm64; elif [ "${arch:0:5}" = "armv7" ]; then arch=arm; fi
+	if [ "$arch" = aarch64 ]; then arch=arm64
+	elif [ "${arch:0:5}" = "armv7" ] || [ "$arch" = "armv7l" ]; then arch=arm
+	elif [ "$arch" = "x86_64" ] || [ "$arch" = "amd64" ]; then arch=x86_64
+	fi
 	HTMLQ="${BIN_DIR}/htmlq/htmlq-${arch}"
 	AAPT2="${BIN_DIR}/aapt2/aapt2-${arch}"
 	TOML="${BIN_DIR}/toml/tq-${arch}"
+	
+	# Make binaries executable if they exist but aren't
+	for bin in "$HTMLQ" "$TOML"; do
+		if [ -f "$bin" ] && [ ! -x "$bin" ]; then
+			chmod +x "$bin" 2>/dev/null || warn "Could not make $bin executable"
+		fi
+	done
 }
 
 config_update() {
@@ -554,7 +584,12 @@ build_rv() {
 		for dl_p in archive apkmirror uptodown; do
 			if [ -z "${args[${dl_p}_dlurl]}" ]; then continue; fi
 			pr "Downloading '${table}' from ${dl_p}"
-			if ! isoneof $dl_p "${tried_dl[@]}"; then get_${dl_p}_resp "${args[${dl_p}_dlurl]}"; fi
+			if ! isoneof $dl_p "${tried_dl[@]}"; then
+				if ! get_${dl_p}_resp "${args[${dl_p}_dlurl]}"; then
+					epr "Failed to get response from ${dl_p}, trying next source..."
+					continue
+				fi
+			fi
 			if ! dl_${dl_p} "${args[${dl_p}_dlurl]}" "$version" "$stock_apk" "$arch" "${args[dpi]}" "$get_latest_ver"; then
 				epr "ERROR: Could not download '${table}' from ${dl_p} with version '${version}', arch '${arch}', dpi '${args[dpi]}'"
 				continue
