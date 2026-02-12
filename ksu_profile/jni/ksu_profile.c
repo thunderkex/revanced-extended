@@ -92,6 +92,7 @@ int main(int argc, char* argv[]) {
     long uid = atol(argv[1]);
 
     struct ksu_uid_should_umount_cmd umount_cmd = {0};
+    umount_cmd.uid = uid;
     if (!ksuctl(KSU_IOCTL_UID_SHOULD_UMOUNT, &umount_cmd)) {
         REPORT_ERR();
         return 1;
