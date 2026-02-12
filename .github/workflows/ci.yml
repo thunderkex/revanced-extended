@@ -60,7 +60,7 @@ jobs:
           fetch-depth: 0
 
       - name: Cache downloaded APKs
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             temp/*.apk
@@ -71,7 +71,7 @@ jobs:
             apk-cache-
 
       - name: Cache prebuilts
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             temp/*-rv/
