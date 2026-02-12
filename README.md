@@ -308,6 +308,17 @@ adb shell pm disable-user --user 0 com.android.vending
 </details>
 
 <details>
+<summary><b>Having trouble with the classic mount method?</b></summary>
+
+If you are experiencing issues such as:
+- "Reflash needed" error after reboots
+- "Suspicious mount detected" warnings from root detector apps
+
+You can consider using [rvmm-zygisk-mount](https://github.com/inotia00/rvmm-zygisk-mount) as an alternative mount method.
+
+</details>
+
+<details>
 <summary><b>Build failed - what should I do?</b></summary>
 
 1. Run `./build.sh clean` and try again
