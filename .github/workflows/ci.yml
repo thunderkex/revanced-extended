@@ -55,7 +55,7 @@ jobs:
       SINGLE_RELEASE: ${{ steps.build_config.outputs.SINGLE_RELEASE }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
