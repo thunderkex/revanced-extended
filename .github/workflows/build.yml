@@ -58,7 +58,7 @@ jobs:
           java-version: "21"
 
       - name: Cache Gradle
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.gradle/caches
@@ -67,7 +67,7 @@ jobs:
           restore-keys: gradle-
 
       - name: Cache downloaded APKs
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             temp/*.apk
@@ -79,7 +79,7 @@ jobs:
             apk-downloads-
 
       - name: Cache prebuilt tools
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             bin/
