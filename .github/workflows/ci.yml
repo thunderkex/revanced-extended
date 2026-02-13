@@ -33,7 +33,7 @@ on:
           - single    # Replace assets in latest-build (default)
           - versioned # Create new release for each build
   schedule:
-    - cron: "0 */4 * * *"  # Every 4 hours
+    - cron: "0 16 * * *" # Daily at 16:00 UTC
   repository_dispatch:
     types: [patch-release]  # Triggered by watch-patches workflow
 
