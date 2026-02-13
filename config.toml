@@ -51,7 +51,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter/"
 archive-dlurl = "https://archive.org/download/geologically/apks/com.twitter.android"
 uptodown-dlurl = "https://twitter.id.uptodown.com/android"
 patches-source = "crimera/piko"
-included-patches = "'Hide For You' 'Hide Live Threads' 'Disable chirp font' 'Remove view count' 'Hide Banner' 'Hide FAB' 'Hide FAB Menu Buttons' 'Hide Promoted Trends' 'Hide Community Notes' 'Remove Ads' 'Remove Google Ads'"
+included-patches = "'Disable chirp font' 'Hide Banner' 'Hide FAB' 'Hide promote button' 'Dynamic color' 'Hide Community Notes' 'Control video auto scroll' 'Remove premium upsell' 'Delete from database'"
 enabled = true
 
 [X-piko-dev]
@@ -60,7 +60,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter/"
 archive-dlurl = "https://archive.org/download/geologically/apks/com.twitter.android"
 uptodown-dlurl = "https://twitter.id.uptodown.com/android"
 patches-source = "crimera/piko"
-included-patches = "'Hide For You' 'Hide Live Threads' 'Disable chirp font' 'Remove view count' 'Hide Banner' 'Hide FAB' 'Hide FAB Menu Buttons' 'Hide Promoted Trends' 'Hide Community Notes' 'Remove Ads' 'Remove Google Ads'"
+included-patches = "'Disable chirp font' 'Hide Banner' 'Hide FAB' 'Hide promote button' 'Dynamic color' 'Hide Community Notes' 'Control video auto scroll' 'Remove premium upsell' 'Delete from database'"
 patches-version = "dev"
 enabled = false
 
@@ -130,7 +130,7 @@ excluded-patches = "'Custom branding icon for YouTube Music' 'Custom branding na
 
 [reddit-Ex]
 build-mode = "apk"
-patches-source = "wchill/rvx-morphed"
+patches-source = "wchill/patcheddit"
 cli-source = "MorpheApp/morphe-cli"
 uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
 apkmirror-dlurl = "https://apkmirror.com/apk/redditinc/reddit"
