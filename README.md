@@ -42,7 +42,7 @@
 <!-- DOWNLOADS_START -->
 ## 📥 Downloads
 
-> **Last Updated:** 2026-02-13 08:02:45 UTC
+> **Last Updated:** 2026-02-13 08:21:47 UTC
 
 ### 🔗 Quick Links
 
@@ -90,7 +90,7 @@
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
 | 📦 APK | v2025.05.27 | 📱 arm64-v8a | 76M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/soundcloud-revanced-v2025.05.27-release-arm64-v8a.apk) |
-| 🧩 Module | v2025.05.27 | 📱 arm64-v8a | 114M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/soundcloud-revanced-magisk-v2025.05.27-release-arm64-v8a.zip) |
+| 🧩 Module | v2025.05.27 | 📱 arm64-v8a | 113M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/soundcloud-revanced-magisk-v2025.05.27-release-arm64-v8a.zip) |
 
 ### ![Spotify](https://img.shields.io/badge/Spotify-1DB954?style=flat-square&logo=spotify&logoColor=white)
 
@@ -110,14 +110,14 @@
 <summary>🔐 <b>File Checksums (MD5)</b></summary>
 
 ```
-a9d0b2ac088854c7aa9fe2a4c3faf05a  music-ex-morphed-revanced-v8.30.54-arm64-v8a.apk
-1ab4d047b836f4fa6da34c9e0a1864eb  soundcloud-revanced-v2025.05.27-release-arm64-v8a.apk
-16f9f66cc56724ace45d837f5f9b784b  spotify-revanced-v9.0.90.1229-arm64-v8a.apk
-5aaeaad1db252c58d6e065be532dcabd  youtube-ex-morphed-revanced-v20.05.46-arm64-v8a.apk
-ed526c89249a219b7daf8eab1e4ebe5e  music-ex-morphed-revanced-magisk-v8.30.54-arm64-v8a.zip
-a12015d460fa353b8cb3622491f41687  soundcloud-revanced-magisk-v2025.05.27-release-arm64-v8a.zip
-9df3bdca9501c0cfc265dffe552f489c  spotify-revanced-magisk-v9.0.90.1229-arm64-v8a.zip
-7bc8a1b85e97dad5a36c4208c0e48604  youtube-ex-morphed-revanced-magisk-v20.05.46-arm64-v8a.zip
+bd36737bf55c3ed6ee012898da7fd896  music-ex-morphed-revanced-v8.30.54-arm64-v8a.apk
+32657fba3c9bc710b8c1a4e28e271e77  soundcloud-revanced-v2025.05.27-release-arm64-v8a.apk
+4851ffce0cfc148d7803e7e5970abd7d  spotify-revanced-v9.0.90.1229-arm64-v8a.apk
+efb3bf30858597e6e56ff2bb8be79859  youtube-ex-morphed-revanced-v20.05.46-arm64-v8a.apk
+5438ac32fe752997fdb77b4a77ea5426  music-ex-morphed-revanced-magisk-v8.30.54-arm64-v8a.zip
+ff717023288a41044acf578ce188a3e5  soundcloud-revanced-magisk-v2025.05.27-release-arm64-v8a.zip
+be4d6b51cf4c0e29ead34e2d8f405722  spotify-revanced-magisk-v9.0.90.1229-arm64-v8a.zip
+3122f4337255a09915a37cefe881524b  youtube-ex-morphed-revanced-magisk-v20.05.46-arm64-v8a.zip
 ```
 
 </details>
