@@ -44,20 +44,23 @@ continue-on-error = true
 # See https://github.com/j-hc/revanced-magisk-module/blob/main/CONFIG.md
 
 # You can use rvmm-config-gen to generate a config
+
 [X-piko]
-apkmirror-dlurl = "https://apkmirror.com/apk/twitter-inc/twitter/"
-archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
+build-mode = "apk"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter/"
+archive-dlurl = "https://archive.org/download/geologically/apks/com.twitter.android"
+uptodown-dlurl = "https://twitter.id.uptodown.com/android"
 patches-source = "crimera/piko"
-included-patches = "'Hide For You' 'Hide Live Threads' 'Disable chirp font' 'Remove view count' 'Hide Banner' 'Hide FAB' 'Hide FAB Menu Buttons' 'Hide Promoted Trends' 'Hide Community Notes' 'Google Ads Patch'"
-integrations-source = "crimera/revanced-integrations"
-enabled = false
+included-patches = "'Hide For You' 'Hide Live Threads' 'Disable chirp font' 'Remove view count' 'Hide Banner' 'Hide FAB' 'Hide FAB Menu Buttons' 'Hide Promoted Trends' 'Hide Community Notes' 'Remove Ads' 'Remove Google Ads'"
+enabled = true
 
 [X-piko-dev]
-apkmirror-dlurl = "https://apkmirror.com/apk/twitter-inc/twitter/"
-archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.twitter.android"
+build-mode = "apk"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter/"
+archive-dlurl = "https://archive.org/download/geologically/apks/com.twitter.android"
+uptodown-dlurl = "https://twitter.id.uptodown.com/android"
 patches-source = "crimera/piko"
-included-patches = "'Hide For You' 'Hide Live Threads' 'Disable chirp font' 'Remove view count' 'Hide Banner' 'Hide FAB' 'Hide FAB Menu Buttons' 'Hide Promoted Trends' 'Hide Community Notes' 'Google Ads Patch'"
-integrations-source = "crimera/revanced-integrations"
+included-patches = "'Hide For You' 'Hide Live Threads' 'Disable chirp font' 'Remove view count' 'Hide Banner' 'Hide FAB' 'Hide FAB Menu Buttons' 'Hide Promoted Trends' 'Hide Community Notes' 'Remove Ads' 'Remove Google Ads'"
 patches-version = "dev"
 enabled = false
 
@@ -126,7 +129,7 @@ included-patches = "'Return YouTube Username'"
 excluded-patches = "'Custom branding icon for YouTube Music' 'Custom branding name for YouTube Music' 'Return YouTube Username'"
 
 [reddit-Ex]
-build-mode = "both"
+build-mode = "apk"
 patches-source = "wchill/rvx-morphed"
 cli-source = "MorpheApp/morphe-cli"
 uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
