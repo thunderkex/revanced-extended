@@ -121,7 +121,8 @@ install() {
 					abort
 				else
 					ui_print "* Uninstalling..."
-					if ! op=$(pmex uninstall -k --user 0 "$PKG_NAME"); then
+					op=$(pmex uninstall -k --user 0 "$PKG_NAME") || :
+					if pmex path "$PKG_NAME" >/dev/null 2>&1; then
 						ui_print "$op"
 						if [ $IT = 2 ]; then abort "ERROR: pm uninstall failed."; fi
 					fi
