@@ -51,6 +51,7 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter/"
 archive-dlurl = "https://archive.org/download/geologically/apks/com.twitter.android"
 uptodown-dlurl = "https://twitter.id.uptodown.com/android"
 patches-source = "crimera/piko"
+cli-source = "inotia00/revanced-cli"
 included-patches = "'Disable chirp font' 'Hide Banner' 'Hide FAB' 'Hide promote button' 'Dynamic color' 'Hide Community Notes' 'Control video auto scroll' 'Remove premium upsell' 'Delete from database'"
 enabled = true
 
