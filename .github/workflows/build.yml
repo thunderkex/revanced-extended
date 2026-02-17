@@ -270,7 +270,7 @@ jobs:
           path: ./build/*
           retention-days: 7
 
-      - name: Update changelog and Magisk update json
+      - name: Update changelog and update json
         id: update_config
         env:
           SINGLE_RELEASE: ${{ inputs.single_release }}
