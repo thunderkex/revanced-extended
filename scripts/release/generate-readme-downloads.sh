@@ -149,6 +149,7 @@ parse_filename() {
         *[Ss]potify*) APP_NAME="Spotify" ;;
         *[Ss]oundcloud*) APP_NAME="SoundCloud" ;;
         *[Gg]photos*|*[Pp]hotos*) APP_NAME="Google Photos" ;;
+        *[Ss]trava*) APP_NAME="Strava" ;;
         *) APP_NAME="${basename}" ;;
     esac
 }
@@ -179,6 +180,7 @@ get_app_logo() {
         "Spotify") logo="spotify"; color="1DB954" ;;
         "SoundCloud") logo="soundcloud"; color="FF3300" ;;
         "Google Photos") logo="googlephotos"; color="4285F4" ;;
+        "Strava") logo="strava"; color="FC4C02" ;;
         *) logo="android"; color="3DDC84" ;;
     esac
     echo "![${app}](https://img.shields.io/badge/${app// /_}-${color}?style=flat-square&logo=${logo}&logoColor=white)"

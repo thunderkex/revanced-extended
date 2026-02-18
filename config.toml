@@ -45,68 +45,73 @@ continue-on-error = true
 
 # You can use rvmm-config-gen to generate a config
 
-[X-piko]
-build-mode = "apk"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter/"
-archive-dlurl = "https://archive.org/download/geologically/apks/com.twitter.android"
-uptodown-dlurl = "https://twitter.id.uptodown.com/android"
-patches-source = "crimera/piko"
-cli-source = "inotia00/revanced-cli"
-included-patches = "'Disable chirp font' 'Hide Banner' 'Hide FAB' 'Hide promote button' 'Dynamic color' 'Hide Community Notes' 'Control video auto scroll' 'Remove premium upsell' 'Delete from database'"
+# ======================== Revanced Apps ========================
+
+[Facebook-Ex]
 enabled = true
-
-[TikTok]
-build-mode = "apk"
-uptodown-dlurl = "https://tiktok.en.uptodown.com/android"
-apkmirror-dlurl = "https://apkmirror.com/apk/tiktok-pte-ltd/tik-tok-including-musical-ly"
-included-patches = "'SIM spoof'"
-enabled = false
-
-[Facebook]
 build-mode = "apk"
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-2/facebook"
-enabled = false
 
-[Instagram]
-build-mode = "apk"
-uptodown-dlurl = "https://instagram.en.uptodown.com/android"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/instagram-instagram"
-enabled = false
-
-[Gphotos]
+[Gphotos-Ex]
+enabled = true
 build-mode = "apk"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/photos/"
 uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
 archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
-enabled = false
 
-[Soundcloud]
+[Instagram-Ex]
+enabled = true
+build-mode = "apk"
+uptodown-dlurl = "https://instagram.en.uptodown.com/android"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/instagram-instagram"
+
+[Lightroom-Ex]
+enabled = true
+build-mode = "apk"
+uptodown-dlurl = "https://adobe-lightroom-mobile.en.uptodown.com/android"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/adobe/lightroom"
+archive-dlurl = "https://archive.org/download/geologically/apks/com.adobe.lrmobile/"
+
+[PrimeVideo-Ex]
+enabled = false
+build-mode = "apk"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/amazon-mobile-llc/amazon-prime-video/"
+uptodown-dlurl = "https://amazon-prime-video.en.uptodown.com/android"
+
+[Soundcloud-Ex]
+enabled = true
 build-mode = "apk"
 uptodown-dlurl = "https://soundcloud.en.uptodown.com/android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/soundcloud/soundcloud-soundcloud"
 
-[Lightroom]
-build-mode = "apk"
-uptodown-dlurl = "https://adobe-lightroom-mobile.en.uptodown.com/android"
-# apkmirror-dlurl = "https://www.apkmirror.com/apk/adobe/lightroom"
-enabled = false
-
-[Spotify]
+[Spotify-Ex]
+enabled = true
 build-mode = "apk"
 # apkmirror-dlurl = "https://www.apkmirror.com/apk/spotify-ab/"
 uptodown-dlurl = "https://spotify.en.uptodown.com/android"
-patches-source = "anddea/revanced-patches"
+archive-dlurl = "https://archive.org/download/geologically/apks/com.spotify.music/"
 
-[Youtube-Ex-morphed]
-build-mode = "both"
-patches-source = "wchill/rvx-morphed"
-cli-source = "MorpheApp/morphe-cli"
-uptodown-dlurl = "https://youtube.en.uptodown.com/android"
-apkmirror-dlurl = "https://apkmirror.com/apk/google-inc/youtube"
-archive-dlurl = "https://archive.org/download/geologically/apks/com.google.android.youtube"
-included-patches = "'MaterialYou' 'Return YouTube Username'"
-excluded-patches = "'Custom branding icon for YouTube' 'Custom branding name for YouTube' 'Return YouTube Username' 'Theme'"
+[Strava-Ex]
+enabled = true
+build-mode = "apk"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/strava-inc/strava-running-and-cycling-gps/"
+uptodown-dlurl = "https://strava.en.uptodown.com/android"
+
+[TikTok]
+enabled = true
+build-mode = "apk"
+uptodown-dlurl = "https://tiktok.en.uptodown.com/android"
+apkmirror-dlurl = "https://apkmirror.com/apk/tiktok-pte-ltd/tik-tok-including-musical-ly"
+archive-dlurl = "https://archive.org/download/geologically/apks/com.zhiliaoapp.musically/"
+
+[Threads-Ex]
+enabled = false
+build-mode = "apk"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/threads/"
+uptodown-dlurl = "https://threads.en.uptodown.com/android"
+
+# ======================== Extended/Morphed Apps ========================
 
 [Music-Ex-morphed]
 enabled = true
@@ -119,17 +124,40 @@ archive-dlurl = "https://archive.org/download/geologically/apks/com.google.andro
 included-patches = "'Return YouTube Username'"
 excluded-patches = "'Custom branding icon for YouTube Music' 'Custom branding name for YouTube Music' 'Return YouTube Username'"
 
+[Youtube-Ex-morphed]
+enabled = true
+build-mode = "both"
+patches-source = "wchill/rvx-morphed"
+cli-source = "MorpheApp/morphe-cli"
+uptodown-dlurl = "https://youtube.en.uptodown.com/android"
+apkmirror-dlurl = "https://apkmirror.com/apk/google-inc/youtube"
+archive-dlurl = "https://archive.org/download/geologically/apks/com.google.android.youtube"
+included-patches = "'MaterialYou' 'Return YouTube Username'"
+excluded-patches = "'Custom branding icon for YouTube' 'Custom branding name for YouTube' 'Return YouTube Username' 'Theme'"
+
 [reddit-Ex]
+enabled = true
 build-mode = "apk"
-patches-source = "wchill/patcheddit"
+patches-source = "MorpheApp/morphe-patches"
 cli-source = "MorpheApp/morphe-cli"
 uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
 apkmirror-dlurl = "https://apkmirror.com/apk/redditinc/reddit"
 archive-dlurl = "https://archive.org/download/geologically/apks/com.reddit.frontpage"
 
+[X-piko]
+enabled = true
+build-mode = "apk"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter/"
+archive-dlurl = "https://archive.org/download/geologically/apks/com.twitter.android"
+uptodown-dlurl = "https://twitter.id.uptodown.com/android"
+patches-source = "crimera/piko"
+included-patches = "'Disable chirp font' 'Hide Banner' 'Hide FAB' 'Hide promote button' 'Dynamic color' 'Hide Community Notes' 'Control video auto scroll' 'Remove premium upsell' 'Delete from database'"
+excluded-patches = "'Customize side bar items' 'Disunify xchat system' 'Enable Undo Posts' 'Show post source label'"
+
 # ======================== Dev Version ========================
 
 [YouTube-Ex-Dev-morphed]
+enabled = false
 uptodown-dlurl = "https://youtube.en.uptodown.com/android"
 apkmirror-dlurl = "https://apkmirror.com/apk/google-inc/youtube"
 archive-dlurl = "https://archive.org/download/geologically/apks/com.google.android.youtube"
@@ -140,9 +168,9 @@ excluded-patches = "'Custom branding icon for YouTube' 'Custom branding name for
 build-mode = "both"
 patches-version = "dev"
 arch = "arm64-v8a"  
-enabled = false
 
 [Music-Ex-dev-morphed]
+enabled = false
 uptodown-dlurl = "https://youtube-music.en.uptodown.com/android"
 apkmirror-dlurl = "https://apkmirror.com/apk/google-inc/youtube-music"
 archive-dlurl = "https://archive.org/download/geologically/apks/com.google.android.apps.youtube.music"
@@ -152,16 +180,16 @@ excluded-patches = "'Custom branding icon for YouTube Music' 'Custom branding na
 build-mode = "both"
 patches-version = "dev"
 arch = "arm64-v8a" 
-enabled = false
 
 [X-piko-dev]
+enabled = false
 build-mode = "apk"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter/"
 archive-dlurl = "https://archive.org/download/geologically/apks/com.twitter.android"
 uptodown-dlurl = "https://twitter.id.uptodown.com/android"
 patches-source = "crimera/piko"
+cli-source = "MorpheApp/morphe-cli"
 included-patches = "'Disable chirp font' 'Hide Banner' 'Hide FAB' 'Hide promote button' 'Dynamic color' 'Hide Community Notes' 'Control video auto scroll' 'Remove premium upsell' 'Delete from database'"
 patches-version = "dev"
-enabled = false
 
 # ==========================================================================
