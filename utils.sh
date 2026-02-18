@@ -647,6 +647,9 @@ build_rv() {
 				patcher_args+=("-d \"${microg_patch}\"")
 			fi
 		fi
+
+		local stock_apk_to_patch="${stock_apk}.stripped.apk"
+		cp -f "$stock_apk" "$stock_apk_to_patch"
 		if [ "$build_mode" = module ]; then
 			zip -d "$stock_apk" "lib/*" >/dev/null 2>&1 || :
 		else
