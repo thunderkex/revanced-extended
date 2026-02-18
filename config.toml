@@ -55,55 +55,45 @@ cli-source = "inotia00/revanced-cli"
 included-patches = "'Disable chirp font' 'Hide Banner' 'Hide FAB' 'Hide promote button' 'Dynamic color' 'Hide Community Notes' 'Control video auto scroll' 'Remove premium upsell' 'Delete from database'"
 enabled = true
 
-[X-piko-dev]
-build-mode = "apk"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter/"
-archive-dlurl = "https://archive.org/download/geologically/apks/com.twitter.android"
-uptodown-dlurl = "https://twitter.id.uptodown.com/android"
-patches-source = "crimera/piko"
-included-patches = "'Disable chirp font' 'Hide Banner' 'Hide FAB' 'Hide promote button' 'Dynamic color' 'Hide Community Notes' 'Control video auto scroll' 'Remove premium upsell' 'Delete from database'"
-patches-version = "dev"
-enabled = false
-
 [TikTok]
-build-mode = "both"
+build-mode = "apk"
 uptodown-dlurl = "https://tiktok.en.uptodown.com/android"
 apkmirror-dlurl = "https://apkmirror.com/apk/tiktok-pte-ltd/tik-tok-including-musical-ly"
 included-patches = "'SIM spoof'"
 enabled = false
 
 [Facebook]
-build-mode = "both"
+build-mode = "apk"
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-2/facebook"
 enabled = false
 
 [Instagram]
-build-mode = "both"
+build-mode = "apk"
 uptodown-dlurl = "https://instagram.en.uptodown.com/android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/instagram-instagram"
 enabled = false
 
 [Gphotos]
-build-mode = "both"
+build-mode = "apk"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/photos/"
 uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
 archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
 enabled = false
 
 [Soundcloud]
-build-mode = "both"
+build-mode = "apk"
 uptodown-dlurl = "https://soundcloud.en.uptodown.com/android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/soundcloud/soundcloud-soundcloud"
 
 [Lightroom]
-build-mode = "both"
+build-mode = "apk"
 uptodown-dlurl = "https://adobe-lightroom-mobile.en.uptodown.com/android"
 # apkmirror-dlurl = "https://www.apkmirror.com/apk/adobe/lightroom"
 enabled = false
 
 [Spotify]
-build-mode = "both"
+build-mode = "apk"
 # apkmirror-dlurl = "https://www.apkmirror.com/apk/spotify-ab/"
 uptodown-dlurl = "https://spotify.en.uptodown.com/android"
 patches-source = "anddea/revanced-patches"
@@ -162,6 +152,16 @@ excluded-patches = "'Custom branding icon for YouTube Music' 'Custom branding na
 build-mode = "both"
 patches-version = "dev"
 arch = "arm64-v8a" 
+enabled = false
+
+[X-piko-dev]
+build-mode = "apk"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter/"
+archive-dlurl = "https://archive.org/download/geologically/apks/com.twitter.android"
+uptodown-dlurl = "https://twitter.id.uptodown.com/android"
+patches-source = "crimera/piko"
+included-patches = "'Disable chirp font' 'Hide Banner' 'Hide FAB' 'Hide promote button' 'Dynamic color' 'Hide Community Notes' 'Control video auto scroll' 'Remove premium upsell' 'Delete from database'"
+patches-version = "dev"
 enabled = false
 
 # ==========================================================================
