@@ -56,6 +56,8 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-2/facebook"
 [Gphotos-Ex]
 enabled = true
 build-mode = "apk"
+patches-version = "v5.48.0"
+cli-version = "v5.0.1"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/photos/"
 uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
 archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
