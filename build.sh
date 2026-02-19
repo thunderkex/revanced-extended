@@ -22,28 +22,6 @@ epr() { echo -e "${RED}[-] ${1}${NC}" >&2; }
 # ============================================
 # Pre-flight checks
 # ============================================
-check_dependencies() {
-    local missing=()
-    
-    command -v jq >/dev/null || missing+=("jq")
-    command -v java >/dev/null || missing+=("openjdk-17")
-    command -v zip >/dev/null || missing+=("zip")
-    command -v curl >/dev/null || missing+=("curl")
-    
-    if [ ${#missing[@]} -gt 0 ]; then
-        epr "Missing dependencies: ${missing[*]}"
-        epr "Install with: apt install ${missing[*]}"
-        exit 1
-    fi
-    
-    # Check Java version
-    local java_ver
-    java_ver=$(java -version 2>&1 | head -1 | cut -d'"' -f2 | cut -d'.' -f1)
-    if [ "$java_ver" -lt 17 ] 2>/dev/null; then
-        warn "Java 17+ recommended, found version $java_ver"
-    fi
-}
-
 check_disk_space() {
     local required_mb=2000  # 2GB minimum
     local available_mb
@@ -68,7 +46,6 @@ check_network() {
 # Run pre-flight checks
 preflight_checks() {
     pr "Running pre-flight checks..."
-    check_dependencies
     check_disk_space
     check_network
 }
