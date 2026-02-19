@@ -1,4 +1,4 @@
-# 🚀 ReVanced Extended
+# ReVanced Extended: Android App Patching, Customization & Ad-Blocking
 
 <div align="center">
 
@@ -8,39 +8,48 @@
 [![License](https://img.shields.io/github/license/thunderkex/revanced-extended?style=for-the-badge)](LICENSE)
 [![Stars](https://img.shields.io/github/stars/thunderkex/revanced-extended?style=for-the-badge&logo=github)](https://github.com/thunderkex/revanced-extended/stargazers)
 
-**Auto-built ReVanced Extended APKs & Magisk Modules**
+**Auto-built APKs, Magisk Modules, and Advanced Android App Customization Tools**
 
-[📥 Downloads](#-downloads) • [📖 Documentation](#-documentation) • [🛠️ Build](#️-build-it-yourself) • [❓ FAQ](#-faq)
+[📥 Downloads](#-download-revanced-extended-apks--modules) • [📖 Documentation](#-documentation-configuration--support) • [🛠️ Build](#️-build-revanced-extended-yourself) • [❓ FAQ](#-frequently-asked-questions-faq)
 
 </div>
 
 ---
 
-## ✨ Features
+## ✨ Key Features & Benefits
 
-- 🔄 **Auto-Updated** - Builds triggered automatically when new patches are released
-- 🧩 **Magisk/KernelSU Modules** - Root installation with auto-updates
-- 📱 **Multiple Architectures** - ARM64, ARM32, x86, and Universal builds
-- 🎨 **Morphe Patches** - Enhanced patches with additional features
-- 🔒 **Verified Builds** - MD5 checksums provided for verification
+- 🔄 **Auto-Updated**: Always up-to-date with the latest patches for popular Android apps (YouTube, Twitter, Reddit, Facebook, Instagram, Spotify, TikTok, and more)
+- 🧩 **Magisk/KernelSU Modules**: Root installation, seamless updates, and advanced modding
+- 📱 **Multi-Architecture Support**: ARM64, ARM32, x86, Universal APKs for maximum compatibility
+- 🎨 **Enhanced Morphe Patches**: Unlock premium features, customize UI, and optimize app performance
+- 🔒 **Verified Builds**: MD5 checksums for security and integrity
+- 🚫 **Ad-Blocking & Privacy**: Remove ads, trackers, and enhance privacy in patched apps
+- 🛠️ **Open-Source & Community-Driven**: Transparent development, frequent updates, and community support
 
 ---
 
-## 📋 Supported Apps
+## 📋 Supported Android Apps & Modules
 
 | App | Patches Source | Status |
 |:---:|:--------------|:------:|
 | ![YouTube Music](https://img.shields.io/badge/YouTube_Music-FF0000?style=flat-square&logo=youtube-music&logoColor=white) | [wchill/rvx-morphed](https://github.com/wchill/rvx-morphed) | ✅ Active |
 | ![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=flat-square&logo=youtube&logoColor=white) | [wchill/rvx-morphed](https://github.com/wchill/rvx-morphed) | ✅ Active |
 | ![Reddit](https://img.shields.io/badge/Reddit-FF4500?style=flat-square&logo=reddit&logoColor=white) | [wchill/rvx-morphed](https://github.com/wchill/rvx-morphed) | ✅ Active |
-| ![X](https://img.shields.io/badge/X_(Twitter)-000000?style=flat-square&logo=x&logoColor=white) | [crimera/piko](https://github.com/crimera/piko) | ✅ Active |
+| ![X (Twitter)](https://img.shields.io/badge/X_(Twitter)-000000?style=flat-square&logo=x&logoColor=white) | [crimera/piko](https://github.com/crimera/piko) | ✅ Active |
+| ![Facebook](https://img.shields.io/badge/Facebook-1877F2?style=flat-square&logo=facebook&logoColor=white) | [revanced](https://github.com/revanced) | ✅ Active |
+| ![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=flat-square&logo=instagram&logoColor=white) | [revanced](https://github.com/revanced) | ✅ Active |
+| ![Spotify](https://img.shields.io/badge/Spotify-1DB954?style=flat-square&logo=spotify&logoColor=white) | [revanced](https://github.com/revanced) | ✅ Active |
+| ![TikTok](https://img.shields.io/badge/TikTok-000000?style=flat-square&logo=tiktok&logoColor=white) | [revanced](https://github.com/revanced) | ✅ Active |
+| ![Google Photos](https://img.shields.io/badge/Google_Photos-4285F4?style=flat-square&logo=googlephotos&logoColor=white) | [revanced](https://github.com/revanced) | ✅ Active |
+| ![SoundCloud](https://img.shields.io/badge/SoundCloud-FF3300?style=flat-square&logo=soundcloud&logoColor=white) | [revanced](https://github.com/revanced) | ✅ Active |
+| ![Strava](https://img.shields.io/badge/Strava-FF7F00?style=flat-square&logo=strava&logoColor=white) | [revanced](https://github.com/revanced) | ✅ Active |
 
-> 💡 Enable more apps by editing `config.toml`
+> 💡 Enable more apps and custom patches by editing `config.toml` (see [CONFIG.md](CONFIG.md))
 
 ---
 # Dont use LITE variants for now
 <!-- DOWNLOADS_START -->
-## 📥 Downloads
+## 📥 Download ReVanced Extended APKs & Modules
 
 > **Last Updated:** 2026-02-18 17:27:08 UTC
 
@@ -55,24 +64,24 @@
 <details>
 <summary>📋 <b>Requirements & Installation</b></summary>
 
-#### Non-Root Installation
-1. Install [MicroG RE](https://github.com/MorpheApp/MicroG-RE/releases) first
-2. Download the APK for your device architecture
+#### Non-Root Installation (Ad-Blocking, Customization)
+1. Install [MicroG RE](https://github.com/MorpheApp/MicroG-RE/releases) for Google login support
+2. Download the APK for your device architecture (ARM64, ARM32, x86, Universal)
 3. Install the APK using your package manager
 
-#### Root Installation (Magisk/KernelSU)
-1. Download the `.zip` module file
+#### Root Installation (Magisk/KernelSU, Advanced Modding)
+1. Download the `.zip` module file for your device
 2. Install via Magisk/KernelSU app
 3. Reboot your device
-4. Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to block Play Store updates
+4. Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to prevent unwanted Play Store updates
 
-#### Architecture Guide
+#### Architecture Guide (Device Compatibility)
 | Arch | Description | Devices |
 |:----:|:------------|:--------|
-| 📱 ARM64 | 64-bit ARM | Most modern phones (2017+) |
-| 📟 ARM32 | 32-bit ARM | Older phones, some tablets |
+| 📱 ARM64 | 64-bit ARM | Most modern Android phones (2017+) |
+| 📟 ARM32 | 32-bit ARM | Older phones, tablets |
 | 💻 x86_64 | 64-bit Intel | Chromebooks, emulators |
-| 🌐 Universal | All architectures | Works everywhere (larger size) |
+| 🌐 Universal | All architectures | Works everywhere (larger APK size) |
 
 </details>
 
@@ -181,13 +190,13 @@ f35d5af765bcba916d120c012c3776fd  music-ex-morphed-revanced-magisk-v8.30.54-arm6
 
 ---
 
-## 📖 Documentation
+## 📖 Documentation, Configuration & Support
 
 <details>
 <summary><b>📁 Project Structure</b></summary>
 
 ```
-.
+. 
 ├── build.sh              # Main build script
 ├── build-termux.sh       # Termux-specific build script
 ├── config.toml           # Build configuration
@@ -239,15 +248,15 @@ excluded-patches = "'Patch2'"    # Patches to exclude
 
 ---
 
-## 🛠️ Build It Yourself
+## 🛠️ Build ReVanced Extended Yourself
 
-### Prerequisites
+### Prerequisites (Build Requirements)
 
 - Linux/macOS or [Termux](https://termux.dev/) on Android
 - Java 17+ (`openjdk-17-jdk`)
 - Required tools: `jq`, `curl`, `zip`
 
-### Quick Start
+### Quick Start (Build & Patch Android Apps)
 
 ```bash
 # Clone the repository
@@ -263,7 +272,7 @@ nano config.toml
 # Built files will be in ./build/
 ```
 
-### Build Options
+### Build Options (Advanced Usage)
 
 ```bash
 # Clean build
@@ -276,7 +285,7 @@ nano config.toml
 ./build.sh config.toml --config-update
 ```
 
-### Termux Build
+### Termux Build (Android CLI)
 
 ```bash
 # Setup Termux environment first
@@ -289,7 +298,7 @@ pkg install openjdk-17 git curl jq zip
 
 ---
 
-## ❓ FAQ
+## ❓ Frequently Asked Questions (FAQ)
 
 <details>
 <summary><b>Which architecture should I choose?</b></summary>
@@ -353,7 +362,7 @@ You can consider using [rvmm-zygisk-mount](https://github.com/inotia00/rvmm-zygi
 
 ---
 
-## 🙏 Credits
+## 🙏 Credits & Acknowledgements
 
 - [ReVanced](https://github.com/revanced) - Original project
 - [inotia00](https://github.com/inotia00) - ReVanced Extended patches
@@ -366,9 +375,9 @@ You can consider using [rvmm-zygisk-mount](https://github.com/inotia00/rvmm-zygi
 
 ## 📄 License
 
-This project is licensed under the GPL-3.0 License - see the [LICENSE](LICENSE) file for details.
-
+This project is licensed under the GPL-3.0 License. See the [LICENSE](LICENSE) file for full details.
 ---
+
 
 <div align="center">
 

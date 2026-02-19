@@ -202,7 +202,7 @@ generate_downloads_section() {
     build_date=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
     
     # Header
-    output+="## 📥 Downloads\n\n"
+    output+="## 📥 Download ReVanced Extended APKs & Modules\n\n"
     output+="> **Last Updated:** ${build_date}\n\n"
     
     # Quick links section
@@ -216,22 +216,22 @@ generate_downloads_section() {
     
     # Requirements note
     output+="<details>\n<summary>📋 <b>Requirements & Installation</b></summary>\n\n"
-    output+="#### Non-Root Installation\n"
-    output+="1. Install [MicroG RE](https://github.com/MorpheApp/MicroG-RE/releases) first\n"
-    output+="2. Download the APK for your device architecture\n"
+    output+="#### Non-Root Installation (Ad-Blocking, Customization)\n"
+    output+="1. Install [MicroG RE](https://github.com/MorpheApp/MicroG-RE/releases) for Google login support\n"
+    output+="2. Download the APK for your device architecture (ARM64, ARM32, x86, Universal)\n"
     output+="3. Install the APK using your package manager\n\n"
     output+="#### Root Installation (Magisk/KernelSU)\n"
-    output+="1. Download the \`.zip\` module file\n"
+    output+="1. Download the \`.zip\` module file for your device\n"
     output+="2. Install via Magisk/KernelSU app\n"
     output+="3. Reboot your device\n"
-    output+="4. Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to block Play Store updates\n\n"
-    output+="#### Architecture Guide\n"
+    output+="4. Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to prevent unwanted Play Store updates\n\n"
+    output+="#### Architecture Guide (Device Compatibility)\n"
     output+="| Arch | Description | Devices |\n"
     output+="|:----:|:------------|:--------|\n"
-    output+="| 📱 ARM64 | 64-bit ARM | Most modern phones (2017+) |\n"
-    output+="| 📟 ARM32 | 32-bit ARM | Older phones, some tablets |\n"
+    output+="| 📱 ARM64 | 64-bit ARM | Most modern Android phones (2017+) |\n"
+    output+="| 📟 ARM32 | 32-bit ARM | Older Android phones, some tablets |\n"
     output+="| 💻 x86_64 | 64-bit Intel | Chromebooks, emulators |\n"
-    output+="| 🌐 Universal | All architectures | Works everywhere (larger size) |\n\n"
+    output+="| 🌐 Universal | All architectures | Works everywhere (larger APK size) |\n\n"
     output+="</details>\n\n"
     
     # Collect all files

@@ -35,32 +35,34 @@ generate_release_notes() {
     local notes_file="release_notes.md"
     local build_date
     build_date=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
-    
+
     cat > "$notes_file" << EOF
-# 🚀 ReVanced Extended - Latest Build
+# 🚀 ReVanced Extended - Latest Build Download & Release Notes
 
 > **Auto-updated:** ${build_date}
 
+Welcome to the custom **ReVanced Extended** latest build release page. Here you can download the most recent APK and Magisk/KernelSU module files, view detailed build information, and find step-by-step installation instructions. Stay up-to-date with the best YouTube mod for Android!
+
 EOF
-    
+
     # Add build info if available
     if [[ -f "build.md" ]]; then
-        echo "## 📦 Build Information" >> "$notes_file"
+        echo "## 📦 Build Information & Changelog" >> "$notes_file"
         echo "" >> "$notes_file"
         cat "build.md" >> "$notes_file"
         echo "" >> "$notes_file"
     fi
-    
+
     # Add asset list
-    echo "## 📥 Downloads" >> "$notes_file"
+    echo "## 📥 Download Latest ReVanced Extended APK & Modules" >> "$notes_file"
     echo "" >> "$notes_file"
-    echo "All assets below are the **latest versions**. Simply download and install!" >> "$notes_file"
+    echo "Below are the **latest versions** of all available assets. Download and install to enjoy the newest features and fixes!" >> "$notes_file"
     echo "" >> "$notes_file"
-    
+
     if [[ -d "$BUILD_DIR" ]]; then
         echo "| File | Size |" >> "$notes_file"
         echo "|------|------|" >> "$notes_file"
-        
+
         for file in "$BUILD_DIR"/*.apk "$BUILD_DIR"/*.zip; do
             [[ -f "$file" ]] || continue
             local filename
@@ -71,31 +73,33 @@ EOF
         done
         echo "" >> "$notes_file"
     fi
-    
+
     # Add installation instructions
     cat >> "$notes_file" << 'EOF'
-## 📲 Installation
+## 📲 How to Install ReVanced Extended
 
-### Magisk/KernelSU Module
-1. Download the `.zip` module file
-2. Install via Magisk/KernelSU app
-3. Reboot device
+### Magisk/KernelSU Module Installation
+1. Download the `.zip` module file from the list above.
+2. Open your Magisk or KernelSU app and install the module.
+3. Reboot your Android device to activate the module.
 
-### Non-Root APK
-1. Download the `.apk` file
-2. Install using your package installer
-3. If updating, uninstall the previous version first
+### Non-Root APK Installation
+1. Download the `.apk` file from the downloads section.
+2. Use your preferred package installer to install the APK.
+3. If updating, uninstall the previous version before installing the new one.
 
-## ⚠️ Important Notes
+## ⚠️ Important Notes for Users
 
-- **Magisk users**: Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to prevent Play Store updates
-- **Module updates**: Magisk will notify you of updates automatically
-- **This release is automatically updated** - assets are always current
+- **Magisk users:** Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to prevent unwanted Play Store updates.
+- **Automatic Updates:** Magisk will notify you when module updates are available.
+- **Always Current:** This release page is automatically updated with the latest ReVanced Extended builds and assets.
 
 ---
 
+For more information, troubleshooting, and support, visit the [ReVanced Extended GitHub repository](https://github.com/thunderkex/revanced-extended).
+
 EOF
-    
+
     echo "$notes_file"
 }
 
