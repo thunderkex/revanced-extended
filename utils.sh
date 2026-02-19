@@ -68,7 +68,7 @@ abort() {
 	epr "ABORT: ${1-}"
 	exit 1
 }
-java() { env -i command java "$@"; }
+java() { env -i java "$@"; }
 
 get_prebuilts() {
 	local cli_src=$1 cli_ver=$2 patches_src=$3 patches_ver=$4
