@@ -1,6 +1,6 @@
 ### 📥 Available APKs
 
-> **Last Updated:** 2026-02-20 08:45:37 UTC
+> **Last Updated:** 2026-02-20 17:02:25 UTC
 
 ### ![Facebook](https://img.shields.io/badge/Facebook-1877F2?style=flat-square&logo=facebook&logoColor=white)
 
@@ -37,7 +37,7 @@
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 📦 APK | v2025.05.27 | 📱 arm64-v8a | 75M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/soundcloud-ex-revanced-v2025.05.27-release-arm64-v8a.apk) |
+| 📦 APK | v2025.05.27 | 📱 arm64-v8a | 76M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/soundcloud-ex-revanced-v2025.05.27-release-arm64-v8a.apk) |
 
 ### ![Spotify](https://img.shields.io/badge/Spotify-1DB954?style=flat-square&logo=spotify&logoColor=white)
 
@@ -55,7 +55,7 @@
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 📦 APK | v36.5.4 | 📱 arm64-v8a | 306M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/tiktok-revanced-v36.5.4-arm64-v8a.apk) |
+| 📦 APK | v36.5.4 | 📱 arm64-v8a | 305M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/tiktok-revanced-v36.5.4-arm64-v8a.apk) |
 
 ### ![X (Twitter)](https://img.shields.io/badge/X_(Twitter)-000000?style=flat-square&logo=x&logoColor=white)
 
