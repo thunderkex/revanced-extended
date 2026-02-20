@@ -1,6 +1,6 @@
 ### 📥 Available APKs
 
-> **Last Updated:** 2026-02-19 07:37:35 UTC
+> **Last Updated:** 2026-02-20 08:45:37 UTC
 
 ### ![Facebook](https://img.shields.io/badge/Facebook-1877F2?style=flat-square&logo=facebook&logoColor=white)
 
@@ -12,7 +12,7 @@
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 📦 APK | v7.63.0 | 📱 arm64-v8a | 170M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/gphotos-ex-revanced-v7.63.0.869312946-arm64-v8a.apk) |
+| 📦 APK | v7.64.0 | 📱 arm64-v8a | 90M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/gphotos-ex-revanced-v7.64.0.870575488-arm64-v8a.apk) |
 
 ### ![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=flat-square&logo=instagram&logoColor=white)
 
@@ -49,7 +49,7 @@
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 📦 APK | vN/A | 📱 arm64-v8a | 124M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/strava-ex-revanced-v450.9-arm64-v8a.apk) |
+| 📦 APK | vN/A | 📱 arm64-v8a | 123M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/strava-ex-revanced-v451.10-arm64-v8a.apk) |
 
 ### ![TikTok](https://img.shields.io/badge/TikTok-000000?style=flat-square&logo=tiktok&logoColor=white)
 

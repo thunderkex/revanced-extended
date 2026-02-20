@@ -9,4 +9,3 @@ Strava-Ex: 450.9
 TikTok: 36.5.4  
 X-piko: 10.86.0-release.0  
 Youtube-Ex-morphed: 20.05.46  
-reddit-Ex: 2026.03.0  
