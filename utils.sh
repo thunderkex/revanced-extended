@@ -181,7 +181,7 @@ set_prebuilts() {
 
 config_update() {
 	if [ ! -f build.md ]; then abort "build.md not available"; fi
-	declare -A sources
+	declare -A sources updated_asset orig_ver src source_asset
 	: >"$TEMP_DIR"/skipped
 	local upped=()
 	local prcfg=false
@@ -192,8 +192,17 @@ config_update() {
 		if [ "$enabled" = "false" ]; then continue; fi
 		PATCHES_SRC=$(toml_get "$t" patches-source) || PATCHES_SRC=$DEF_PATCHES_SRC
 		PATCHES_VER=$(toml_get "$t" patches-version) || PATCHES_VER=$DEF_PATCHES_VER
+
+		# remember original info for reporting
+		orig_ver["$table_name"]="$PATCHES_VER"
+		src["$table_name"]="$PATCHES_SRC"
+
 		if [[ -v sources["$PATCHES_SRC/$PATCHES_VER"] ]]; then
-			if [ "${sources["$PATCHES_SRC/$PATCHES_VER"]}" = 1 ]; then upped+=("$table_name"); fi
+			if [ "${sources["$PATCHES_SRC/$PATCHES_VER"]}" = 1 ]; then
+				# reuse recorded asset for this source/version key
+				updated_asset["$table_name"]="${source_asset[$PATCHES_SRC/$PATCHES_VER]}"
+				upped+=("$table_name")
+			fi
 		else
 			sources["$PATCHES_SRC/$PATCHES_VER"]=0
 			local rv_rel="https://api.github.com/repos/${PATCHES_SRC}/releases"
@@ -212,6 +221,8 @@ config_update() {
 					sources["$PATCHES_SRC/$PATCHES_VER"]=1
 					prcfg=true
 					upped+=("$table_name")
+					updated_asset["$table_name"]="$last_patches"
+					source_asset["$PATCHES_SRC/$PATCHES_VER"]="$last_patches"
 				else
 					echo "$OP" >>"$TEMP_DIR"/skipped
 				fi
@@ -225,6 +236,15 @@ config_update() {
 			query+=".key == \"$table\""
 		done
 		jq "to_entries | map(select(${query} or (.value | type != \"object\"))) | from_entries" <<<"$__TOML__"
+		# Echo human-readable update info including source and version differences
+		echo "Updates available for the following tables:"
+		for t in "${upped[@]}"; do
+			echo " - $t:"
+			echo "     from: ${src[$t]}/${orig_ver[$t]}"
+			echo "     new asset: ${updated_asset[$t]:-}"
+		done
+	else
+		echo "No updates found"
 	fi
 }
 
