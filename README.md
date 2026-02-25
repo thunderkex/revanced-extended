@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/thunderkex/revanced-extended/build.yml?style=for-the-badge&logo=github&label=Build)](https://github.com/thunderkex/revanced-extended/actions)
+[![CI Status](https://img.shields.io/github/actions/workflow/status/thunderkex/revanced-extended/ci.yml?style=for-the-badge&logo=github&label=CI)](https://github.com/thunderkex/revanced-extended/actions)
 [![Latest Release](https://img.shields.io/github/v/release/thunderkex/revanced-extended?style=for-the-badge&logo=github&label=Latest)](https://github.com/thunderkex/revanced-extended/releases/tag/latest-build)
 [![Downloads](https://img.shields.io/github/downloads/thunderkex/revanced-extended/total?style=for-the-badge&logo=github&label=Downloads)](https://github.com/thunderkex/revanced-extended/releases)
 [![License](https://img.shields.io/github/license/thunderkex/revanced-extended?style=for-the-badge)](LICENSE)
