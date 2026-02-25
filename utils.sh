@@ -491,6 +491,15 @@ get_archive_resp() {
 }
 get_archive_vers() { sed 's/^[^-]*-//;s/-\(all\|arm64-v8a\|arm-v7a\)\.apk//g' <<<"$__ARCHIVE_RESP__"; }
 get_archive_pkg_name() { echo "$__ARCHIVE_PKG_NAME__"; }
+
+# -------------------- direct --------------------
+dl_direct() {
+	local url=$1 version=${2// /-} output=$3 arch=$4 dpi=$5
+	req "$url" "${output}" || return 1
+}
+get_direct_vers() { cut -d- -f2 <<<"$__DIRECT_APKNAME__"; }
+get_direct_pkg_name() { cut -d- -f1 <<<"$__DIRECT_APKNAME__"; }
+get_direct_resp() { __DIRECT_APKNAME__=$(awk -F/ '{print $NF}' <<<"$1"); }
 # --------------------------------------------------
 
 patch_apk() {

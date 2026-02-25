@@ -174,22 +174,19 @@ for table_name in $(toml_get_table_names); do
 			abort "ERROR: build-mode '${app_args[build_mode]}' is not a valid option for '${table_name}': only 'both', 'apk' or 'module' is allowed"
 		fi
 	} || app_args[build_mode]=apk
-	app_args[uptodown_dlurl]=$(toml_get "$t" uptodown-dlurl) && {
-		app_args[uptodown_dlurl]=${app_args[uptodown_dlurl]%/}
-		app_args[uptodown_dlurl]=${app_args[uptodown_dlurl]%download}
-		app_args[uptodown_dlurl]=${app_args[uptodown_dlurl]%/}
-		app_args[dl_from]=uptodown
-	} || app_args[uptodown_dlurl]=""
-	app_args[apkmirror_dlurl]=$(toml_get "$t" apkmirror-dlurl) && {
-		app_args[apkmirror_dlurl]=${app_args[apkmirror_dlurl]%/}
-		app_args[dl_from]=apkmirror
-	} || app_args[apkmirror_dlurl]=""
-	app_args[archive_dlurl]=$(toml_get "$t" archive-dlurl) && {
-		app_args[archive_dlurl]=${app_args[archive_dlurl]%/}
-		app_args[dl_from]=archive
-	} || app_args[archive_dlurl]=""
-	if [ -z "${app_args[dl_from]-}" ]; then abort "ERROR: no 'apkmirror_dlurl', 'uptodown_dlurl' or 'archive_dlurl' option was set for '$table_name'."; fi
-	app_args[arch]=$(toml_get "$t" arch) || app_args[arch]="$DEFAULT_ARCH"
+
+	for dl_from in "direct" "uptodown" "apkmirror" "archive"; do
+		if app_args[${dl_from}_dlurl]=$(toml_get "$t" ${dl_from}-dlurl); then
+			app_args[${dl_from}_dlurl]=${app_args[${dl_from}_dlurl]%/}
+			app_args[${dl_from}_dlurl]=${app_args[${dl_from}_dlurl]%download}
+			app_args[${dl_from}_dlurl]=${app_args[${dl_from}_dlurl]%/}
+			app_args[dl_from]=${dl_from}
+		else
+			app_args[${dl_from}_dlurl]=""
+		fi
+	done
+	if [ -z "${app_args[dl_from]-}" ]; then abort "ERROR: no 'apkmirror-dlurl', 'uptodown-dlurl' or 'archive-dlurl' option was set for '$table_name'."; fi
+	app_args[arch]=$(toml_get "$t" arch) || app_args[arch]="all"
 	if ! isoneof "${app_args[arch]}" "both" "all" "arm64-v8a" "arm-v7a" "x86_64" "x86"; then
 		abort "wrong arch '${app_args[arch]}' for '$table_name'"
 	fi
