@@ -4,7 +4,7 @@
 # See CONFIG.md for detailed documentation
 
 # === Global Build Settings ===
-enable-magisk-update = true
+enable-module-update = true
 parallel-jobs = 1
 compression-level = 9
 riplib = true

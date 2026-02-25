@@ -19,37 +19,6 @@ pr() { echo -e "${GREEN}[+] ${1}${NC}"; }
 warn() { echo -e "${YELLOW}[!] ${1}${NC}"; }
 epr() { echo -e "${RED}[-] ${1}${NC}" >&2; }
 
-# ============================================
-# Pre-flight checks
-# ============================================
-check_disk_space() {
-    local required_mb=2000  # 2GB minimum
-    local available_mb
-    
-    if [ "$OS" = "Android" ]; then
-        available_mb=$(df -m . | tail -1 | awk '{print $4}')
-    else
-        available_mb=$(df -BM . | tail -1 | awk '{print $4}' | tr -d 'M')
-    fi
-    
-    if [ "$available_mb" -lt "$required_mb" ] 2>/dev/null; then
-        warn "Low disk space: ${available_mb}MB available, ${required_mb}MB recommended"
-    fi
-}
-
-check_network() {
-    if ! curl -s --connect-timeout 5 https://api.github.com >/dev/null 2>&1; then
-        warn "Network connectivity issues detected"
-    fi
-}
-
-# Run pre-flight checks
-preflight_checks() {
-    pr "Running pre-flight checks..."
-    check_disk_space
-    check_network
-}
-
 if [ "${1-}" = "clean" ]; then
 	rm -rf temp build logs build.md "$BUILD_STATE_FILE"
 	exit 0
@@ -57,15 +26,14 @@ fi
 
 source utils.sh
 
-preflight_checks
+jq --version >/dev/null || abort "\`jq\` is not installed. install it with 'apt install jq' or equivalent"
+java --version >/dev/null || abort "\`openjdk 17\` is not installed. install it with 'apt install openjdk-17-jre' or equivalent"
+zip --version >/dev/null || abort "\`zip\` is not installed. install it with 'apt install zip' or equivalent"
 
 set_prebuilts
 
 vtf() { if ! isoneof "${1}" "true" "false"; then abort "ERROR: '${1}' is not a valid option for '${2}': only true or false is allowed"; fi; }
 
-# ============================================
-# Resume support
-# ============================================
 save_build_state() {
     local app_name="$1"
     local status="$2"
@@ -85,9 +53,7 @@ clear_build_state() {
     rm -f "$BUILD_STATE_FILE"
 }
 
-# ============================================
-# Main configuration
-# ============================================
+# -- Main config --
 toml_prep "${1:-config.toml}" || abort "could not find config file '${1:-config.toml}'\n\tUsage: $0 <config.toml>"
 main_config_t=$(toml_get_table_main)
 COMPRESSION_LEVEL=$(toml_get "$main_config_t" compression-level) || COMPRESSION_LEVEL="9"
@@ -95,7 +61,7 @@ if ! PARALLEL_JOBS=$(toml_get "$main_config_t" parallel-jobs); then
 	if [ "$OS" = Android ]; then PARALLEL_JOBS=1; else PARALLEL_JOBS=$(nproc); fi
 fi
 
-# New config options
+
 CONTINUE_ON_ERROR=$(toml_get "$main_config_t" continue-on-error) || CONTINUE_ON_ERROR="true"
 DOWNLOAD_TIMEOUT=$(toml_get "$main_config_t" download-timeout) || DOWNLOAD_TIMEOUT="30"
 DOWNLOAD_RETRIES=$(toml_get "$main_config_t" download-retries) || DOWNLOAD_RETRIES="3"
@@ -106,7 +72,6 @@ LITE_LANGUAGES=$(toml_get "$main_config_t" lite-languages) || LITE_LANGUAGES="en
 LITE_DPI=$(toml_get "$main_config_t" lite-dpi) || LITE_DPI="xxhdpi"
 LITE_COMPRESSION=$(toml_get "$main_config_t" lite-compression) || LITE_COMPRESSION="9"
 
-# Override from environment
 DEFAULT_ARCH="${TARGET_ARCH:-$DEFAULT_ARCH}"
 BUILD_LITE="${BUILD_LITE_ENV:-$BUILD_LITE}"
 
@@ -124,7 +89,6 @@ if [ "${2-}" = "--config-update" ]; then
 	exit 0
 fi
 
-# Resume mode
 if [ "${2-}" = "--resume" ]; then
     pr "Resume mode enabled - skipping completed builds"
 else
@@ -132,14 +96,14 @@ else
 fi
 
 : >build.md
-ENABLE_MAGISK_UPDATE=$(toml_get "$main_config_t" enable-magisk-update) || ENABLE_MAGISK_UPDATE=true
-if [ "$ENABLE_MAGISK_UPDATE" = true ] && [ -z "${GITHUB_REPOSITORY-}" ]; then
+ENABLE_MODULE_UPDATE=$(toml_get "$main_config_t" enable-module-update) || ENABLE_MODULE_UPDATE=true
+if [ "$ENABLE_MODULE_UPDATE" = true ] && [ -z "${GITHUB_REPOSITORY-}" ]; then
 	pr "You are building locally. Module updates will not be enabled."
-	ENABLE_MAGISK_UPDATE=false
+	ENABLE_MODULE_UPDATE=false
 fi
 if ((COMPRESSION_LEVEL > 9)) || ((COMPRESSION_LEVEL < 0)); then abort "compression-level must be within 0-9"; fi
 
-rm -rf revanced-magisk/bin/*/tmp.*
+rm -rf module/bin/*/tmp.*
 for file in "$TEMP_DIR"/*/changelog.md; do
 	[ -f "$file" ] && : >"$file"
 done
@@ -154,7 +118,6 @@ idx=0
 total_apps=0
 built_apps=0
 
-# Count total enabled apps
 for table_name in $(toml_get_table_names); do
     if [ -z "$table_name" ]; then continue; fi
     t=$(toml_get_table "$table_name")
@@ -237,7 +200,7 @@ for table_name in $(toml_get_table_names); do
 	table_name_f=${table_name_f// /-}
 	app_args[module_prop_name]=$(toml_get "$t" module-prop-name) || app_args[module_prop_name]="${table_name_f}-jhc"
 
-	# Per-app lite build setting
+		# Per-app lite build setting
 	app_args[build_lite]=$(toml_get "$t" build-lite) || app_args[build_lite]="$BUILD_LITE"
 
 	if [ "${app_args[arch]}" = both ]; then
@@ -258,27 +221,6 @@ for table_name in $(toml_get_table_names); do
 		idx=$((idx + 1))
 		((built_apps++)) || true
 		build_rv "$(declare -p app_args)" &
-	elif [ "${app_args[arch]}" = all ]; then
-		# Build all architectures: arm64, arm, x86_64
-		for build_arch in "arm64-v8a" "arm-v7a" "x86_64"; do
-			app_args[table]="$table_name ($build_arch)"
-			app_args[arch]="$build_arch"
-			module_prop_name_b=${app_args[module_prop_name]}
-			if [ "$build_arch" = "arm64-v8a" ]; then
-				app_args[module_prop_name]="${module_prop_name_b}-arm64"
-			elif [ "$build_arch" = "arm-v7a" ]; then
-				app_args[module_prop_name]="${module_prop_name_b}-arm"
-			else
-				app_args[module_prop_name]="${module_prop_name_b}-${build_arch}"
-			fi
-			if ((idx >= PARALLEL_JOBS)); then
-				wait -n
-				idx=$((idx - 1))
-			fi
-			idx=$((idx + 1))
-			((built_apps++)) || true
-			build_rv "$(declare -p app_args)" &
-		done
 	else
 		if [ "${app_args[arch]}" = "arm64-v8a" ]; then
 			app_args[module_prop_name]="${app_args[module_prop_name]}-arm64"

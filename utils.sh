@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-MODULE_TEMPLATE_DIR="revanced-magisk"
+MODULE_TEMPLATE_DIR="module"
 CWD=$(pwd)
 TEMP_DIR="temp"
 BIN_DIR="bin"
@@ -13,29 +13,9 @@ OS=$(uname -o)
 toml_prep() {
 	if [ ! -f "$1" ]; then return 1; fi
 	if [ "${1##*.}" == toml ]; then
-		if [ ! -x "$TOML" ]; then
-			epr "TOML parser not found or not executable: $TOML"
-			epr "Make sure bin/toml/tq-$(uname -m) exists and is executable"
-			return 1
-		fi
-		__TOML__=$($TOML --output json --file "$1" . 2>&1) || {
-			epr "Failed to parse TOML config: $1"
-			epr "Output: $__TOML__"
-			return 1
-		}
-		# Validate JSON output
-		if ! echo "$__TOML__" | jq empty 2>/dev/null; then
-			epr "TOML parser did not produce valid JSON"
-			epr "Output: $__TOML__"
-			return 1
-		fi
+		__TOML__=$($TOML --output json --file "$1" .)
 	elif [ "${1##*.}" == json ]; then
 		__TOML__=$(cat "$1")
-		# Validate JSON
-		if ! echo "$__TOML__" | jq empty 2>/dev/null; then
-			epr "Invalid JSON config: $1"
-			return 1
-		fi
 	else abort "config extension not supported"; fi
 }
 toml_get_table_names() { jq -r -e 'to_entries[] | select(.value | type == "object") | .key' <<<"$__TOML__"; }
@@ -163,20 +143,10 @@ set_prebuilts() {
 	APKSIGNER="${BIN_DIR}/apksigner.jar"
 	local arch
 	arch=$(uname -m)
-	if [ "$arch" = aarch64 ]; then arch=arm64
-	elif [ "${arch:0:5}" = "armv7" ] || [ "$arch" = "armv7l" ]; then arch=arm
-	elif [ "$arch" = "x86_64" ] || [ "$arch" = "amd64" ]; then arch=x86_64
-	fi
+	if [ "$arch" = aarch64 ]; then arch=arm64; elif [ "${arch:0:5}" = "armv7" ]; then arch=arm; fi
 	HTMLQ="${BIN_DIR}/htmlq/htmlq-${arch}"
 	AAPT2="${BIN_DIR}/aapt2/aapt2-${arch}"
 	TOML="${BIN_DIR}/toml/tq-${arch}"
-	
-	# Make binaries executable if they exist but aren't
-	for bin in "$HTMLQ" "$TOML"; do
-		if [ -f "$bin" ] && [ ! -x "$bin" ]; then
-			chmod +x "$bin" 2>/dev/null || warn "Could not make $bin executable"
-		fi
-	done
 }
 
 config_update() {
@@ -193,16 +163,15 @@ config_update() {
 		PATCHES_SRC=$(toml_get "$t" patches-source) || PATCHES_SRC=$DEF_PATCHES_SRC
 		PATCHES_VER=$(toml_get "$t" patches-version) || PATCHES_VER=$DEF_PATCHES_VER
 
-		# remember original info for reporting
 		orig_ver["$table_name"]="$PATCHES_VER"
 		src["$table_name"]="$PATCHES_SRC"
 
 		if [[ -v sources["$PATCHES_SRC/$PATCHES_VER"] ]]; then
-			if [ "${sources["$PATCHES_SRC/$PATCHES_VER"]}" = 1 ]; then
-				# reuse recorded asset for this source/version key
+		if [ "${sources["$PATCHES_SRC/$PATCHES_VER"]}" = 1 ]; then
 				updated_asset["$table_name"]="${source_asset[$PATCHES_SRC/$PATCHES_VER]}"
 				upped+=("$table_name")
 			fi
+			if [ "${sources["$PATCHES_SRC/$PATCHES_VER"]}" = 1 ]; then upped+=("$table_name"); fi
 		else
 			sources["$PATCHES_SRC/$PATCHES_VER"]=0
 			local rv_rel="https://api.github.com/repos/${PATCHES_SRC}/releases"
@@ -509,7 +478,7 @@ get_uptodown_pkg_name() { $HTMLQ --text "tr.full:nth-child(1) > td:nth-child(3)"
 dl_archive() {
 	local url=$1 version=$2 output=$3 arch=$4
 	local path version=${version// /}
-	# Try to find arch-specific APK first, fallback to universal (-all) APK
+		# Try to find arch-specific APK first, fallback to universal (-all) APK
 	path=$(grep "${version_f#v}-${arch// /}" <<<"$__ARCHIVE_RESP__") || \
 	path=$(grep "${version_f#v}-all" <<<"$__ARCHIVE_RESP__") || return 1
 	req "${url}/${path}" "$output"
@@ -671,26 +640,27 @@ build_rv() {
 		local stock_apk_to_patch="${stock_apk}.stripped.apk"
 		cp -f "$stock_apk" "$stock_apk_to_patch"
 		if [ "$build_mode" = module ]; then
-			zip -d "$stock_apk" "lib/*" >/dev/null 2>&1 || :
+			zip -d "$stock_apk_to_patch" "lib/*" >/dev/null 2>&1 || :
 		else
 			if [ "$arch" = "arm64-v8a" ]; then
-				zip -d "$stock_apk" "lib/armeabi-v7a/*" "lib/x86_64/*" "lib/x86/*" >/dev/null 2>&1 || :
+				zip -d "$stock_apk_to_patch" "lib/armeabi-v7a/*" "lib/x86_64/*" "lib/x86/*" >/dev/null 2>&1 || :
 			elif [ "$arch" = "arm-v7a" ]; then
-				zip -d "$stock_apk" "lib/arm64-v8a/*" "lib/x86_64/*" "lib/x86/*" >/dev/null 2>&1 || :
+				zip -d "$stock_apk_to_patch" "lib/arm64-v8a/*" "lib/x86_64/*" "lib/x86/*" >/dev/null 2>&1 || :
 			elif [ "$arch" = "x86" ]; then
-				zip -d "$stock_apk" "lib/arm64-v8a/*" "lib/x86_64/*" "lib/armeabi-v7a/*" >/dev/null 2>&1 || :
+				zip -d "$stock_apk_to_patch" "lib/arm64-v8a/*" "lib/x86_64/*" "lib/armeabi-v7a/*" >/dev/null 2>&1 || :
 			elif [ "$arch" = "x86_64" ]; then
-				zip -d "$stock_apk" "lib/arm64-v8a/*" "lib/armeabi-v7a/*" "lib/x86/*" >/dev/null 2>&1 || :
+				zip -d "$stock_apk_to_patch" "lib/arm64-v8a/*" "lib/armeabi-v7a/*" "lib/x86/*" >/dev/null 2>&1 || :
 			else
-				zip -d "$stock_apk" "lib/x86_64/*" "lib/x86/*" >/dev/null 2>&1 || :
+				zip -d "$stock_apk_to_patch" "lib/x86_64/*" "lib/x86/*" >/dev/null 2>&1 || :
 			fi
 		fi
 		if [ "${NORB:-}" != true ] || [ ! -f "$patched_apk" ]; then
-			if ! patch_apk "$stock_apk" "$patched_apk" "${patcher_args[*]}" "${args[cli]}" "${args[ptjar]}"; then
+			if ! patch_apk "$stock_apk_to_patch" "$patched_apk" "${patcher_args[*]}" "${args[cli]}" "${args[ptjar]}"; then
 				epr "Building '${table}' failed!"
 				return 0
 			fi
 		fi
+		rm "$stock_apk_to_patch"
 		if [ "$build_mode" = apk ]; then
 			local apk_output="${BUILD_DIR}/${app_name_l}-${rv_brand_f}-v${version_f}-${arch_f}.apk"
 			mv -f "$patched_apk" "$apk_output"
@@ -709,11 +679,11 @@ build_rv() {
 			"${args[module_prop_name]}" \
 			"${app_name} ${args[rv_brand]}" \
 			"${version} (patches ${patches_ver})" \
-			"${app_name} ${args[rv_brand]} Magisk module" \
+			"${app_name} ${args[rv_brand]} module" \
 			"https://raw.githubusercontent.com/${GITHUB_REPOSITORY-}/update/${upj}" \
 			"$base_template"
 
-		local module_output="${app_name_l}-${rv_brand_f}-magisk-v${version_f}-${arch_f}.zip"
+		local module_output="${app_name_l}-${rv_brand_f}-module-v${version_f}-${arch_f}.zip"
 		pr "Packing module ${table}"
 		cp -f "$patched_apk" "${base_template}/base.apk"
 		if [ "${args[include_stock]}" = true ]; then cp -f "$stock_apk" "${base_template}/${pkg_name}.apk"; fi
@@ -746,5 +716,5 @@ versionCode=${NEXT_VER_CODE}
 author=Thunderkex
 description=${4}" >"${6}/module.prop"
 
-	if [ "$ENABLE_MAGISK_UPDATE" = true ]; then echo "updateJson=${5}" >>"${6}/module.prop"; fi
+	if [ "$ENABLE_MODULE_UPDATE" = true ]; then echo "updateJson=${5}" >>"${6}/module.prop"; fi
 }
