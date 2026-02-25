@@ -75,7 +75,7 @@
 <!-- DOWNLOADS_START -->
 ## 📥 Download ReVanced Extended APKs & Modules
 
-> **Last Updated:** 2026-02-25 04:14:10 UTC
+> **Last Updated:** 2026-02-25 17:29:50 UTC
 
 ### 🔗 Quick Links
 
@@ -127,7 +127,7 @@
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 📦 APK | v417.0.0 | 📱 arm64-v8a | 136M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-v417.0.0.54.77-arm64-v8a.apk) |
+| 📦 APK | v417.0.0 | 📱 arm64-v8a | 135M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-v417.0.0.54.77-arm64-v8a.apk) |
 
 ### ![lightroom-ex](https://img.shields.io/badge/lightroom-ex-3DDC84?style=flat-square&logo=android&logoColor=white)
 
@@ -183,19 +183,19 @@
 <summary>🔐 <b>File Checksums (MD5)</b></summary>
 
 ```
-e542ee6a72be9f3342bb2029b84b34b1  facebook-ex-revanced-v490.0.0.63.82-arm64-v8a.apk
-1e58a83b85691d7c1c2ff31bd18a4025  gphotos-ex-revanced-v7.64.0.873168826-arm64-v8a.apk
-29b62b1b41e80789b9ad0e8620b27a40  instagram-ex-revanced-v417.0.0.54.77-arm64-v8a.apk
-2779438868d691a8c1eb374303c0aecc  lightroom-ex-revanced-v9.3.0-arm64-v8a.apk
-49d2ac7ec03fe5ccd9c0ea83138e1e1d  music-ex-morphed-revanced-v8.30.54-arm64-v8a.apk
-3fbdd7e133340c4ef2723f79bd7fc4bb  soundcloud-ex-revanced-v2025.05.27-release-arm64-v8a.apk
-0b6c51fa06a5bb967bc47224365d9917  spotify-ex-revanced-v9.0.96.819-arm64-v8a.apk
-f1b8acf61dc81338bc77420cc52cc06e  strava-ex-revanced-v451.10-arm64-v8a.apk
-2cf884d7ffd6b6a437e4391dbcf93d9a  tiktok-revanced-v36.5.4-arm64-v8a.apk
-1033cbdbcc455e34ad78d9a718cba3c5  x-piko-revanced-v10.86.0-release.0-arm64-v8a.apk
-94628e5057a4a8794f4828a0c63f469e  youtube-ex-morphed-revanced-v20.05.46-arm64-v8a.apk
-040aca3009d668e09934a7735116968b  music-ex-morphed-revanced-module-v8.30.54-arm64-v8a.zip
-6f3268b72ba467e6936121e651a4b94b  youtube-ex-morphed-revanced-module-v20.05.46-arm64-v8a.zip
+30f49d3349655a12e7aec8a59c9ed28f  facebook-ex-revanced-v490.0.0.63.82-arm64-v8a.apk
+88a470db0bb8d743ed05fdb8e8be2d62  gphotos-ex-revanced-v7.64.0.873168826-arm64-v8a.apk
+40e946494344562072770b963b9896b9  instagram-ex-revanced-v417.0.0.54.77-arm64-v8a.apk
+c154a609441eecbecc9e5771a021cbc1  lightroom-ex-revanced-v9.3.0-arm64-v8a.apk
+1c452266f6ede3e5a158ca35f3349571  music-ex-morphed-revanced-v8.30.54-arm64-v8a.apk
+9105ec2bfd025448e97b95abab31bba8  soundcloud-ex-revanced-v2025.05.27-release-arm64-v8a.apk
+2743837afc57ee21d29ff1a8066559d0  spotify-ex-revanced-v9.0.96.819-arm64-v8a.apk
+978dd3312cfd84525aeffe8ce96dd7a0  strava-ex-revanced-v451.10-arm64-v8a.apk
+3db6589bc082a2860bb3903329ee5f14  tiktok-revanced-v36.5.4-arm64-v8a.apk
+0e8920f5a547c31d1e0ae9f734ac4270  x-piko-revanced-v10.86.0-release.0-arm64-v8a.apk
+7e8662ea559dba12ec02832be08b3217  youtube-ex-morphed-revanced-v20.05.46-arm64-v8a.apk
+2753121cbde329434c561c9ebe8468ea  music-ex-morphed-revanced-module-v8.30.54-arm64-v8a.zip
+016e3fd6b2c80f153bc34cae2579a272  youtube-ex-morphed-revanced-module-v20.05.46-arm64-v8a.zip
 ```
 
 </details>
