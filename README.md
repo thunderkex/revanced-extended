@@ -2,11 +2,35 @@
 
 <div align="center">
 
-[![CI Status](https://img.shields.io/github/actions/workflow/status/thunderkex/revanced-extended/ci.yml?style=for-the-badge&logo=github&label=CI)](https://github.com/thunderkex/revanced-extended/actions)
-[![Latest Release](https://img.shields.io/github/v/release/thunderkex/revanced-extended?style=for-the-badge&logo=github&label=Latest)](https://github.com/thunderkex/revanced-extended/releases/tag/latest-build)
-[![Downloads](https://img.shields.io/github/downloads/thunderkex/revanced-extended/total?style=for-the-badge&logo=github&label=Downloads)](https://github.com/thunderkex/revanced-extended/releases)
-[![License](https://img.shields.io/github/license/thunderkex/revanced-extended?style=for-the-badge)](LICENSE)
-[![Stars](https://img.shields.io/github/stars/thunderkex/revanced-extended?style=for-the-badge&logo=github)](https://github.com/thunderkex/revanced-extended/stargazers)
+<p align="center">
+  <a href="https://github.com/thunderkex/revanced-extended/actions">
+    <img alt="CI Status" src="https://img.shields.io/github/actions/workflow/status/thunderkex/revanced-extended/ci.yml?style=flat-square&logo=github&label=CI&logoColor=white" />
+  </a>
+  <a href="https://github.com/thunderkex/revanced-extended/releases/tag/latest-build">
+    <img alt="Latest Release" src="https://img.shields.io/github/v/release/thunderkex/revanced-extended?style=flat-square&logo=github&label=Latest&logoColor=white" />
+  </a>
+  <a href="https://github.com/thunderkex/revanced-extended/releases">
+    <img alt="Downloads" src="https://img.shields.io/github/downloads/thunderkex/revanced-extended/total?style=flat-square&logo=github&label=Downloads&logoColor=white" />
+  </a>
+  <a href="LICENSE">
+    <img alt="License" src="https://img.shields.io/github/license/thunderkex/revanced-extended?style=flat-square&logo=open-source-initiative&logoColor=white" />
+  </a>
+  <a href="https://github.com/thunderkex/revanced-extended/stargazers">
+    <img alt="Stars" src="https://img.shields.io/github/stars/thunderkex/revanced-extended?style=flat-square&logo=github&logoColor=white" />
+  </a>
+  <a href="https://github.com/thunderkex/revanced-extended/issues">
+    <img alt="Issues" src="https://img.shields.io/github/issues/thunderkex/revanced-extended?style=flat-square&logo=github&logoColor=white" />
+  </a>
+  <a href="https://github.com/thunderkex/revanced-extended/pulls">
+    <img alt="Pull Requests" src="https://img.shields.io/github/issues-pr/thunderkex/revanced-extended?style=flat-square&logo=github&logoColor=white" />
+  </a>
+  <a href="https://github.com/thunderkex/revanced-extended/graphs/contributors">
+    <img alt="Contributors" src="https://img.shields.io/github/contributors/thunderkex/revanced-extended?style=flat-square&logo=github&logoColor=white" />
+  </a>
+  <a href="https://github.com/thunderkex/revanced-extended/network/members">
+    <img alt="Forks" src="https://img.shields.io/github/forks/thunderkex/revanced-extended?style=flat-square&logo=github&logoColor=white" />
+  </a>
+</p>
 
 **Auto-built APKs, Magisk Modules, and Advanced Android App Customization Tools**
 
@@ -375,7 +399,5 @@ This project is licensed under the GPL-3.0 License. See the [LICENSE](LICENSE) f
 <div align="center">
 
 **⭐ Star this repo if you find it useful!**
-
-[![GitHub Sponsors](https://img.shields.io/badge/Sponsor-❤️-ea4aaa?style=for-the-badge)](https://github.com/sponsors/thunderkex)
 
 </div>
