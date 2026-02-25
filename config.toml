@@ -14,7 +14,6 @@ remove-rv-integrations-checks = true
 # Supported: "arm64-v8a", "armeabi-v7a", "x86_64", "universal", "all", "both"
 # "all" builds all architectures separately
 # "both" builds arm64-v8a and armeabi-v7a
-# "universal" keeps all architectures in single APK
 default-arch = "arm64-v8a"
 
 # === Lite Build Settings ===
