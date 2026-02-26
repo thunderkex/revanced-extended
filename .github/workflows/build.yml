@@ -264,7 +264,7 @@ jobs:
           make_latest: true
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: build-${{ inputs.target_arch || 'arm64-v8a' }}-${{ github.run_number }}
           path: ./build/*
