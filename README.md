@@ -75,7 +75,7 @@
 <!-- DOWNLOADS_START -->
 ## 📥 Download ReVanced Extended APKs & Modules
 
-> **Last Updated:** 2026-02-27 16:56:50 UTC
+> **Last Updated:** 2026-02-28 16:42:52 UTC
 
 ### 🔗 Quick Links
 
@@ -152,13 +152,13 @@
 <summary>🔐 <b>File Checksums (MD5)</b></summary>
 
 ```
-6eae4e4b2d8a0bc1dc0ff9a5760f13db  soundcloud-ex-revanced-v2025.05.27-release-all-arm64-v8a.apk
-92a65b12b949aabc58f27c8200ed3421  spotify-ex-revanced-v9.0.96.819-all-arm64-v8a.apk
-8937f60fdf5cb8baa4f8f209f64158d4  strava-ex-revanced-v452.10-all-arm64-v8a.apk
-30d89f0fd82d8c0416ca8f6bfd433bf3  tiktok-revanced-v36.5.4-all-arm64-v8a.apk
-e734204863ed4fe616fe356559ef88c1  x-piko-revanced-v10.86.0-release.0-all-arm64-v8a.apk
-dfa3b80cf26875d3915a7fad35aa20d8  youtube-ex-morphed-revanced-v20.05.46-all-arm64-v8a.apk
-d9fac44d7e00ef2c9fe7bcff01e5cd2e  youtube-ex-morphed-revanced-module-v20.05.46-all-arm64-v8a.zip
+872ade685bfbe7c75fdabe4b4b711dda  soundcloud-ex-revanced-v2025.05.27-release-all-arm64-v8a.apk
+318ed020ff2397af37455d44ab3f89d0  spotify-ex-revanced-v9.0.96.819-all-arm64-v8a.apk
+6066002b2e3a71c4ebfc020df41d31ec  strava-ex-revanced-v452.10-all-arm64-v8a.apk
+64d5263b0fa5bad7e8a86296f4efd598  tiktok-revanced-v36.5.4-all-arm64-v8a.apk
+d596e612bfabe8e0a02bf40184f5104d  x-piko-revanced-v10.86.0-release.0-all-arm64-v8a.apk
+877e5071a0a31cc5f408003234d32346  youtube-ex-morphed-revanced-v20.05.46-all-arm64-v8a.apk
+e30982c5689fb3916ab1c4835df96c78  youtube-ex-morphed-revanced-module-v20.05.46-all-arm64-v8a.zip
 ```
 
 </details>
