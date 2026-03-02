@@ -1,6 +1,6 @@
 ### 📥 Available APKs
 
-> **Last Updated:** 2026-03-02 09:42:06 UTC
+> **Last Updated:** 2026-03-02 17:14:27 UTC
 
 ### ![Facebook](https://img.shields.io/badge/Facebook-1877F2?style=flat-square&logo=facebook&logoColor=white)
 
@@ -18,7 +18,7 @@
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 📦 APK | v418.0.0 | 📱 arm64-v8a | 138M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-v418.0.0.51.77-arm64-v8a.apk) |
+| 📦 APK | v418.0.0 | 📱 arm64-v8a | 139M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-v418.0.0.51.77-arm64-v8a.apk) |
 
 ### ![lightroom-ex](https://img.shields.io/badge/lightroom-ex-3DDC84?style=flat-square&logo=android&logoColor=white)
 
