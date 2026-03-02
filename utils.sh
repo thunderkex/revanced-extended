@@ -221,7 +221,7 @@ _req() {
 	local ip="$1" op="$2"
 	shift 2
 	if [ "$op" = - ]; then
-		if ! curl -L -c "$TEMP_DIR/cookie.txt" -b "$TEMP_DIR/cookie.txt" --connect-timeout 5 --retry 0 --fail -s -S "$@" "$ip"; then
+		if ! curl -L --http2 --compressed -c "$TEMP_DIR/cookie.txt" -b "$TEMP_DIR/cookie.txt" --connect-timeout 10 --retry 0 --fail -s -S "$@" "$ip"; then
 			epr "Request failed: $ip"
 			return 1
 		fi
@@ -233,7 +233,7 @@ _req() {
 			while [ -f "$dlp" ]; do sleep 1; done
 			return
 		fi
-		if ! curl -L -c "$TEMP_DIR/cookie.txt" -b "$TEMP_DIR/cookie.txt" --connect-timeout 5 --retry 0 --fail -s -S "$@" "$ip" -o "$dlp"; then
+		if ! curl -L --http2 --compressed -c "$TEMP_DIR/cookie.txt" -b "$TEMP_DIR/cookie.txt" --connect-timeout 10 --retry 0 --fail -s -S "$@" "$ip" -o "$dlp"; then
 			epr "Request failed: $ip"
 			return 1
 		fi
@@ -241,21 +241,114 @@ _req() {
 	fi
 }
 __UA_LIST__=(
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
 	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
 	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
 	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
+	"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
 	"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+	"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0"
 	"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0"
 	"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0"
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:134.0) Gecko/20100101 Firefox/134.0"
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 14.7; rv:137.0) Gecko/20100101 Firefox/137.0"
 	"Mozilla/5.0 (Macintosh; Intel Mac OS X 14.7; rv:136.0) Gecko/20100101 Firefox/136.0"
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 14.7; rv:135.0) Gecko/20100101 Firefox/135.0"
+	"Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 Firefox/137.0"
 	"Mozilla/5.0 (X11; Linux x86_64; rv:136.0) Gecko/20100101 Firefox/136.0"
 	"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:135.0) Gecko/20100101 Firefox/135.0"
 	"Mozilla/5.0 (Macintosh; Intel Mac OS X 14_7_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Safari/605.1.15"
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15"
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 13_6_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15"
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 Edg/134.0.0.0"
 	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 Edg/133.0.0.0"
 	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 Edg/132.0.0.0"
 )
+__ACCEPT_LANG_LIST__=(
+	"en-US,en;q=0.9"
+	"en-US,en;q=0.9,fr;q=0.8"
+	"en-US,en;q=0.9,de;q=0.8"
+	"en-GB,en;q=0.9"
+	"en-US,en;q=0.8,es;q=0.6"
+	"en-US,en;q=0.9,ja;q=0.8"
+)
 get_random_ua() { echo "${__UA_LIST__[$((RANDOM % ${#__UA_LIST__[@]}))]}"; }
-req() { _req "$1" "$2" -H "User-Agent: $(get_random_ua)"; }
+get_random_accept_lang() { echo "${__ACCEPT_LANG_LIST__[$((RANDOM % ${#__ACCEPT_LANG_LIST__[@]}))]}"; }
+random_delay() {
+	local min=${1:-1} max=${2:-3}
+	sleep "$((min + RANDOM % (max - min + 1)))"
+}
+prepare_browser_headers() {
+	local ua="$1" referer="${2:-}"
+	local lang
+	lang=$(get_random_accept_lang)
+	__BROWSER_HEADER_ARGS__=(
+		-H "User-Agent: ${ua}"
+		-H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"
+		-H "Accept-Language: ${lang}"
+		-H "DNT: 1"
+		-H "Connection: keep-alive"
+		-H "Upgrade-Insecure-Requests: 1"
+	)
+	if [ -n "$referer" ]; then
+		__BROWSER_HEADER_ARGS__+=(-H "Referer: ${referer}")
+	fi
+	if [[ "$ua" == *"Edg/"* ]]; then
+		local ev
+		ev=$(echo "$ua" | sed 's/.*Edg\/\([0-9]*\).*/\1/')
+		__BROWSER_HEADER_ARGS__+=(
+			-H "Sec-Fetch-Dest: document"
+			-H "Sec-Fetch-Mode: navigate"
+			-H "Sec-Fetch-Site: ${referer:+cross-site}${referer:-none}"
+			-H "Sec-Fetch-User: ?1"
+			-H "Cache-Control: max-age=0"
+			-H "Sec-CH-UA: \"Not(A:Brand\";v=\"99\", \"Microsoft Edge\";v=\"${ev}\", \"Chromium\";v=\"${ev}\""
+			-H "Sec-CH-UA-Mobile: ?0"
+			-H "Sec-CH-UA-Platform: \"Windows\""
+		)
+	elif [[ "$ua" == *"Chrome/"* ]]; then
+		local cv
+		cv=$(echo "$ua" | sed 's/.*Chrome\/\([0-9]*\).*/\1/')
+		local platform="Windows"
+		[[ "$ua" == *"Macintosh"* ]] && platform="macOS"
+		[[ "$ua" == *"X11"* || "$ua" == *"Linux"* ]] && platform="Linux"
+		__BROWSER_HEADER_ARGS__+=(
+			-H "Sec-Fetch-Dest: document"
+			-H "Sec-Fetch-Mode: navigate"
+			-H "Sec-Fetch-Site: ${referer:+cross-site}${referer:-none}"
+			-H "Sec-Fetch-User: ?1"
+			-H "Cache-Control: max-age=0"
+			-H "Sec-CH-UA: \"Chromium\";v=\"${cv}\", \"Not(A:Brand\";v=\"99\", \"Google Chrome\";v=\"${cv}\""
+			-H "Sec-CH-UA-Mobile: ?0"
+			-H "Sec-CH-UA-Platform: \"${platform}\""
+		)
+	elif [[ "$ua" == *"Firefox/"* ]]; then
+		__BROWSER_HEADER_ARGS__+=(
+			-H "Sec-Fetch-Dest: document"
+			-H "Sec-Fetch-Mode: navigate"
+			-H "Sec-Fetch-Site: ${referer:+cross-site}${referer:-none}"
+			-H "Sec-Fetch-User: ?1"
+			-H "Cache-Control: no-cache"
+			-H "Pragma: no-cache"
+		)
+	fi
+}
+req() {
+	local ua
+	ua=$(get_random_ua)
+	prepare_browser_headers "$ua"
+	_req "$1" "$2" "${__BROWSER_HEADER_ARGS__[@]}"
+}
+req_ref() {
+	local ua
+	ua=$(get_random_ua)
+	prepare_browser_headers "$ua" "$3"
+	_req "$1" "$2" "${__BROWSER_HEADER_ARGS__[@]}"
+}
 gh_req() { _req "$1" "$2" -H "$GH_HEADER"; }
 gh_dl() {
 	if [ ! -f "$1" ]; then
@@ -379,8 +472,9 @@ dl_apkmirror() {
 		local resp node app_table apkmname dlurl=""
 		apkmname=$($HTMLQ "h1.marginZero" --text <<<"$__APKMIRROR_RESP__")
 		apkmname="${apkmname,,}" apkmname="${apkmname// /-}" apkmname="${apkmname//[^a-z0-9-]/}"
-		url="${url}/${apkmname}-${version//./-}-release/"
-		resp=$(req "$url" -) || return 1
+		local release_url="${url}/${apkmname}-${version//./-}-release/"
+		url="$release_url"
+		resp=$(req_ref "$url" - "https://www.apkmirror.com/") || return 1
 		node=$($HTMLQ "div.table-row.headerFont:nth-last-child(1)" -r "span:nth-child(n+3)" <<<"$resp")
 		if [ "$node" ]; then
 			for current_dpi in $dpi; do
@@ -392,22 +486,23 @@ dl_apkmirror() {
 				done
 			done
 			[ -z "$dlurl" ] && return 1
-			resp=$(req "$dlurl" -)
+			resp=$(req_ref "$dlurl" - "$release_url")
 		fi
-		url=$(echo "$resp" | $HTMLQ --base https://www.apkmirror.com --attribute href "a.btn") || return 1
-		url=$(req "$url" - | $HTMLQ --base https://www.apkmirror.com --attribute href "span > a[rel = nofollow]") || return 1
+		local btn_url
+		btn_url=$(echo "$resp" | $HTMLQ --base https://www.apkmirror.com --attribute href "a.btn") || return 1
+		url=$(req_ref "$btn_url" - "$url" | $HTMLQ --base https://www.apkmirror.com --attribute href "span > a[rel = nofollow]") || return 1
 	fi
 
 	if [ "$is_bundle" = true ]; then
-		req "$url" "${output}.apkm" || return 1
+		req_ref "$url" "${output}.apkm" "https://www.apkmirror.com/" || return 1
 		merge_splits "${output}.apkm" "${output}"
 	else
-		req "$url" "${output}" || return 1
+		req_ref "$url" "${output}" "https://www.apkmirror.com/" || return 1
 	fi
 }
 get_apkmirror_vers() {
 	local vers apkm_resp
-	apkm_resp=$(req "https://www.apkmirror.com/uploads/?appcategory=${__APKMIRROR_CAT__}" -)
+	apkm_resp=$(req_ref "https://www.apkmirror.com/uploads/?appcategory=${__APKMIRROR_CAT__}" - "https://www.apkmirror.com/")
 	vers=$(sed -n 's;.*Version:</span><span class="infoSlide-value">\(.*\) </span>.*;\1;p' <<<"$apkm_resp" | awk '{$1=$1}1')
 	if [ "$__AAV__" = false ]; then
 		local IFS=$'\n'
@@ -423,19 +518,20 @@ get_apkmirror_vers() {
 }
 get_apkmirror_pkg_name() { sed -n 's;.*id=\(.*\)" class="accent_color.*;\1;p' <<<"$__APKMIRROR_RESP__"; }
 get_apkmirror_resp() {
-	__APKMIRROR_RESP__=$(req "${1}" -) || return 1
+	__APKMIRROR_RESP__=$(req_ref "${1}" - "https://www.apkmirror.com/") || return 1
 	__APKMIRROR_CAT__="${1##*/}"
 }
 
 # -------------------- uptodown --------------------
 get_uptodown_resp() {
-	local max_retries=3 attempt=1
+	local max_retries=5 attempt=1
 	while [ $attempt -le $max_retries ]; do
-		if __UPTODOWN_RESP__=$(req "${1}/versions" -) && __UPTODOWN_RESP_PKG__=$(req "${1}/download" -); then
+		if __UPTODOWN_RESP__=$(req "${1}/versions" -) && __UPTODOWN_RESP_PKG__=$(req_ref "${1}/download" - "${1}/"); then
 			return 0
 		fi
-		epr "uptodown request failed (attempt ${attempt}/${max_retries}), retrying in 5s..."
-		sleep 5
+		local wait_sec=$(( 3 + RANDOM % 8 ))
+		epr "uptodown request failed (attempt ${attempt}/${max_retries}), retrying in ${wait_sec}s..."
+		sleep "$wait_sec"
 		attempt=$((attempt + 1))
 	done
 	return 1
