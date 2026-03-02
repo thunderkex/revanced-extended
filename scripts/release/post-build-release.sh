@@ -43,13 +43,37 @@ EOF
     echo "" >> "$notes_file"
 
     if [[ -d "$BUILD_DIR" ]]; then
+        # RevPack section
+        local has_revpack=false
+        for file in "$BUILD_DIR"/revpack-*.zip; do
+            [[ -f "$file" ]] && has_revpack=true && break
+        done
+
+        if [[ "$has_revpack" == "true" ]]; then
+            echo "### 📦 RevPack (All-in-One Module)" >> "$notes_file"
+            echo "" >> "$notes_file"
+            echo "| File | Size |" >> "$notes_file"
+            echo "|------|------|" >> "$notes_file"
+            for file in "$BUILD_DIR"/revpack-*.zip; do
+                [[ -f "$file" ]] || continue
+                local filename
+                filename=$(basename "$file")
+                local size
+                size=$(du -h "$file" | cut -f1)
+                echo "| \`$filename\` | $size |" >> "$notes_file"
+            done
+            echo "" >> "$notes_file"
+        fi
+
+        echo "### 🧩 Modules \& APKs" >> "$notes_file"
+        echo "" >> "$notes_file"
         echo "| File | Size |" >> "$notes_file"
         echo "|------|------|" >> "$notes_file"
-
         for file in "$BUILD_DIR"/*.apk "$BUILD_DIR"/*.zip; do
             [[ -f "$file" ]] || continue
             local filename
             filename=$(basename "$file")
+            [[ "$filename" == revpack-* ]] && continue
             local size
             size=$(du -h "$file" | cut -f1)
             echo "| \`$filename\` | $size |" >> "$notes_file"

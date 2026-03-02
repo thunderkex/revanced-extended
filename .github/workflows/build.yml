@@ -332,6 +332,7 @@ jobs:
           NL=$'\n'
           APKS=""
           MODULES=""
+          REVPACK=""
           ARCH="${{ inputs.target_arch || 'arm64-v8a' }}"
           
           # Use appropriate release tag
@@ -343,7 +344,9 @@ jobs:
           
           for OUTPUT in *; do
             DL_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${RELEASE_TAG}/${OUTPUT}"
-            if [[ $OUTPUT = *.apk ]]; then
+            if [[ $OUTPUT = revpack-* ]]; then
+              REVPACK+="${NL}📦[${OUTPUT}](${DL_URL})"
+            elif [[ $OUTPUT = *.apk ]]; then
               APKS+="${NL}📦[${OUTPUT}](${DL_URL})"
             elif [[ $OUTPUT = *.zip ]]; then
               MODULES+="${NL}📦[${OUTPUT}](${DL_URL})"
@@ -351,10 +354,17 @@ jobs:
           done
           MODULES=${MODULES#"$NL"}
           APKS=${APKS#"$NL"}
+          REVPACK=${REVPACK#"$NL"}
 
           BODY="$(sed 's/^\* \*\*/↪ \*\*/g; s/^\* `/↪ \*\*/g; s/`/\*/g; s/^\* /\↪/g; s/\*\*/\*/g; s/###//g; s/^- /↪ /g; /^==/d;' ../build.md)"
           LINE="━━━━━━━━━━━━━━━━━━━━"
-          MSG="🚀 *ReVanced Extended - New Build*${NL}${LINE}${NL}${NL}📋 *Changelog:*${NL}${BODY}${NL}${NL}🏗️ *Architecture:* \`${ARCH}\`${NL}${NL}${LINE}${NL}📥 *Downloads*${NL}${NL}🧩 *Magisk Modules:*${NL}${MODULES}${NL}${NL}📱 *APK Files:*${NL}${APKS}${NL}${LINE}"
+
+          # Build optional RevPack section (LINE must be defined first)
+          REVPACK_SECTION=""
+          if [ -n "$REVPACK" ]; then
+            REVPACK_SECTION="${NL}${NL}📦 *RevPack (All-in-One Module):*${NL}${REVPACK}${NL}${LINE}"
+          fi
+          MSG="🚀 *ReVanced Extended - New Build*${NL}${LINE}${NL}${NL}📋 *Changelog:*${NL}${BODY}${NL}${NL}🏗️ *Architecture:* \`${ARCH}\`${NL}${NL}${LINE}${NL}📥 *Downloads*${REVPACK_SECTION}${NL}${NL}🧩 *Magisk Modules:*${NL}${MODULES}${NL}${NL}📱 *APK Files:*${NL}${APKS}${NL}${LINE}"
           echo "'$MSG'"
           MSG=${MSG:0:9450}
           POST="https://api.telegram.org/bot${TG_TOKEN}/sendMessage"
