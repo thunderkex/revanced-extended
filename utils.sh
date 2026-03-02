@@ -241,32 +241,32 @@ _req() {
 	fi
 }
 __UA_LIST__=(
-	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
-	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
-	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
-	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
-	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
-	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
-	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
-	"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
-	"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
-	"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
-	"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0"
-	"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0"
-	"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0"
-	"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:134.0) Gecko/20100101 Firefox/134.0"
-	"Mozilla/5.0 (Macintosh; Intel Mac OS X 14.7; rv:137.0) Gecko/20100101 Firefox/137.0"
-	"Mozilla/5.0 (Macintosh; Intel Mac OS X 14.7; rv:136.0) Gecko/20100101 Firefox/136.0"
-	"Mozilla/5.0 (Macintosh; Intel Mac OS X 14.7; rv:135.0) Gecko/20100101 Firefox/135.0"
-	"Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 Firefox/137.0"
-	"Mozilla/5.0 (X11; Linux x86_64; rv:136.0) Gecko/20100101 Firefox/136.0"
-	"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:135.0) Gecko/20100101 Firefox/135.0"
-	"Mozilla/5.0 (Macintosh; Intel Mac OS X 14_7_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Safari/605.1.15"
-	"Mozilla/5.0 (Macintosh; Intel Mac OS X 14_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15"
-	"Mozilla/5.0 (Macintosh; Intel Mac OS X 13_6_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15"
-	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 Edg/134.0.0.0"
-	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 Edg/133.0.0.0"
-	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 Edg/132.0.0.0"
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+	"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+	"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+	"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0) Gecko/20100101 Firefox/144.0"
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0"
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 15.3; rv:146.0) Gecko/20100101 Firefox/146.0"
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 15.3; rv:145.0) Gecko/20100101 Firefox/145.0"
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 15.3; rv:144.0) Gecko/20100101 Firefox/144.0"
+	"Mozilla/5.0 (X11; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+	"Mozilla/5.0 (X11; Linux x86_64; rv:145.0) Gecko/20100101 Firefox/145.0"
+	"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:144.0) Gecko/20100101 Firefox/144.0"
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 15_3) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Safari/605.1.15"
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 15_2) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.2 Safari/605.1.15"
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 15_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.1 Safari/605.1.15"
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0"
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0"
+	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
 )
 __ACCEPT_LANG_LIST__=(
 	"en-US,en;q=0.9"
@@ -282,58 +282,89 @@ random_delay() {
 	local min=${1:-1} max=${2:-3}
 	sleep "$((min + RANDOM % (max - min + 1)))"
 }
+# Returns the GREASE brand token used in Sec-CH-UA, rotated by Chrome major version
+get_chrome_grease_brand() {
+	local cv=$1
+	local brands=(
+		'"Not_A Brand";v="8"'
+		'"Not;A=Brand";v="8"'
+		'"Not=A?Brand";v="24"'
+		'"Not:A-Brand";v="24"'
+		'"Not(A:Brand";v="8"'
+		'"Not A(Brand";v="8"'
+	)
+	echo "${brands[$(( cv % ${#brands[@]} ))]}"
+}
 prepare_browser_headers() {
 	local ua="$1" referer="${2:-}"
 	local lang
 	lang=$(get_random_accept_lang)
 	__BROWSER_HEADER_ARGS__=(
 		-H "User-Agent: ${ua}"
-		-H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"
 		-H "Accept-Language: ${lang}"
-		-H "DNT: 1"
 		-H "Connection: keep-alive"
-		-H "Upgrade-Insecure-Requests: 1"
 	)
 	if [ -n "$referer" ]; then
 		__BROWSER_HEADER_ARGS__+=(-H "Referer: ${referer}")
 	fi
 	if [[ "$ua" == *"Edg/"* ]]; then
-		local ev
+		local ev grease
 		ev=$(echo "$ua" | sed 's/.*Edg\/\([0-9]*\).*/\1/')
+		grease=$(get_chrome_grease_brand "$ev")
 		__BROWSER_HEADER_ARGS__+=(
+			-H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7"
+			-H "Accept-Encoding: gzip, deflate, br, zstd"
+			-H "Upgrade-Insecure-Requests: 1"
 			-H "Sec-Fetch-Dest: document"
 			-H "Sec-Fetch-Mode: navigate"
 			-H "Sec-Fetch-Site: ${referer:+cross-site}${referer:-none}"
 			-H "Sec-Fetch-User: ?1"
 			-H "Cache-Control: max-age=0"
-			-H "Sec-CH-UA: \"Not(A:Brand\";v=\"99\", \"Microsoft Edge\";v=\"${ev}\", \"Chromium\";v=\"${ev}\""
+			-H "Sec-CH-UA: ${grease}, \"Microsoft Edge\";v=\"${ev}\", \"Chromium\";v=\"${ev}\""
 			-H "Sec-CH-UA-Mobile: ?0"
 			-H "Sec-CH-UA-Platform: \"Windows\""
+			-H "Priority: u=0, i"
 		)
 	elif [[ "$ua" == *"Chrome/"* ]]; then
-		local cv
+		local cv grease
 		cv=$(echo "$ua" | sed 's/.*Chrome\/\([0-9]*\).*/\1/')
+		grease=$(get_chrome_grease_brand "$cv")
 		local platform="Windows"
 		[[ "$ua" == *"Macintosh"* ]] && platform="macOS"
 		[[ "$ua" == *"X11"* || "$ua" == *"Linux"* ]] && platform="Linux"
 		__BROWSER_HEADER_ARGS__+=(
+			-H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7"
+			-H "Accept-Encoding: gzip, deflate, br, zstd"
+			-H "Upgrade-Insecure-Requests: 1"
 			-H "Sec-Fetch-Dest: document"
 			-H "Sec-Fetch-Mode: navigate"
 			-H "Sec-Fetch-Site: ${referer:+cross-site}${referer:-none}"
 			-H "Sec-Fetch-User: ?1"
 			-H "Cache-Control: max-age=0"
-			-H "Sec-CH-UA: \"Chromium\";v=\"${cv}\", \"Not(A:Brand\";v=\"99\", \"Google Chrome\";v=\"${cv}\""
+			-H "Sec-CH-UA: ${grease}, \"Chromium\";v=\"${cv}\", \"Google Chrome\";v=\"${cv}\""
 			-H "Sec-CH-UA-Mobile: ?0"
 			-H "Sec-CH-UA-Platform: \"${platform}\""
+			-H "Priority: u=0, i"
 		)
 	elif [[ "$ua" == *"Firefox/"* ]]; then
 		__BROWSER_HEADER_ARGS__+=(
+			-H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"
+			-H "Accept-Encoding: gzip, deflate, br"
+			-H "DNT: 1"
+			-H "Upgrade-Insecure-Requests: 1"
 			-H "Sec-Fetch-Dest: document"
 			-H "Sec-Fetch-Mode: navigate"
 			-H "Sec-Fetch-Site: ${referer:+cross-site}${referer:-none}"
 			-H "Sec-Fetch-User: ?1"
 			-H "Cache-Control: no-cache"
 			-H "Pragma: no-cache"
+		)
+	else
+		# Safari / fallback
+		__BROWSER_HEADER_ARGS__+=(
+			-H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+			-H "Accept-Encoding: gzip, deflate, br"
+			-H "Upgrade-Insecure-Requests: 1"
 		)
 	fi
 }
