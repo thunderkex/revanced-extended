@@ -10,6 +10,15 @@ compression-level = 9
 riplib = true
 remove-rv-integrations-checks = true
 
+# === RevPack (Combined Module) ===
+# Set to true to bundle all built module zips into one flashable RevPack zip
+combine-modules = true
+# Output filename (without .zip)
+pack-name = "revpack"
+pack-apps = ""
+pack-exclude-apps = ""
+
+
 # === Architecture Settings ===
 # Supported: "arm64-v8a", "armeabi-v7a", "x86_64", "universal", "all", "both"
 # "all" builds all architectures separately

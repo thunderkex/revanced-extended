@@ -231,3 +231,15 @@ for table_name in $(toml_get_table_names); do
 done
 wait
 rm -rf temp/tmp.*
+
+COMBINE_MODULES=$(toml_get "$main_config_t" combine-modules) || COMBINE_MODULES="false"
+if [ "$COMBINE_MODULES" = true ]; then
+	PACK_NAME=$(toml_get "$main_config_t" pack-name) || PACK_NAME="revpack"
+	PACK_APPS=$(toml_get "$main_config_t" pack-apps) || PACK_APPS=""
+	PACK_EXCLUDE=$(toml_get "$main_config_t" pack-exclude-apps) || PACK_EXCLUDE=""
+	pr "Building RevPack: ${PACK_NAME}.zip"
+	PACK_APPS="$PACK_APPS" PACK_EXCLUDE="$PACK_EXCLUDE" \
+		ENABLE_MODULE_UPDATE="$ENABLE_MODULE_UPDATE" \
+		GITHUB_REPOSITORY="${GITHUB_REPOSITORY-}" \
+		bash "${CWD}/scripts/utilities/combine-modules.sh" "$PACK_NAME"
+fi

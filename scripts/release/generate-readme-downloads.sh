@@ -127,6 +127,9 @@ parse_filename() {
     if [[ "$basename" =~ -v([0-9]+\.[0-9]+\.[0-9]+) ]]; then
         APP_VERSION="${BASH_REMATCH[1]}"
         basename="${basename%-v${APP_VERSION}}"
+    elif [[ "$basename" =~ -v([0-9]{8}) ]]; then
+        APP_VERSION="${BASH_REMATCH[1]}"
+        basename="${basename%-v${APP_VERSION}}"
     fi
     
     basename="${basename%-revanced}"
@@ -134,6 +137,7 @@ parse_filename() {
     APP_VARIANT="$basename"
     
     case "$basename" in
+        *revpack*) APP_NAME="RevPack"; APP_ARCH="all" ;;
         *[Yy]outube*[Mm]usic*|*[Mm]usic*) APP_NAME="YouTube Music" ;;
         *[Yy]outube*) APP_NAME="YouTube" ;;
         *[Rr]eddit*) APP_NAME="Reddit" ;;
@@ -165,6 +169,7 @@ get_app_logo() {
     case "$app" in
         "YouTube") logo="youtube"; color="FF0000" ;;
         "YouTube Music") logo="youtubemusic"; color="FF0000" ;;
+        "RevPack") logo="android"; color="7C4DFF" ;;
         "Reddit") logo="reddit"; color="FF4500" ;;
         "X (Twitter)") logo="x"; color="000000" ;;
         "Instagram") logo="instagram"; color="E4405F" ;;

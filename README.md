@@ -44,6 +44,7 @@
 
 - 🔄 **Auto-Updated**: Always up-to-date with the latest patches for popular Android apps (YouTube, Twitter, Reddit, Facebook, Instagram, Spotify, TikTok, and more)
 - 🧩 **Magisk/KernelSU Modules**: Root installation, seamless updates, and advanced modding
+- 📦 **RevPack**: Bundle all patched apps into one flashable module with a built-in KernelSU WebUI 
 - 📱 **Multi-Architecture Support**: ARM64, ARM32, x86, Universal APKs for maximum compatibility
 - 🎨 **Enhanced Morphe Patches**: Unlock premium features, customize UI, and optimize app performance
 - 🔒 **Verified Builds**: MD5 checksums for security and integrity
@@ -67,6 +68,7 @@
 | ![Google Photos](https://img.shields.io/badge/Google_Photos-4285F4?style=flat-square&logo=googlephotos&logoColor=white) | [revanced](https://github.com/revanced) | ✅ Active |
 | ![SoundCloud](https://img.shields.io/badge/SoundCloud-FF3300?style=flat-square&logo=soundcloud&logoColor=white) | [revanced](https://github.com/revanced) | ✅ Active |
 | ![Strava](https://img.shields.io/badge/Strava-FF7F00?style=flat-square&logo=strava&logoColor=white) | [revanced](https://github.com/revanced) | ✅ Active |
+| ![RevPack](https://img.shields.io/badge/RevPack-7C4DFF?style=flat-square&logo=android&logoColor=white) | All of the above | ✅ Bundle |
 
 > 💡 Enable more apps and custom patches by editing `config.toml` (see [CONFIG.md](CONFIG.md))
 
@@ -239,8 +241,10 @@ Key options in `config.toml`:
 | `build-lite` | Build lite variants | `true` |
 | `compression-level` | APK compression (0-9) | `9` |
 | `parallel-jobs` | Parallel build jobs | Auto |
-| `patches-source` | Patches repository | Per-app |
-
+| `patches-source` | Patches repository | Per-app || `combine-modules` | Build RevPack bundle | `false` |
+| `pack-name` | RevPack output filename | `revpack` |
+| `pack-apps` | Whitelist apps in RevPack | `` (all) |
+| `pack-exclude-apps` | Blacklist apps from RevPack | `` (none) |
 See [CONFIG.md](CONFIG.md) for full documentation.
 
 </details>
@@ -265,7 +269,65 @@ excluded-patches = "'Patch2'"    # Patches to exclude
 
 ---
 
-## 🛠️ Build ReVanced Extended Yourself
+## � RevPack — Combined Module
+
+RevPack bundles every built Magisk/KernelSU module into **one flashable zip**. Instead of flashing each patched app separately, flash RevPack once and get everything.
+
+### Features
+
+- **Single flash** — one zip installs all patched apps
+- **KernelSU WebUI** — built-in dashboard accessible from KernelSU Manager showing per-app status, version info, and enable/disable controls
+- **Material You** — dynamic color theming based on your wallpaper (Android 12+)
+- **Auto update JSON** — works with KernelSU/Magisk module update system
+- **Selective packaging** — whitelist or blacklist specific apps
+
+### Enabling RevPack
+
+Edit `config.toml`:
+
+```toml
+# === RevPack (Combined Module) ===
+combine-modules = true
+pack-name = "revpack"          # output filename: revpack-v<date>.zip
+
+# Include only these apps (comma-separated table names from config.toml).
+# Leave empty to include all built modules.
+pack-apps = ""
+
+# Exclude specific apps from the bundle.
+pack-exclude-apps = ""
+```
+
+**Example — YouTube + Music only:**
+```toml
+combine-modules = true
+pack-apps = "YouTube,YouTube-Music"
+```
+
+**Example — everything except TikTok:**
+```toml
+combine-modules = true
+pack-exclude-apps = "TikTok"
+```
+
+### KernelSU WebUI
+
+After flashing RevPack, open **KernelSU Manager → Modules → RevPack → WebUI** to access the dashboard.
+
+| Feature | Description |
+|:--------|:------------|
+| App status badge | `● Enabled` / `⊘ Disabled` / `✗ Not installed` |
+| Module version | Version baked in at build time |
+| Installed version | Live read from the device |
+| Base path | Resolved APK path on device |
+| RVHC APK | Whether the patched APK is present |
+| Enable / Disable button | Toggle the app without rebooting via `pm enable` / `pm disable-user` |
+
+> The WebUI requires KernelSU. Status checks are read-only when opened in a regular browser.
+
+---
+
+## �🛠️ Build ReVanced Extended Yourself
 
 ### Prerequisites (Build Requirements)
 

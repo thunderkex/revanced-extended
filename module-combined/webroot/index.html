@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RevPack</title>
+<style>
+  :root {
+    --bg:        #0f0f0f;
+    --surface:   #1a1a1a;
+    --surface2:  #242424;
+    --border:    #2e2e2e;
+    --text:      #f0f0f0;
+    --text2:     #999;
+    --accent:    #212d33;
+    --accent-on: #ffffff;
+    --green:     #4caf50;
+    --yellow:    #ffb300;
+    --red:       #e53935;
+    --radius:    14px;
+    --radius-sm: 8px;
+    --shadow:    0 2px 12px rgba(0,0,0,.45);
+    --header-bg: #212d33;
+    --header-text:      #ffffff;
+    --header-text-sub:  rgba(255,255,255,.75);
+    --header-btn-bg:    rgba(255,255,255,.18);
+    --header-btn-hover: rgba(255,255,255,.28);
+  }
+  /* ── Static fallback palette (light) ── */
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg:       #f5f5f5;
+      --surface:  #ffffff;
+      --surface2: #f0f0f0;
+      --border:   #e0e0e0;
+      --text:     #1a1a1a;
+      --text2:    #666;
+      --shadow:   0 2px 12px rgba(0,0,0,.10);
+      --header-bg: #212d33;
+    }
+  }
+  /* ── Material You dynamic color — Android 12+ ── */
+  @media (dynamic-color) {
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg:       env(--system-neutral1-900,  #0f0f0f);
+        --surface:  env(--system-neutral1-800,  #1a1a1a);
+        --surface2: env(--system-neutral1-700,  #242424);
+        --border:   env(--system-neutral2-700,  #2e2e2e);
+        --text:     env(--system-neutral1-50,   #f0f0f0);
+        --text2:    env(--system-neutral2-300,  #999);
+        --accent:   env(--system-accent1-200,   #b388ff);
+        --accent-on:env(--system-accent1-900,   #12005e);
+      }
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg:       env(--system-neutral1-50,   #f5f5f5);
+        --surface:  env(--system-neutral1-10,   #ffffff);
+        --surface2: env(--system-neutral2-50,   #f0f0f0);
+        --border:   env(--system-neutral1-200,  #e0e0e0);
+        --text:     env(--system-neutral1-900,  #1a1a1a);
+        --text2:    env(--system-neutral2-600,  #666);
+        --accent:   env(--system-accent1-600,   #212d33);
+        --accent-on:env(--system-accent1-0,     #ffffff);
+        --shadow:   0 2px 12px rgba(0,0,0,.10);
+      }
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+    padding-bottom: 32px;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--header-bg);
+    padding: 20px 20px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 18px;
+    background: var(--bg);
+    border-radius: 18px 18px 0 0;
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .logo {
+    width: 46px; height: 46px;
+    background: rgba(255,255,255,.18);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .header h1 { color: var(--header-text); font-size: 22px; font-weight: 700; line-height: 1.1; }
+  .header p  { color: var(--header-text-sub); font-size: 12px; margin-top: 2px; }
+  .refresh-btn {
+    margin-left: auto;
+    background: var(--header-btn-bg);
+    border: none; color: var(--header-text);
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s;
+    flex-shrink: 0;
+  }
+  .refresh-btn:hover  { background: var(--header-btn-hover); }
+  .refresh-btn:active { background: var(--header-btn-hover); }
+  .spin { animation: spin .7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Body padding ── */
+  .content { padding: 16px; max-width: 640px; margin: 0 auto; }
+
+  /* ── Info chips ── */
+  .chips {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 12px;
+    color: var(--text2);
+    display: flex; align-items: center; gap: 5px;
+  }
+  .chip b { color: var(--text); }
+
+  /* ── Section title ── */
+  .section-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin: 20px 0 10px;
+  }
+
+  /* ── App card ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+    transition: border-color .2s;
+  }
+  .card:last-child { margin-bottom: 0; }
+  .card-header {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .app-icon {
+    width: 40px; height: 40px;
+    background: var(--surface2);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+  }
+  .app-name {
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1.2;
+  }
+  .app-pkg {
+    font-size: 11px;
+    color: var(--text2);
+    margin-top: 2px;
+    word-break: break-all;
+  }
+  .status-badge {
+    margin-left: auto;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .badge-mounted  { background: rgba(76,175,80,.15);  color: var(--green); border: 1px solid rgba(76,175,80,.3); }
+  .badge-unmounted{ background: rgba(255,179,0,.15);   color: var(--yellow); border: 1px solid rgba(255,179,0,.3); }
+  .badge-missing  { background: rgba(229,57,53,.15);   color: var(--red); border: 1px solid rgba(229,57,53,.3); }
+  .badge-loading  { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+
+  .card-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 12px -16px;
+  }
+  .card-rows { display: grid; gap: 7px; }
+  .row {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: 12.5px;
+  }
+  .row-label {
+    color: var(--text2);
+    min-width: 90px;
+    flex-shrink: 0;
+  }
+  .row-value {
+    color: var(--text);
+    word-break: break-all;
+    font-family: "SF Mono", "Fira Code", monospace;
+    font-size: 11.5px;
+  }
+  .row-value.na { color: var(--text2); font-family: inherit; font-size: 12.5px; }
+  .ver-match   { color: var(--green); }
+  .ver-mismatch{ color: var(--yellow); }
+
+  /* ── Empty / Error states ── */
+  .state-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 20px;
+    text-align: center;
+    color: var(--text2);
+  }
+  .state-card .icon { font-size: 36px; margin-bottom: 10px; }
+  .state-card h3 { color: var(--text); margin-bottom: 6px; }
+  .state-card p  { font-size: 12px; line-height: 1.5; }
+
+  /* ── No-KSU banner ── */
+  .banner {
+    background: rgba(255,179,0,.12);
+    border: 1px solid rgba(255,179,0,.35);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--yellow);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  /* ── Mount action button ── */
+  .mount-btn {
+    display: none;
+    margin-top: 12px;
+    width: 100%;
+    padding: 8px 0;
+    border-radius: var(--radius-sm);
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity .15s;
+  }
+  .mount-btn:active { opacity: .7; }
+  .mount-btn.unmount { background: rgba(229,57,53,.15); color: var(--red);    border: 1px solid rgba(229,57,53,.35); }
+  .mount-btn.mount   { background: rgba(76,175,80,.15);  color: var(--green); border: 1px solid rgba(76,175,80,.35); }
+  .mount-btn.busy    { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); cursor: default; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="logo">⚡</div>
+    <div>
+      <h1>RevPack</h1>
+      <p id="header-sub">Loading…</p>
+    </div>
+    <button class="refresh-btn" id="refresh-btn" title="Refresh" onclick="refresh()"><span id="refresh-icon">↻</span></button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="chips" id="chips"></div>
+  <div id="ksu-banner"></div>
+  <div class="section-title">Installed Apps</div>
+  <div id="app-list">
+    <div class="state-card">
+      <div class="icon">⏳</div>
+      <h3>Loading…</h3>
+      <p>Fetching app status from device</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+function exec(cmd, timeoutMs = 8000) {
+  if (!window.ksu || typeof ksu.exec !== 'function') {
+    return Promise.resolve({ ok: false, out: '', err: 'no-ksu' });
+  }
+
+  return new Promise(resolve => {
+    const cbName = `_ksu_cb_${Date.now()}_${Math.random() * 1e6 | 0}`;
+    const timer = setTimeout(() => {
+      delete window[cbName];
+      resolve({ ok: false, out: '', err: 'timeout' });
+    }, timeoutMs);
+    window[cbName] = (code, stdout, stderr) => {
+      clearTimeout(timer);
+      delete window[cbName];
+      resolve({
+        ok:  code === 0,
+        out: (stdout || '').replace(/\r/g, '').trim(),
+        err: (stderr || '').replace(/\r/g, '').trim(),
+      });
+    };
+    try {
+      ksu.exec(cmd, '{}', cbName);
+    } catch (e) {
+      clearTimeout(timer);
+      delete window[cbName];
+      resolve({ ok: false, out: '', err: String(e) });
+    }
+  });
+}
+
+const ICONS = {
+  'com.google.android.youtube':            '▶️',
+  'com.google.android.apps.youtube.music':'🎵',
+  'com.spotify.music':                     '🎧',
+  'com.reddit.frontpage':                  '🟠',
+  'com.twitter.android':                   '🐦',
+  'com.instagram.android':                 '📸',
+  'com.facebook.katana':                   '👤',
+  'com.zhiliaoapp.musically':              '🎶',
+  'com.soundcloud.android':               '☁️',
+  'com.strava':                            '🚴',
+  'com.adobe.lrmobile':                    '🌅',
+};
+const icon = pkg => ICONS[pkg] || '📱';
+
+function shortName(pkg) {
+  const map = {
+    'com.google.android.youtube':            'YouTube',
+    'com.google.android.apps.youtube.music':'YouTube Music',
+    'com.spotify.music':                     'Spotify',
+    'com.reddit.frontpage':                  'Reddit',
+    'com.twitter.android':                   'X (Twitter)',
+    'com.instagram.android':                 'Instagram',
+    'com.facebook.katana':                   'Facebook',
+    'com.zhiliaoapp.musically':              'TikTok',
+    'com.soundcloud.android':               'SoundCloud',
+    'com.strava':                            'Strava',
+    'com.adobe.lrmobile':                    'Lightroom',
+  };
+  if (map[pkg]) return map[pkg];
+  const parts = pkg.split('.');
+  return parts[parts.length - 1].replace(/([A-Z])/g, ' $1').trim();
+}
+
+let MODULE_ID = '';
+let MODPATH    = '';
+
+async function resolveModulePath() {
+  if (window.ksu && ksu.moduleId) {
+    MODULE_ID = ksu.moduleId;
+  } else {
+    MODULE_ID = (window.REVPACK_MANIFEST && window.REVPACK_MANIFEST.id) || 'revpack';
+  }
+  MODPATH = '/data/adb/modules/' + MODULE_ID;
+}
+
+let MANIFEST = null;
+
+async function loadManifest() {
+  try {
+    const r = await fetch('./manifest.json');
+    MANIFEST = await r.json();
+  } catch (_) {
+    MANIFEST = null;
+  }
+}
+
+async function getLiveInfo(pkg) {
+  const logs = [];
+  async function run(label, cmd, timeoutMs) {
+    const res = await exec(cmd, timeoutMs || 5000);
+    logs.push({ label, cmd, ok: res.ok, out: res.out, err: res.err });
+    return res;
+  }
+
+  const listRes = await run('pm list packages',
+    `pm list packages 2>&1 | grep "^package:${pkg}$"`);
+  const inList = listRes.out.trim() !== '';
+
+  const pathRes = await run('pm path',
+    `pm path "${pkg}" 2>&1`);
+  const pmPathRaw = pathRes.out.trim();
+  const pmPathOut = pmPathRaw.startsWith('package:') ? pmPathRaw.slice(8).trim() : pmPathRaw;
+
+  const installed = inList || pmPathOut.length > 0;
+  const basePath  = pmPathOut.replace('/base.apk', '');
+
+  const verRes = await run('versionName',
+    `dumpsys package "${pkg}" 2>&1 | grep -m1 versionName | sed 's/.*versionName[[:space:]]*=//'`,
+    10000);
+  const liveVer = verRes.out.trim();
+
+  // Check disabled state: pm list packages -d lists only disabled packages
+  const disabledRes = await run('pm list packages -d',
+    `pm list packages -d 2>&1 | grep "^package:${pkg}$"`);
+  const disabled = disabledRes.out.trim() !== '';
+
+  const archRes = await run('uname -m', `uname -m`);
+  const arch = archRes.out.trim();
+
+  const rvhcRes = await run('rvhc apk',
+    `[ -f "/data/adb/rvhc/${MODULE_ID}-${pkg}.apk" ] && echo yes || echo no`);
+  const rvhcOk = rvhcRes.out === 'yes';
+
+  return { installed, disabled, basePath, liveVer, arch, rvhcOk };
+}
+
+function renderChips(meta) {
+  const chips = $('chips');
+  chips.innerHTML = '';
+  const add = (icon, label, val) => {
+    const d = document.createElement('div');
+    d.className = 'chip';
+    d.innerHTML = `${icon} <span>${label}: <b>${val}</b></span>`;
+    chips.appendChild(d);
+  };
+  if (meta.version)    add('🏷️', 'Version', meta.version);
+  if (meta.totalApps)  add('📱', 'Apps', meta.totalApps);
+  if (meta.arch)       add('🏗️', 'Arch',    meta.arch);
+  if (meta.id)         add('🆔', 'ID',      meta.id);
+}
+
+function cardId(pkg) { return 'card-' + pkg.replace(/\./g, '-'); }
+
+function renderCardSkeleton(pkg, moduleVer, moduleArch) {
+  const div = document.createElement('div');
+  div.className = 'card';
+  div.id = cardId(pkg);
+  div.innerHTML = `
+    <div class="card-header">
+      <div class="app-icon">${icon(pkg)}</div>
+      <div>
+        <div class="app-name">${shortName(pkg)}</div>
+        <div class="app-pkg">${pkg}</div>
+      </div>
+      <span class="status-badge badge-loading" id="badge-${cardId(pkg)}">Checking…</span>
+    </div>
+    <div class="card-divider"></div>
+    <div class="card-rows" id="rows-${cardId(pkg)}">
+      <div class="row"><span class="row-label">Module ver</span><span class="row-value">${moduleVer || '—'}</span></div>
+      <div class="row"><span class="row-label">Arch</span><span class="row-value">${moduleArch || '—'}</span></div>
+      <div class="row"><span class="row-label">Installed ver</span><span class="row-value na" id="lver-${cardId(pkg)}">…</span></div>
+      <div class="row"><span class="row-label">Base path</span><span class="row-value na" id="path-${cardId(pkg)}">…</span></div>
+      <div class="row"><span class="row-label">RVHC APK</span><span class="row-value na" id="rvhc-${cardId(pkg)}">…</span></div>
+    </div>
+    <button class="mount-btn" id="mbtn-${cardId(pkg)}" onclick="toggleEnabled('${pkg}')"></button>`;
+  return div;
+}
+
+function updateCardLive(pkg, info, moduleVer) {
+  const cid  = cardId(pkg);
+  const badge = $('badge-' + cid);
+  const lver  = $('lver-'  + cid);
+  const path  = $('path-'  + cid);
+  const rvhc  = $('rvhc-'  + cid);
+  const mbtn  = $('mbtn-'  + cid);
+
+  if (!info.installed) {
+    badge.className = 'status-badge badge-missing';
+    badge.textContent = '✗ Not installed';
+  } else if (info.disabled) {
+    badge.className = 'status-badge badge-unmounted';
+    badge.textContent = '⊘ Disabled';
+  } else {
+    badge.className = 'status-badge badge-mounted';
+    badge.textContent = '● Enabled';
+  }
+
+  if (lver) {
+    if (info.liveVer) {
+      const match = moduleVer && info.liveVer === moduleVer;
+      lver.textContent = info.liveVer;
+      lver.className = 'row-value ' + (match ? 'ver-match' : 'ver-mismatch');
+    } else {
+      lver.textContent = '—'; lver.className = 'row-value na';
+    }
+  }
+  if (path) {
+    path.textContent = info.basePath || '—';
+    path.className   = info.basePath ? 'row-value' : 'row-value na';
+  }
+  if (rvhc) {
+    rvhc.textContent = info.rvhcOk ? '✓ Present' : '✗ Missing';
+    rvhc.className   = 'row-value ' + (info.rvhcOk ? 'ver-match' : 'ver-mismatch');
+  }
+
+  if (mbtn && info.installed) {
+    mbtn.style.display = 'block';
+    if (info.disabled) {
+      mbtn.className = 'mount-btn mount';
+      mbtn.textContent = '▲ Enable app';
+    } else {
+      mbtn.className = 'mount-btn unmount';
+      mbtn.textContent = '■ Disable app';
+    }
+  }
+}
+
+async function toggleEnabled(pkg) {
+  const cid  = cardId(pkg);
+  const mbtn = $('mbtn-' + cid);
+  if (!mbtn || mbtn.classList.contains('busy')) return;
+
+  const shouldEnable = mbtn.classList.contains('mount'); // 'mount' class = currently disabled → enable
+
+  mbtn.className   = 'mount-btn busy';
+  mbtn.textContent = '⌛ Working…';
+
+  const cmd = shouldEnable
+    ? `pm enable "${pkg}" 2>&1 && echo ok`
+    : `pm disable-user --user 0 "${pkg}" 2>&1 && echo ok`;
+
+  const res = await exec(cmd, 10000);
+
+  const badge = $('badge-' + cid);
+  // pm enable/disable prints a result line even on success; check last word
+  const succeeded = res.ok || res.out.includes('enabled') || res.out.includes('disabled') || res.out.trim().endsWith('ok');
+
+  if (succeeded) {
+    badge.className  = shouldEnable ? 'status-badge badge-mounted' : 'status-badge badge-unmounted';
+    badge.textContent = shouldEnable ? '● Enabled' : '⊘ Disabled';
+  } else {
+    badge.className  = 'status-badge badge-missing';
+    badge.textContent = 'Failed: ' + (res.err || res.out || 'unknown').slice(0, 80);
+  }
+
+  setTimeout(async () => {
+    const info    = await getLiveInfo(pkg);
+    const appMeta = MANIFEST && MANIFEST.apps && MANIFEST.apps.find(a => a.pkg === pkg);
+    updateCardLive(pkg, info, appMeta ? appMeta.moduleVer : '');
+  }, 800);
+}
+
+async function render() {
+  await resolveModulePath();
+
+  if (!window.ksu) {
+    $('ksu-banner').innerHTML = `<div class="banner">
+      ⚠️ <b>KernelSU not detected.</b> Live status checks are unavailable.
+      Open this page from the <b>KernelSU Manager → Modules → RevPack → WebUI</b>.
+    </div>`;
+  }
+
+  await loadManifest();
+
+  const archRes = await exec('uname -m');
+  const arch    = archRes.ok ? archRes.out : (MANIFEST && MANIFEST.arch) || '';
+
+  const meta = {
+    id:        MODULE_ID,
+    version:   MANIFEST && MANIFEST.version || '',
+    totalApps: MANIFEST && MANIFEST.apps ? MANIFEST.apps.length : '?',
+    arch:      arch,
+  };
+  renderChips(meta);
+
+  $('header-sub').textContent =
+    `${meta.totalApps} app${meta.totalApps !== 1 ? 's' : ''} • ${meta.version || 'unknown version'}`;
+
+  const apps = MANIFEST && MANIFEST.apps;
+  if (!apps || apps.length === 0) {
+    const lsRes = await exec(`ls "${MODPATH}/apps/" 2>/dev/null`);
+    if (!lsRes.ok || !lsRes.out) {
+      $('app-list').innerHTML = `<div class="state-card">
+        <div class="icon">⚠️</div>
+        <h3>Could not read app list</h3>
+        <p>manifest.json not found and ksu.exec is unavailable.<br>
+        Try opening this page from KernelSU Manager.</p>
+      </div>`;
+      return;
+    }
+    const pkgs = lsRes.out.split('\n').map(s => s.trim()).filter(Boolean);
+    await renderAppsFromPkgs(pkgs);
+  } else {
+    await renderAppsFromManifest(apps);
+  }
+}
+
+async function renderAppsFromManifest(apps) {
+  const list = $('app-list');
+  list.innerHTML = '';
+
+  for (const app of apps) {
+    list.appendChild(renderCardSkeleton(app.pkg, app.moduleVer, app.moduleArch));
+  }
+
+  await Promise.allSettled(apps.map(async app => {
+    try {
+      const info = await getLiveInfo(app.pkg);
+      updateCardLive(app.pkg, info, app.moduleVer);
+    } catch (_) {
+    }
+  }));
+}
+
+async function renderAppsFromPkgs(pkgs) {
+  const list = $('app-list');
+  list.innerHTML = '';
+
+  for (const pkg of pkgs) {
+    const cfgRes = await exec(`cat "${MODPATH}/apps/${pkg}/config" 2>/dev/null`);
+    let moduleVer = '', moduleArch = '';
+    if (cfgRes.ok) {
+      for (const line of cfgRes.out.split('\n')) {
+        if (line.startsWith('PKG_VER='))   moduleVer  = line.slice(8).trim();
+        if (line.startsWith('MODULE_ARCH=')) moduleArch = line.slice(12).trim();
+      }
+    }
+    list.appendChild(renderCardSkeleton(pkg, moduleVer, moduleArch));
+  }
+
+  for (const pkg of pkgs) {
+    const cfgRes = await exec(`grep PKG_VER "${MODPATH}/apps/${pkg}/config" 2>/dev/null | cut -d= -f2`);
+    const moduleVer = cfgRes.ok ? cfgRes.out.trim() : '';
+    const info = await getLiveInfo(pkg);
+    updateCardLive(pkg, info, moduleVer);
+  }
+}
+
+function refresh() {
+  const icon = $('refresh-icon');
+  icon.classList.add('spin');
+  render()
+    .catch(err => {
+      $('app-list').innerHTML = `<div class="state-card">
+        <div class="icon">⚠️</div>
+        <h3>Error</h3>
+        <p>${err && err.message ? err.message : String(err)}</p>
+      </div>`;
+    })
+    .finally(() => icon.classList.remove('spin'));
+}
+
+
+function applyDynamicColor() {
+  if (!CSS || !CSS.supports('color', 'env(--system-accent1-200, red)')) return;
+
+  const probe = document.createElement('div');
+  probe.style.cssText = 'position:absolute;visibility:hidden;width:0;height:0;' +
+    'background-color:env(--system-accent1-200,rgb(124,77,255))';
+  document.body.appendChild(probe);
+  const bg = getComputedStyle(probe).backgroundColor;
+  document.body.removeChild(probe);
+
+  if (bg === 'rgb(124, 77, 255)') return;
+
+  document.documentElement.classList.add('has-dynamic-color');
+
+  const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+
+  function readEnv(variable, fallback) {
+    const el = document.createElement('div');
+    el.style.cssText = `position:absolute;visibility:hidden;` +
+      `background-color:env(${variable},${fallback})`;
+    document.body.appendChild(el);
+    const v = getComputedStyle(el).backgroundColor;
+    document.body.removeChild(el);
+    return v;
+  }
+
+  const a1hi = dark
+    ? readEnv('--system-accent1-700', '#212d33')
+    : readEnv('--system-accent1-700', '#212d33');
+
+  const onColor = dark ? '#ffffff' : readEnv('--system-accent1-0', '#ffffff');
+
+  const root = document.documentElement.style;
+
+  root.setProperty('--header-bg', a1hi);
+  root.setProperty('--header-text',     onColor);
+  root.setProperty('--header-text-sub', onColor.startsWith('rgb(255') ? 'rgba(255,255,255,.75)' : 'rgba(0,0,0,.6)');
+  root.setProperty('--header-btn-bg',   onColor.startsWith('rgb(255') ? 'rgba(255,255,255,.18)' : 'rgba(0,0,0,.10)');
+  root.setProperty('--header-btn-hover',onColor.startsWith('rgb(255') ? 'rgba(255,255,255,.28)' : 'rgba(0,0,0,.18)');
+
+  const chipAccent = dark
+    ? readEnv('--system-accent1-200', '#b388ff')
+    : readEnv('--system-accent1-600', '#212d33');
+  document.querySelectorAll('.chip').forEach(c => {
+    c.style.borderColor = chipAccent.replace(')', ', .35)').replace('rgb(', 'rgba(');
+  });
+}
+
+applyDynamicColor();
+refresh();
+</script>
+</body>
+</html>

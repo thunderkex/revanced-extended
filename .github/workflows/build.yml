@@ -175,6 +175,8 @@ jobs:
           ARCH="${{ inputs.target_arch || 'arm64-v8a' }}"
           for f in *.apk *.zip; do
             [ -f "$f" ] || continue
+            # Skip RevPack — it bundles all architectures, no arch suffix needed
+            [[ "$f" == revpack-* ]] && continue
             # Skip if already has architecture in name
             if [[ "$f" != *"$ARCH"* ]] && [ "$ARCH" != "universal" ] && [ "$ARCH" != "all" ]; then
               base="${f%.*}"
@@ -298,8 +300,8 @@ jobs:
           }
 
           cd build || { echo "build folder not found"; exit 1; }
-          for OUTPUT in *magisk*.zip; do
-            [ "$OUTPUT" = "*magisk*.zip" ] && continue
+          for OUTPUT in *.zip; do
+            [ "$OUTPUT" = "*.zip" ] && continue
             ZIP_S=$(unzip -p "$OUTPUT" module.prop)
             if ! UPDATE_JSON=$(echo "$ZIP_S" | grep updateJson); then continue; fi
             UPDATE_JSON="${UPDATE_JSON##*/}"

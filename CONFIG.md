@@ -21,6 +21,11 @@ compression-level = 9                # module zip compression level
 remove-rv-integrations-checks = true # remove checks from the revanced integrations
 dpi = "nodpi anydpi 120-640dpi"      # dpi packages to be searched in order. default: "nodpi anydpi"
 
+# === RevPack (Combined Module) ===
+# Whitelist: only include these app table names (comma-separated). Empty = include all.
+# Example: pack-apps = "Youtube-Ex-morphed,Music-Ex-morphed"
+# Blacklist: exclude these app table names from the pack (comma-separated).
+
 patches-source = "revanced/revanced-patches" # where to fetch patches bundle from. default: "revanced/revanced-patches"
 cli-source = "ReVanced/revanced-cli"             # where to fetch cli from. default: "ReVanced/revanced-cli"
 # options like cli-source can also set per app
