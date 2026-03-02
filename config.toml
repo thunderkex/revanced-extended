@@ -57,13 +57,13 @@ continue-on-error = true
 
 [Facebook-Ex]
 enabled = true
-build-mode = "apk"
+build-mode = "both"
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-2/facebook"
 
 [Gphotos-Ex]
 enabled = true
-build-mode = "apk"
+build-mode = "both"
 patches-version = "v5.48.0"
 cli-version = "v5.0.1"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/photos/"
@@ -72,13 +72,13 @@ archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.a
 
 [Instagram-Ex]
 enabled = true
-build-mode = "apk"
+build-mode = "both"
 uptodown-dlurl = "https://instagram.en.uptodown.com/android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/instagram-instagram"
 
 [Lightroom-Ex]
 enabled = true
-build-mode = "apk"
+build-mode = "both"
 uptodown-dlurl = "https://adobe-lightroom-mobile.en.uptodown.com/android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/adobe/lightroom"
 archive-dlurl = "https://archive.org/download/geologically/apks/com.adobe.lrmobile/"
@@ -91,26 +91,26 @@ uptodown-dlurl = "https://amazon-prime-video.en.uptodown.com/android"
 
 [Soundcloud-Ex]
 enabled = true
-build-mode = "apk"
+build-mode = "both"
 uptodown-dlurl = "https://soundcloud.en.uptodown.com/android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/soundcloud/soundcloud-soundcloud"
 
 [Spotify-Ex]
 enabled = true
-build-mode = "apk"
+build-mode = "both"
 # apkmirror-dlurl = "https://www.apkmirror.com/apk/spotify-ab/"
 uptodown-dlurl = "https://spotify.en.uptodown.com/android"
 archive-dlurl = "https://archive.org/download/geologically/apks/com.spotify.music/"
 
 [Strava-Ex]
 enabled = true
-build-mode = "apk"
+build-mode = "both"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/strava-inc/strava-running-and-cycling-gps/"
 uptodown-dlurl = "https://strava.en.uptodown.com/android"
 
 [TikTok]
 enabled = true
-build-mode = "apk"
+build-mode = "both"
 uptodown-dlurl = "https://tiktok.en.uptodown.com/android"
 apkmirror-dlurl = "https://apkmirror.com/apk/tiktok-pte-ltd/tik-tok-including-musical-ly"
 archive-dlurl = "https://archive.org/download/geologically/apks/com.zhiliaoapp.musically/"
@@ -147,7 +147,7 @@ excluded-patches = "'Custom branding icon for YouTube' 'Custom branding name for
 
 [reddit-Ex]
 enabled = true
-build-mode = "apk"
+build-mode = "both"
 patches-source = "MorpheApp/morphe-patches"
 cli-source = "MorpheApp/morphe-cli"
 uptodown-dlurl = "https://reddit-official-app.en.uptodown.com/android"
@@ -156,7 +156,7 @@ archive-dlurl = "https://archive.org/download/geologically/apks/com.reddit.front
 
 [X-piko]
 enabled = true
-build-mode = "apk"
+build-mode = "both"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter/"
 archive-dlurl = "https://archive.org/download/geologically/apks/com.twitter.android"
 uptodown-dlurl = "https://twitter.id.uptodown.com/android"
