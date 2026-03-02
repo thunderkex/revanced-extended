@@ -1,36 +1,21 @@
-#!/usr/bin/env bash
-# ============================================
-# Post-Build Release Script
-# ============================================
-# Called after successful build to update the
-# single mutable release with new assets.
-#
-# This script is designed to be called from
-# GitHub Actions workflow after build completes.
-# ============================================
-
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="${SCRIPT_DIR}/../.."
 
-# Source the release manager
 source "${SCRIPT_DIR}/release-manager.sh" 2>/dev/null || {
     echo "Error: release-manager.sh not found"
     exit 1
 }
 
-# Source the downloads generator
 source "${SCRIPT_DIR}/generate-readme-downloads.sh" 2>/dev/null || {
     echo "Warning: generate-readme-downloads.sh not found, skipping README update"
 }
 
-# Configuration
 RELEASE_TAG="${RELEASE_TAG:-latest-build}"
 RELEASE_NAME="${RELEASE_NAME:-ReVanced Extended - Latest Build}"
 BUILD_DIR="${BUILD_DIR:-build}"
 
-# Generate release notes from build.md or changelog
 generate_release_notes() {
     local notes_file="release_notes.md"
     local build_date
@@ -45,7 +30,6 @@ Welcome to the custom **ReVanced Extended** latest build release page. Here you 
 
 EOF
 
-    # Add build info if available
     if [[ -f "build.md" ]]; then
         echo "## 📦 Build Information & Changelog" >> "$notes_file"
         echo "" >> "$notes_file"
@@ -53,7 +37,6 @@ EOF
         echo "" >> "$notes_file"
     fi
 
-    # Add asset list
     echo "## 📥 Download Latest ReVanced Extended APK & Modules" >> "$notes_file"
     echo "" >> "$notes_file"
     echo "Below are the **latest versions** of all available assets. Download and install to enjoy the newest features and fixes!" >> "$notes_file"
@@ -74,7 +57,6 @@ EOF
         echo "" >> "$notes_file"
     fi
 
-    # Add installation instructions
     cat >> "$notes_file" << 'EOF'
 ## 📲 How to Install ReVanced Extended
 
@@ -103,13 +85,11 @@ EOF
     echo "$notes_file"
 }
 
-# Main execution
 main() {
     echo "=========================================="
     echo " Post-Build Release"
     echo "=========================================="
     
-    # Check required environment
     if [[ -z "${GITHUB_TOKEN:-}" ]]; then
         echo "Error: GITHUB_TOKEN not set"
         exit 1
@@ -120,7 +100,6 @@ main() {
         exit 1
     fi
     
-    # Check for build artifacts
     if [[ ! -d "$BUILD_DIR" ]]; then
         echo "Error: Build directory not found: $BUILD_DIR"
         exit 1
@@ -137,26 +116,38 @@ main() {
     
     echo "Found $file_count build artifacts"
     
-    # Generate release notes
     echo "Generating release notes..."
     local notes_file
     notes_file=$(generate_release_notes)
     
-    # Generate README downloads section
+    echo "Updating release '$RELEASE_TAG'..."
+
+    export GITHUB_TOKEN
+    export GITHUB_REPOSITORY
+    export RELEASE_TAG
+    export RELEASE_NAME
+    export BUILD_DIR
+    export GH_TOKEN="$GITHUB_TOKEN"
+
+    init_release
+
+
+    upload_assets
+
+    update_body "$notes_file"
+
     echo "Generating README downloads..."
     if type generate_downloads_section &>/dev/null; then
-        # Export variables for the generator
         export BUILD_DIR
         export RELEASE_TAG
         export REPO_URL="https://github.com/${GITHUB_REPOSITORY}"
         export README_FILE="${PROJECT_ROOT}/README.md"
         export DOWNLOADS_MD="${PROJECT_ROOT}/DOWNLOADS.md"
-        
-        # Update README and DOWNLOADS.md
+        export USE_RELEASE_ASSETS=true
+
         update_readme "$REPO_URL" 2>/dev/null || echo "Warning: Failed to update README"
         generate_downloads_md "$REPO_URL" > "$DOWNLOADS_MD" 2>/dev/null || echo "Warning: Failed to generate DOWNLOADS.md"
-        
-        # Commit and push documentation updates
+
         if [[ -n "${GITHUB_ACTIONS:-}" ]]; then
             echo "Committing documentation updates..."
             git config --local user.email "action@github.com"
@@ -167,29 +158,6 @@ main() {
         fi
     fi
     
-    # Run full release cycle
-    echo "Updating release '$RELEASE_TAG'..."
-    
-    # Export for release-manager.sh
-    export GITHUB_TOKEN
-    export GITHUB_REPOSITORY
-    export RELEASE_TAG
-    export RELEASE_NAME
-    export BUILD_DIR
-    export GH_TOKEN="$GITHUB_TOKEN"
-    
-    # Initialize release if needed
-    init_release
-    
-    # # Clean old assets
-    # clean_assets
-    
-    # Upload new assets
-    upload_assets
-    
-    # Update release body
-    update_body "$notes_file"
-    
     echo ""
     echo "=========================================="
     echo " Release Updated Successfully!"
@@ -198,11 +166,9 @@ main() {
     echo "Release URL: https://github.com/${GITHUB_REPOSITORY}/releases/tag/${RELEASE_TAG}"
     echo ""
     
-    # List final assets
     list_assets
 }
 
-# Run if executed directly
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     main "$@"
 fi

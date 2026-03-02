@@ -1,19 +1,3 @@
-#!/usr/bin/env bash
-# ============================================
-# README Downloads Generator
-# ============================================
-# Generates a beautiful downloads section for README.md
-# with all APKs and modules from the latest build.
-#
-# Improvements over typical implementations:
-# - Categorizes by app type (YouTube, Music, etc.)
-# - Shows both APK and Magisk module variants
-# - Includes version, architecture, size info
-# - Badge-style download buttons
-# - File checksums for verification
-# - Responsive table design
-# ============================================
-
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -81,14 +65,31 @@ get_checksum() {
     fi
 }
 
-# Parse app info from filename
-# Format: appname-variant-revanced-vX.X.X-arch[-lite].apk/zip
+fetch_release_assets() {
+    [[ -z "${GITHUB_REPOSITORY:-}" ]] && return 1
+    command -v gh &>/dev/null      || return 1
+    command -v jq &>/dev/null      || return 1
+
+    local response
+    response=$(gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${RELEASE_TAG}" 2>/dev/null) || return 1
+
+    echo "$response" | jq -r '
+        .assets[] |
+        select(.name | test("\\.(apk|zip)$")) |
+        .size as $b |
+        (if   $b > 1048576 then "\($b / 1048576 | floor)MB"
+         elif $b > 1024    then "\($b / 1024    | floor)KB"
+         else                   "\($b)B"
+         end) as $sz |
+        "\(.name)|||\($sz)|||\(.browser_download_url)"
+    ' 2>/dev/null
+}
+
 parse_filename() {
     local filename="$1"
     local basename="${filename%.*}"
     local extension="${filename##*.}"
     
-    # Initialize variables
     APP_NAME=""
     APP_VARIANT=""
     APP_VERSION=""
@@ -109,14 +110,12 @@ parse_filename() {
         basename="${basename%-lite}"
     fi
     
-    # Check if module (from filename pattern)
     if [[ "$basename" == *"-module"* ]]; then
         IS_MODULE="true"
         FILE_TYPE="module"
         basename="${basename%-module}"
     fi
     
-    # Extract architecture
     for arch in "arm64-v8a" "armeabi-v7a" "x86_64" "x86" "universal" "all"; do
         if [[ "$basename" == *"-$arch"* ]]; then
             APP_ARCH="$arch"
@@ -125,19 +124,15 @@ parse_filename() {
         fi
     done
     
-    # Extract version (vX.X.X pattern)
     if [[ "$basename" =~ -v([0-9]+\.[0-9]+\.[0-9]+) ]]; then
         APP_VERSION="${BASH_REMATCH[1]}"
         basename="${basename%-v${APP_VERSION}}"
     fi
     
-    # Remove -revanced suffix if present
     basename="${basename%-revanced}"
     
-    # The rest is app name with variant
     APP_VARIANT="$basename"
     
-    # Determine app category
     case "$basename" in
         *[Yy]outube*[Mm]usic*|*[Mm]usic*) APP_NAME="YouTube Music" ;;
         *[Yy]outube*) APP_NAME="YouTube" ;;
@@ -154,7 +149,6 @@ parse_filename() {
     esac
 }
 
-# Get emoji for architecture
 get_arch_emoji() {
     case "$1" in
         "arm64-v8a") echo "📱" ;;
@@ -165,7 +159,6 @@ get_arch_emoji() {
     esac
 }
 
-# Get app logo (shields.io badge with logo)
 get_app_logo() {
     local app="$1"
     local logo color
@@ -186,7 +179,6 @@ get_app_logo() {
     echo "![${app}](https://img.shields.io/badge/${app// /_}-${color}?style=flat-square&logo=${logo}&logoColor=white)"
 }
 
-# Generate download badge URL
 generate_badge() {
     local label="$1"
     local color="${2:-blue}"
@@ -194,18 +186,15 @@ generate_badge() {
     echo "https://img.shields.io/badge/${label}-${color}?style=${style}"
 }
 
-# Generate the downloads section
 generate_downloads_section() {
     local repo_url="$1"
     local output=""
     local build_date
     build_date=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
     
-    # Header
     output+="## 📥 Download ReVanced Extended APKs & Modules\n\n"
     output+="> **Last Updated:** ${build_date}\n\n"
     
-    # Quick links section
     output+="### 🔗 Quick Links\n\n"
     output+="| Resource | Link |\n"
     output+="|:---------|:-----|\n"
@@ -214,7 +203,6 @@ generate_downloads_section() {
     output+="| 📱 MicroG RE | [![MicroG](https://img.shields.io/badge/MicroG_RE-green?style=flat-square)](https://github.com/MorpheApp/MicroG-RE/releases) |\n"
     output+="\n"
     
-    # Requirements note
     output+="<details>\n<summary>📋 <b>Requirements & Installation</b></summary>\n\n"
     output+="#### Non-Root Installation (Ad-Blocking, Customization)\n"
     output+="1. Install [MicroG RE](https://github.com/MorpheApp/MicroG-RE/releases) for Google login support\n"
@@ -234,57 +222,88 @@ generate_downloads_section() {
     output+="| 🌐 Universal | All architectures | Works everywhere (larger APK size) |\n\n"
     output+="</details>\n\n"
     
-    # Collect all files
-    declare -A app_files
+       declare -A app_files
+    declare -A _seen_filenames
     local apps_order=()
-    
+
     for file in "$BUILD_DIR"/*.apk "$BUILD_DIR"/*.zip; do
         [[ -f "$file" ]] || continue
         local filename
         filename=$(basename "$file")
         parse_filename "$filename"
-        
+        _seen_filenames["$filename"]=1
+
         if [[ -z "${app_files[$APP_NAME]+x}" ]]; then
             apps_order+=("$APP_NAME")
         fi
-        
-        app_files["$APP_NAME"]+="${file}|"
+        app_files["$APP_NAME"]+="local:${file}|"
     done
-    
+
+    if [[ "${USE_RELEASE_ASSETS:-false}" == "true" ]]; then
+        local _release_lines
+        _release_lines=$(fetch_release_assets 2>/dev/null) || _release_lines=""
+
+        while IFS= read -r _line; do
+            [[ -z "$_line" ]] && continue
+            local _rname _rsize _rurl
+            _rname=$(echo "$_line" | awk -F'\|\|\|' '{print $1}')
+            _rsize=$(echo "$_line" | awk -F'\|\|\|' '{print $2}')
+            _rurl=$(echo  "$_line" | awk -F'\|\|\|' '{print $3}')
+
+            # Skip if we already have it from local build
+            [[ -n "${_seen_filenames[$_rname]+x}" ]] && continue
+
+            parse_filename "$_rname"
+            if [[ -z "${app_files[$APP_NAME]+x}" ]]; then
+                apps_order+=("$APP_NAME")
+            fi
+            app_files["$APP_NAME"]+="release:${_rname}|||${_rsize}|||${_rurl}|"
+        done <<< "$_release_lines"
+    fi
+
     if [[ ${#apps_order[@]} -eq 0 ]]; then
         output+="*No builds available yet. Run the build script first.*\n"
         echo -e "$output"
         return
     fi
-    
+
     output+="---\n\n"
-    
-    # Generate tables for each app
+
     for app in "${apps_order[@]}"; do
         local app_logo
         app_logo=$(get_app_logo "$app")
-        
+
         output+="### ${app_logo}\n\n"
         output+="| Type | Version | Architecture | Size | Download |\n"
         output+="|:----:|:-------:|:------------:|:----:|:--------:|\n"
-        
-        # Parse files for this app
-        IFS='|' read -ra files <<< "${app_files[$app]}"
-        for file in "${files[@]}"; do
-            [[ -z "$file" ]] && continue
-            [[ -f "$file" ]] || continue
-            
-            local filename
-            filename=$(basename "$file")
-            parse_filename "$filename"
-            
-            local size
-            size=$(get_file_size "$file")
+
+        IFS='|' read -ra _entries <<< "${app_files[$app]}"
+        for _entry in "${_entries[@]}"; do
+            [[ -z "$_entry" ]] && continue
+
+            local filename size download_url
+
+            if [[ "$_entry" == local:* ]]; then
+                local file="${_entry#local:}"
+                [[ -f "$file" ]] || continue
+                filename=$(basename "$file")
+                parse_filename "$filename"
+                size=$(get_file_size "$file")
+                download_url="${repo_url}/releases/download/${RELEASE_TAG}/${filename}"
+            elif [[ "$_entry" == release:* ]]; then
+                local _rdata="${_entry#release:}"
+                filename=$(echo "$_rdata" | awk -F'\|\|\|' '{print $1}')
+                size=$(echo    "$_rdata" | awk -F'\|\|\|' '{print $2}')
+                download_url=$(echo "$_rdata" | awk -F'\|\|\|' '{print $3}')
+                parse_filename "$filename"
+            else
+                continue
+            fi
+
             local arch_emoji
             arch_emoji=$(get_arch_emoji "$APP_ARCH")
             local arch_display="${arch_emoji} ${APP_ARCH:-Universal}"
-            
-            # Type column
+
             local type_display
             if [[ "$IS_MODULE" == "true" ]]; then
                 if [[ "$IS_LITE" == "true" ]]; then
@@ -299,20 +318,17 @@ generate_downloads_section() {
                     type_display="📦 APK"
                 fi
             fi
-            
-            # Download link
-            local download_url="${repo_url}/releases/download/${RELEASE_TAG}/${filename}"
+
             local badge_label
             badge_label=$(echo "⬇_Download" | sed 's/ /_/g')
             local download_badge="[![Download]($(generate_badge "$badge_label" "blue"))](${download_url})"
-            
+
             output+="| ${type_display} | v${APP_VERSION:-N/A} | ${arch_display} | ${size} | ${download_badge} |\n"
         done
-        
+
         output+="\n"
     done
     
-    # Checksums section (collapsible)
     output+="<details>\n<summary>🔐 <b>File Checksums (MD5)</b></summary>\n\n"
     output+="\`\`\`\n"
     for file in "$BUILD_DIR"/*.apk "$BUILD_DIR"/*.zip; do
@@ -328,14 +344,12 @@ generate_downloads_section() {
     output+="\`\`\`\n\n"
     output+="</details>\n\n"
     
-    # Footer
     output+="---\n\n"
     output+="<sub>📝 This section is automatically generated after each successful build.</sub>\n"
     
     echo -e "$output"
 }
 
-# Generate standalone DOWNLOADS.md
 generate_downloads_md() {
     local repo_url="$1"
     local build_date
@@ -348,47 +362,77 @@ generate_downloads_md() {
 
 EOF
     
-    # Generate tables for files
     declare -A app_files
+    declare -A _seen_filenames
     local apps_order=()
-    
+
     for file in "$BUILD_DIR"/*.apk "$BUILD_DIR"/*.zip; do
         [[ -f "$file" ]] || continue
         local filename
         filename=$(basename "$file")
         parse_filename "$filename"
-        
+        _seen_filenames["$filename"]=1
+
         if [[ -z "${app_files[$APP_NAME]+x}" ]]; then
             apps_order+=("$APP_NAME")
         fi
-        
-        app_files["$APP_NAME"]+="${file}|"
+        app_files["$APP_NAME"]+="local:${file}|"
     done
-    
+
+    if [[ "${USE_RELEASE_ASSETS:-false}" == "true" ]]; then
+        local _release_lines
+        _release_lines=$(fetch_release_assets 2>/dev/null) || _release_lines=""
+        while IFS= read -r _line; do
+            [[ -z "$_line" ]] && continue
+            local _rname _rsize _rurl
+            _rname=$(echo "$_line" | awk -F'\|\|\|' '{print $1}')
+            _rsize=$(echo "$_line" | awk -F'\|\|\|' '{print $2}')
+            _rurl=$(echo  "$_line" | awk -F'\|\|\|' '{print $3}')
+            [[ -n "${_seen_filenames[$_rname]+x}" ]] && continue
+            parse_filename "$_rname"
+            if [[ -z "${app_files[$APP_NAME]+x}" ]]; then
+                apps_order+=("$APP_NAME")
+            fi
+            app_files["$APP_NAME"]+="release:${_rname}|||${_rsize}|||${_rurl}|"
+        done <<< "$_release_lines"
+    fi
+
     for app in "${apps_order[@]}"; do
         local app_logo
         app_logo=$(get_app_logo "$app")
-        
+
         echo "### ${app_logo}"
         echo ""
         echo "| Type | Version | Architecture | Size | Download |"
         echo "|:----:|:-------:|:------------:|:----:|:--------:|"
-        
-        IFS='|' read -ra files <<< "${app_files[$app]}"
-        for file in "${files[@]}"; do
-            [[ -z "$file" ]] && continue
-            [[ -f "$file" ]] || continue
-            
-            local filename
-            filename=$(basename "$file")
-            parse_filename "$filename"
-            
-            local size
-            size=$(get_file_size "$file")
+
+        IFS='|' read -ra _entries <<< "${app_files[$app]}"
+        for _entry in "${_entries[@]}"; do
+            [[ -z "$_entry" ]] && continue
+
+            local filename size download_url
+
+            if [[ "$_entry" == local:* ]]; then
+                local file="${_entry#local:}"
+                [[ -f "$file" ]] || continue
+                filename=$(basename "$file")
+                parse_filename "$filename"
+                size=$(get_file_size "$file")
+                download_url="${repo_url}/releases/download/${RELEASE_TAG}/${filename}"
+            elif [[ "$_entry" == release:* ]]; then
+                local _rdata="${_entry#release:}"
+                filename=$(echo "$_rdata" | awk -F'\|\|\|' '{print $1}')
+                size=$(echo    "$_rdata" | awk -F'\|\|\|' '{print $2}')
+                download_url=$(echo "$_rdata" | awk -F'\|\|\|' '{print $3}')
+                parse_filename "$filename"
+            else
+                continue
+            fi
+
             local arch_emoji
             arch_emoji=$(get_arch_emoji "$APP_ARCH")
             local arch_display="${arch_emoji} ${APP_ARCH:-Universal}"
-            
+
             local type_display
             if [[ "$IS_MODULE" == "true" ]]; then
                 if [[ "$IS_LITE" == "true" ]]; then
@@ -403,18 +447,15 @@ EOF
                     type_display="📦 APK"
                 fi
             fi
-            
-            local download_url="${repo_url}/releases/download/${RELEASE_TAG}/${filename}"
+
             local download_badge="[![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](${download_url})"
-            
             echo "| ${type_display} | v${APP_VERSION:-N/A} | ${arch_display} | ${size} | ${download_badge} |"
         done
-        
+
         echo ""
     done
 }
 
-# Update README with downloads section
 update_readme() {
     local repo_url="$1"
     local downloads_content
@@ -426,12 +467,10 @@ update_readme() {
         return
     fi
     
-    # Check for markers in README
     local start_marker="<!-- DOWNLOADS_START -->"
     local end_marker="<!-- DOWNLOADS_END -->"
     
     if grep -q "$start_marker" "$README_FILE" && grep -q "$end_marker" "$README_FILE"; then
-        # Replace content between markers
         local temp_file
         temp_file=$(mktemp)
         
@@ -444,7 +483,6 @@ update_readme() {
         mv "$temp_file" "$README_FILE"
         log "Updated downloads section in README.md"
     else
-        # Append to end of README with markers
         {
             echo ""
             echo "$start_marker"
@@ -455,11 +493,9 @@ update_readme() {
     fi
 }
 
-# Main function
 main() {
     log "Generating downloads documentation..."
     
-    # Detect repository URL
     local repo_url
     repo_url=$(detect_repo_url)
     
@@ -473,7 +509,6 @@ main() {
     info "Build directory: $BUILD_DIR"
     info "Release tag: $RELEASE_TAG"
     
-    # Check build directory
     if [[ ! -d "$BUILD_DIR" ]]; then
         warn "Build directory not found: $BUILD_DIR"
         exit 0
@@ -489,19 +524,16 @@ main() {
     
     log "Found $file_count build artifacts"
     
-    # Generate DOWNLOADS.md
     log "Generating DOWNLOADS.md..."
     generate_downloads_md "$repo_url" > "$DOWNLOADS_MD"
     log "Created: $DOWNLOADS_MD"
     
-    # Update README.md
     log "Updating README.md..."
     update_readme "$repo_url"
     
     log "Done!"
 }
 
-# Run if executed directly
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     main "$@"
 fi
