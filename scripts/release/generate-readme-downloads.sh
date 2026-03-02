@@ -272,10 +272,7 @@ generate_downloads_section() {
     for app in "${apps_order[@]}"; do
         local app_logo
         app_logo=$(get_app_logo "$app")
-
-        output+="### ${app_logo}\n\n"
-        output+="| Type | Version | Architecture | Size | Download |\n"
-        output+="|:----:|:-------:|:------------:|:----:|:--------:|\n"
+        local app_rows=""
 
         IFS='|' read -ra _entries <<< "${app_files[$app]}"
         for _entry in "${_entries[@]}"; do
@@ -300,6 +297,8 @@ generate_downloads_section() {
                 continue
             fi
 
+            [[ -z "$download_url" ]] && continue
+
             local arch_emoji
             arch_emoji=$(get_arch_emoji "$APP_ARCH")
             local arch_display="${arch_emoji} ${APP_ARCH:-Universal}"
@@ -323,9 +322,15 @@ generate_downloads_section() {
             badge_label=$(echo "⬇_Download" | sed 's/ /_/g')
             local download_badge="[![Download]($(generate_badge "$badge_label" "blue"))](${download_url})"
 
-            output+="| ${type_display} | v${APP_VERSION:-N/A} | ${arch_display} | ${size} | ${download_badge} |\n"
+            app_rows+="| ${type_display} | v${APP_VERSION:-N/A} | ${arch_display} | ${size} | ${download_badge} |\n"
         done
 
+        [[ -z "$app_rows" ]] && continue
+
+        output+="### ${app_logo}\n\n"
+        output+="| Type | Version | Architecture | Size | Download |\n"
+        output+="|:----:|:-------:|:------------:|:----:|:--------:|\n"
+        output+="${app_rows}"
         output+="\n"
     done
     
@@ -400,11 +405,7 @@ EOF
     for app in "${apps_order[@]}"; do
         local app_logo
         app_logo=$(get_app_logo "$app")
-
-        echo "### ${app_logo}"
-        echo ""
-        echo "| Type | Version | Architecture | Size | Download |"
-        echo "|:----:|:-------:|:------------:|:----:|:--------:|"
+        local app_rows=""
 
         IFS='|' read -ra _entries <<< "${app_files[$app]}"
         for _entry in "${_entries[@]}"; do
@@ -429,6 +430,8 @@ EOF
                 continue
             fi
 
+            [[ -z "$download_url" ]] && continue
+
             local arch_emoji
             arch_emoji=$(get_arch_emoji "$APP_ARCH")
             local arch_display="${arch_emoji} ${APP_ARCH:-Universal}"
@@ -449,10 +452,16 @@ EOF
             fi
 
             local download_badge="[![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](${download_url})"
-            echo "| ${type_display} | v${APP_VERSION:-N/A} | ${arch_display} | ${size} | ${download_badge} |"
+            app_rows+="| ${type_display} | v${APP_VERSION:-N/A} | ${arch_display} | ${size} | ${download_badge} |\n"
         done
 
+        [[ -z "$app_rows" ]] && continue
+
+        echo "### ${app_logo}"
         echo ""
+        echo "| Type | Version | Architecture | Size | Download |"
+        echo "|:----:|:-------:|:------------:|:----:|:--------:|"
+        echo -e "${app_rows}"
     done
 }
 
