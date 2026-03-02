@@ -1,33 +1,16 @@
-#!/usr/bin/env bash
-# ============================================
-# Single Mutable Release Manager
-# ============================================
-# Manages a single permanent release tag where
-# assets are replaced with each build.
-#
-# Non-Negotiables:
-# ✅ Only one release exists at any time
-# ✅ Assets are directly attached to release
-# ✅ Release tag is permanent (latest-build)
-# ✅ Fully automated - no human intervention
-# ============================================
-
 set -euo pipefail
 
-# Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-# Logging
 log() { echo -e "${GREEN}[+]${NC} $1"; }
 warn() { echo -e "${YELLOW}[!]${NC} $1"; }
 error() { echo -e "${RED}[-]${NC} $1" >&2; }
 debug() { [[ "${DEBUG:-false}" == "true" ]] && echo -e "${BLUE}[D]${NC} $1"; }
 
-# Configuration with defaults
 RELEASE_TAG="${RELEASE_TAG:-latest-build}"
 RELEASE_NAME="${RELEASE_NAME:-ReVanced Extended - Latest Build}"
 BUILD_DIR="${BUILD_DIR:-build}"
@@ -35,7 +18,6 @@ PARALLEL_UPLOADS="${PARALLEL_UPLOADS:-4}"
 RETRY_COUNT="${RETRY_COUNT:-3}"
 RETRY_DELAY="${RETRY_DELAY:-5}"
 
-# Required environment
 check_env() {
     if [[ -z "${GITHUB_TOKEN:-}" ]]; then
         error "GITHUB_TOKEN is required"
@@ -56,19 +38,16 @@ check_env() {
     debug "Release tag: $RELEASE_TAG"
 }
 
-# Get release ID
 get_release_id() {
     local response
     response=$(gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${RELEASE_TAG}" 2>/dev/null) || return 1
     echo "$response" | jq -r '.id // empty' 2>/dev/null || echo ""
 }
 
-# Check if release exists
 release_exists() {
     gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" &>/dev/null
 }
 
-# Initialize/create release if it doesn't exist
 init_release() {
     log "Initializing release..."
     
@@ -79,7 +58,6 @@ init_release() {
     
     log "Creating release '$RELEASE_TAG'..."
     
-    # Create the release
     gh release create "$RELEASE_TAG" \
         --repo "$GITHUB_REPOSITORY" \
         --title "$RELEASE_NAME" \
@@ -93,7 +71,6 @@ This release is automatically updated with each new build.
 *Last updated: $(date -u '+%Y-%m-%d %H:%M:%S UTC')*" \
         --latest \
         2>/dev/null || {
-            # If tag exists but release doesn't, create from existing tag
             gh release create "$RELEASE_TAG" \
                 --repo "$GITHUB_REPOSITORY" \
                 --title "$RELEASE_NAME" \
@@ -105,7 +82,6 @@ This release is automatically updated with each new build.
     log "Release created successfully"
 }
 
-# Delete all existing assets from release
 clean_assets() {
     log "Cleaning existing assets..."
     
@@ -114,16 +90,13 @@ clean_assets() {
         return 0
     fi
     
-    # Get asset IDs with better error handling
     local api_response asset_ids
     
-    # Disable pipefail temporarily for this section
     set +o pipefail
     
     api_response=$(gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${RELEASE_TAG}" 2>/dev/null || echo "{}")
     asset_ids=$(echo "$api_response" | jq -r '.assets[]?.id // empty' 2>/dev/null || echo "")
     
-    # Re-enable pipefail
     set -o pipefail
     
     if [[ -z "$asset_ids" || "$asset_ids" == "null" ]]; then
@@ -137,7 +110,6 @@ clean_assets() {
         [[ -z "$asset_id" || "$asset_id" == "null" ]] && continue
         debug "Deleting asset ID: $asset_id"
         
-        # Retry deletion with backoff
         local deleted=false
         for attempt in 1 2 3; do
             if gh api -X DELETE "repos/${GITHUB_REPOSITORY}/releases/assets/${asset_id}" &>/dev/null; then
@@ -157,8 +129,6 @@ clean_assets() {
     
     if [[ $failed -gt 0 ]]; then
         log "Deleted $count assets ($failed failed)"
-        # Don't fail the whole script if some assets couldn't be deleted
-        # They will be overwritten by the clobber flag during upload
     else
         log "Deleted $count assets"
     fi
@@ -166,11 +136,35 @@ clean_assets() {
     return 0
 }
 
-# Upload file with retry logic
+delete_asset_by_name() {
+    local filename="$1"
+    local api_response asset_id
+    
+    set +o pipefail
+    api_response=$(gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${RELEASE_TAG}" 2>/dev/null || echo "{}")
+    asset_id=$(echo "$api_response" | jq -r --arg name "$filename" '.assets[] | select(.name == $name) | .id // empty' 2>/dev/null || echo "")
+    set -o pipefail
+    
+    if [[ -n "$asset_id" && "$asset_id" != "null" ]]; then
+        debug "Deleting existing asset '$filename' (ID: $asset_id)..."
+        for attempt in 1 2 3; do
+            if gh api -X DELETE "repos/${GITHUB_REPOSITORY}/releases/assets/${asset_id}" &>/dev/null; then
+                debug "Deleted existing asset: $filename"
+                return 0
+            fi
+            sleep 1
+        done
+        warn "Could not delete existing asset '$filename', will attempt clobber upload"
+    fi
+    return 0
+}
+
 upload_file() {
     local file="$1"
     local filename
     filename=$(basename "$file")
+    
+    delete_asset_by_name "$filename"
     
     for ((i=1; i<=RETRY_COUNT; i++)); do
         debug "Uploading $filename (attempt $i/$RETRY_COUNT)..."
@@ -192,7 +186,6 @@ upload_file() {
     return 1
 }
 
-# Upload all assets from build directory
 upload_assets() {
     log "Uploading assets from '$BUILD_DIR'..."
     
@@ -201,10 +194,8 @@ upload_assets() {
         exit 1
     fi
     
-    # Ensure release exists
     init_release
     
-    # Collect files to upload
     local files=()
     for file in "$BUILD_DIR"/*.apk "$BUILD_DIR"/*.zip; do
         [[ -f "$file" ]] && files+=("$file")
@@ -217,14 +208,13 @@ upload_assets() {
     
     log "Found ${#files[@]} files to upload"
     
-    # Upload files (with optional parallelism)
     local failed=0
     if [[ $PARALLEL_UPLOADS -gt 1 ]] && command -v parallel &>/dev/null; then
-        # Use GNU parallel if available
-        printf '%s\n' "${files[@]}" | parallel -j "$PARALLEL_UPLOADS" \
-            "gh release upload '$RELEASE_TAG' {} --repo '$GITHUB_REPOSITORY' --clobber 2>/dev/null && echo '✓ {}' || echo '✗ {}'"
+        export -f delete_asset_by_name upload_file log warn error debug
+        export RELEASE_TAG GITHUB_REPOSITORY RETRY_COUNT RETRY_DELAY DEBUG
+        printf '%s\n' "${files[@]}" | parallel -j "$PARALLEL_UPLOADS" upload_file {}
+        failed=$((${PIPESTATUS[0]:-0}))
     else
-        # Sequential upload
         for file in "${files[@]}"; do
             upload_file "$file" || ((failed++))
         done
@@ -238,7 +228,6 @@ upload_assets() {
     log "All assets uploaded successfully"
 }
 
-# Update release body/description
 update_body() {
     local body_file="${1:-}"
     local body=""
@@ -269,7 +258,6 @@ This release is automatically updated with each new build.
     log "Release body updated"
 }
 
-# Move tag to current commit (keeps release, updates tag pointer)
 move_tag() {
     log "Moving tag to current commit..."
     
@@ -281,7 +269,6 @@ move_tag() {
         return 0
     fi
     
-    # Delete and recreate tag
     git tag -d "$RELEASE_TAG" 2>/dev/null || true
     git push origin ":refs/tags/$RELEASE_TAG" 2>/dev/null || true
     git tag "$RELEASE_TAG" "$current_commit"
@@ -290,7 +277,6 @@ move_tag() {
     log "Tag moved to $current_commit"
 }
 
-# List current assets
 list_assets() {
     log "Listing release assets..."
     
@@ -309,7 +295,6 @@ list_assets() {
     echo ""
 }
 
-# Full release cycle: clean -> upload -> update body
 full_cycle() {
     log "Starting full release cycle..."
     
@@ -322,7 +307,6 @@ full_cycle() {
     list_assets
 }
 
-# Delete release entirely (use with caution)
 delete_release() {
     warn "Deleting release '$RELEASE_TAG'..."
     
@@ -339,7 +323,6 @@ delete_release() {
     log "Release deleted"
 }
 
-# Show help
 show_help() {
     cat << EOF
 Single Mutable Release Manager
@@ -377,7 +360,6 @@ Examples:
 EOF
 }
 
-# Main
 main() {
     local command="${1:-help}"
     shift || true
