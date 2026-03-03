@@ -1,0 +1,79 @@
+name: RevPack Custom Configurator
+
+on:
+  workflow_dispatch:
+    inputs:
+      enabled_apps:
+        description: >
+          Apps to BUILD (comma-separated section names from config.toml).
+          Use "all" to enable every app, or leave blank to keep current state.
+        required: false
+        default: 'all'
+      disabled_apps:
+        description: >
+          Apps to DISABLE (comma-separated). Always takes priority over enabled_apps.
+        required: false
+        default: ''
+      pack_apps:
+        description: >
+          Apps to bundle in RevPack (comma-separated section names).
+          Leave blank to bundle all enabled apps.
+        required: false
+        default: ''
+      pack_exclude_apps:
+        description: >
+          Apps to EXCLUDE from RevPack (comma-separated section names).
+        required: false
+        default: ''
+      trigger_build:
+        description: 'Trigger a CI build with this configuration'
+        required: false
+        default: true
+        type: boolean
+      build_arch:
+        description: 'Architecture for the triggered build'
+        required: false
+        default: 'arm64-v8a'
+        type: choice
+        options:
+          - arm64-v8a
+          - armeabi-v7a
+          - x86_64
+          - universal
+          - all
+
+concurrency:
+  group: configure-apps
+  cancel-in-progress: false
+
+jobs:
+  configure:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+
+    steps:
+      - name: Trigger CI build
+        if: ${{ inputs.trigger_build == true }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run ci.yml \
+            --repo "${{ github.repository }}" \
+            --ref "${{ github.ref_name }}" \
+            --field build_arch="${{ inputs.build_arch }}" \
+            --field force_build=true \
+            --field from_configurator=true \
+            --field enabled_apps="${{ inputs.enabled_apps }}" \
+            --field disabled_apps="${{ inputs.disabled_apps }}" \
+            --field pack_apps="${{ inputs.pack_apps }}" \
+            --field pack_exclude_apps="${{ inputs.pack_exclude_apps }}"
+          echo "CI build triggered — arch: ${{ inputs.build_arch }}"
+          echo "  enabled_apps:      ${{ inputs.enabled_apps }}"
+          echo "  disabled_apps:     ${{ inputs.disabled_apps }}"
+          echo "  pack_apps:         ${{ inputs.pack_apps }}"
+          echo "  pack_exclude_apps: ${{ inputs.pack_exclude_apps }}"
+
+      - name: Skipped
+        if: ${{ inputs.trigger_build == false }}
+        run: echo "trigger_build=false — no build was triggered."
