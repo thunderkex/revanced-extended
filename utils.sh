@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env bash
+#!/usr/bin/env bash
 
 MODULE_TEMPLATE_DIR="module"
 CWD=$(pwd)
