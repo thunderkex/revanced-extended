@@ -159,12 +159,49 @@ delete_asset_by_name() {
     return 0
 }
 
+delete_assets_by_pattern() {
+    local pattern="$1"
+    local api_response
+    
+    set +o pipefail
+    api_response=$(gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${RELEASE_TAG}" 2>/dev/null || echo "{}")
+    
+    while IFS=$'\t' read -r asset_id asset_name; do
+        [[ -z "$asset_id" || "$asset_id" == "null" ]] && continue
+        case "$asset_name" in
+            $pattern)
+                debug "Deleting old asset '$asset_name' (ID: $asset_id)..."
+                local deleted=false
+                for attempt in 1 2 3; do
+                    if gh api -X DELETE "repos/${GITHUB_REPOSITORY}/releases/assets/${asset_id}" &>/dev/null; then
+                        log "Deleted old revpack asset: $asset_name"
+                        deleted=true
+                        break
+                    fi
+                    sleep 1
+                done
+                [[ "$deleted" == false ]] && warn "Could not delete old asset '$asset_name'"
+                ;;
+        esac
+    done < <(echo "$api_response" | jq -r '.assets[] | [.id, .name] | @tsv' 2>/dev/null || true)
+    
+    set -o pipefail
+}
+
 upload_file() {
     local file="$1"
     local filename
     filename=$(basename "$file")
-    
-    delete_asset_by_name "$filename"
+
+    if [[ "$filename" == revpack-*.zip ]]; then
+        if [[ "${PRESERVE_REVPACK:-false}" != "true" ]]; then
+            delete_assets_by_pattern "revpack-*.zip"
+        else
+            debug "PRESERVE_REVPACK=true — keeping existing revpack assets alongside $filename"
+        fi
+    else
+        delete_asset_by_name "$filename"
+    fi
     
     for ((i=1; i<=RETRY_COUNT; i++)); do
         debug "Uploading $filename (attempt $i/$RETRY_COUNT)..."

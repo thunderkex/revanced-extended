@@ -24,6 +24,11 @@ on:
         required: false
         default: false
         type: boolean
+      from_configurator:
+        description: 'Triggered by RevPack Configurator (preserves existing revpack assets with unique name)'
+        required: false
+        default: false
+        type: boolean
       release_mode:
         description: 'Release mode'
         required: false
@@ -53,6 +58,7 @@ jobs:
       BUILD_ARCH: ${{ steps.build_config.outputs.BUILD_ARCH }}
       BUILD_LITE: ${{ steps.build_config.outputs.BUILD_LITE }}
       SINGLE_RELEASE: ${{ steps.build_config.outputs.SINGLE_RELEASE }}
+      FROM_CONFIGURATOR: ${{ steps.build_config.outputs.FROM_CONFIGURATOR }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -130,6 +136,9 @@ jobs:
             echo "SINGLE_RELEASE=false" >> $GITHUB_OUTPUT
           fi
 
+          # From configurator flag
+          echo "FROM_CONFIGURATOR=${{ github.event.inputs.from_configurator || 'false' }}" >> $GITHUB_OUTPUT
+
   build:
     permissions: write-all
     needs: check
@@ -140,6 +149,7 @@ jobs:
       target_arch: ${{ needs.check.outputs.BUILD_ARCH }}
       build_lite: ${{ needs.check.outputs.BUILD_LITE == 'true' }}
       single_release: ${{ needs.check.outputs.SINGLE_RELEASE == 'true' }}
+      from_configurator: ${{ needs.check.outputs.FROM_CONFIGURATOR == 'true' }}
     secrets: inherit
 
   # Cleanup old workflow runs (keep last 15)

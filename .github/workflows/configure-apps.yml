@@ -1,0 +1,200 @@
+name: Configure Apps
+
+on:
+  workflow_dispatch:
+    inputs:
+      enabled_apps:
+        description: >
+          Apps to BUILD (comma-separated section names from config.toml).
+          Use "all" to enable every app, or leave blank to keep current state.
+        required: false
+        default: 'all'
+      disabled_apps:
+        description: >
+          Apps to DISABLE (comma-separated). Always takes priority over enabled_apps.
+        required: false
+        default: ''
+      pack_apps:
+        description: >
+          Apps to bundle in RevPack (comma-separated section names).
+          Leave blank to bundle all enabled apps.
+        required: false
+        default: ''
+      pack_exclude_apps:
+        description: >
+          Apps to EXCLUDE from RevPack (comma-separated section names).
+        required: false
+        default: ''
+      trigger_build:
+        description: 'Trigger a CI build after saving config'
+        required: false
+        default: true
+        type: boolean
+      build_arch:
+        description: 'Architecture for the triggered build'
+        required: false
+        default: 'arm64-v8a'
+        type: choice
+        options:
+          - arm64-v8a
+          - armeabi-v7a
+          - x86_64
+          - universal
+          - all
+
+concurrency:
+  group: configure-apps
+  cancel-in-progress: false
+
+jobs:
+  configure:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+
+      - name: Update config.toml
+        id: update_config
+        env:
+          ENABLED_APPS:       ${{ inputs.enabled_apps }}
+          DISABLED_APPS:      ${{ inputs.disabled_apps }}
+          PACK_APPS:          ${{ inputs.pack_apps }}
+          PACK_EXCLUDE_APPS:  ${{ inputs.pack_exclude_apps }}
+        run: |
+          python3 - <<'PYEOF'
+          import os, re, sys
+
+          cfg_path = "config.toml"
+          with open(cfg_path, "r") as f:
+              lines = f.readlines()
+
+          enabled_raw   = os.environ.get("ENABLED_APPS",      "all").strip()
+          disabled_raw  = os.environ.get("DISABLED_APPS",     "").strip()
+          pack_raw      = os.environ.get("PACK_APPS",         "").strip()
+          exclude_raw   = os.environ.get("PACK_EXCLUDE_APPS", "").strip()
+
+          def csv(s):
+              return [x.strip() for x in s.split(",") if x.strip()] if s else []
+
+          # None = enable all; empty string also means "all"
+          enabled_list  = csv(enabled_raw) if enabled_raw and enabled_raw.lower() != "all" else None
+          disabled_list = set(csv(disabled_raw))
+          pack_list     = csv(pack_raw)
+          exclude_list  = csv(exclude_raw)
+
+          output   = []
+          current  = None      # current [Section] name
+          in_main  = True      # before the first [Section]
+          pack_written = False
+          exclude_written = False
+
+          skip_pack_key    = False
+          skip_exclude_key = False
+
+          # Regex patterns
+          section_re  = re.compile(r"^\[([^\]]+)\]")
+          enabled_re  = re.compile(r"^(\s*enabled\s*=\s*)(true|false)(.*)")
+          pack_re     = re.compile(r"^(\s*pack-apps\s*=\s*)")
+          excl_re     = re.compile(r"^(\s*pack-exclude-apps\s*=\s*)")
+
+          for line in lines:
+              sec_m = section_re.match(line.rstrip())
+              if sec_m:
+                  in_main = False
+                  current = sec_m.group(1)
+                  output.append(line)
+                  continue
+
+              # ── Main config section (before any [Section]) ──
+              if in_main:
+                  pm = pack_re.match(line)
+                  em = excl_re.match(line)
+                  if pm:
+                      val = ", ".join(f'"{a}"' for a in pack_list) if pack_list else '""'
+                      output.append(f'pack-apps = {val}\n')
+                      pack_written = True
+                      continue
+                  if em:
+                      val = ", ".join(f'"{a}"' for a in exclude_list) if exclude_list else '""'
+                      output.append(f'pack-exclude-apps = {val}\n')
+                      exclude_written = True
+                      continue
+                  output.append(line)
+                  continue
+
+              # ── App section (inside [SectionName]) ──
+              en_m = enabled_re.match(line)
+              if en_m and current is not None:
+                  if current in disabled_list:
+                      new_val = "false"
+                  elif enabled_list is None:
+                      # "all" mode — enable unless explicitly disabled
+                      new_val = "true"
+                  elif current in enabled_list:
+                      new_val = "true"
+                  else:
+                      new_val = "false"
+                  output.append(f"{en_m.group(1)}{new_val}{en_m.group(3)}\n")
+                  continue
+
+              output.append(line)
+
+          # If pack-apps / pack-exclude-apps weren't in file yet, inject after combine-modules line
+          if not pack_written or not exclude_written:
+              final = []
+              for line in output:
+                  final.append(line)
+                  if "combine-modules" in line and "=" in line and not pack_written:
+                      val = ", ".join(f'"{a}"' for a in pack_list) if pack_list else '""'
+                      final.append(f'pack-apps = {val}\n')
+                      pack_written = True
+                      val2 = ", ".join(f'"{a}"' for a in exclude_list) if exclude_list else '""'
+                      final.append(f'pack-exclude-apps = {val2}\n')
+                      exclude_written = True
+              output = final
+
+          with open(cfg_path, "w") as f:
+              f.writelines(output)
+
+          print("config.toml updated successfully")
+
+          # Summary
+          if enabled_list is None:
+              print(f"  Enabled:   all apps")
+          else:
+              print(f"  Enabled:   {', '.join(enabled_list) or '(none)'}")
+          print(f"  Disabled:  {', '.join(disabled_list) or '(none)'}")
+          print(f"  pack-apps: {', '.join(pack_list) or '(empty = all)'}")
+          print(f"  pack-excl: {', '.join(exclude_list) or '(none)'}")
+          PYEOF
+
+      - name: Show diff
+        run: git diff config.toml
+
+      - name: Commit & push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add config.toml
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+          git commit -m "configure-apps: update enabled/pack settings [skip ci]"
+          git push
+
+      - name: Trigger CI build
+        if: ${{ inputs.trigger_build == true }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run ci.yml \
+            --ref "${{ github.ref_name }}" \
+            --field build_arch="${{ inputs.build_arch }}" \
+            --field force_build=true \
+            --field from_configurator=true
+          echo "CI build triggered for arch: ${{ inputs.build_arch }}"

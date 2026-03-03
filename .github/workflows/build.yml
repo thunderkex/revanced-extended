@@ -22,6 +22,11 @@ on:
         required: false
         default: true
         description: "Use single mutable release model (replace assets in latest-build)"
+      from_configurator:
+        type: boolean
+        required: false
+        default: false
+        description: "Triggered by RevPack Configurator"
 
   workflow_dispatch:
     inputs:
@@ -173,10 +178,17 @@ jobs:
         run: |
           cd build
           ARCH="${{ inputs.target_arch || 'arm64-v8a' }}"
+          FROM_CONFIGURATOR="${{ inputs.from_configurator || 'false' }}"
           for f in *.apk *.zip; do
             [ -f "$f" ] || continue
-            # Skip RevPack — it bundles all architectures, no arch suffix needed
-            [[ "$f" == revpack-* ]] && continue
+            if [[ "$f" == revpack-* ]]; then
+              if [ "$FROM_CONFIGURATOR" = "true" ]; then
+                TS=$(date +%Y%m%d%H%M)
+                base="${f%.zip}"
+                mv "$f" "${base}-custom-${TS}.zip" 2>/dev/null || true
+              fi
+              continue
+            fi
             # Skip if already has architecture in name
             if [[ "$f" != *"$ARCH"* ]] && [ "$ARCH" != "universal" ] && [ "$ARCH" != "all" ]; then
               base="${f%.*}"
@@ -213,6 +225,7 @@ jobs:
           RELEASE_TAG: "latest-build"
           RELEASE_NAME: "ReVanced Extended - Latest Build"
           BUILD_DIR: "build"
+          PRESERVE_REVPACK: ${{ inputs.from_configurator && 'true' || 'false' }}
         run: |
           chmod +x ./scripts/release/post-build-release.sh 2>/dev/null || true
           if [ -f "./scripts/release/post-build-release.sh" ]; then
@@ -230,12 +243,16 @@ jobs:
                 --latest
             fi
             
-            # Delete existing assets
             echo "Cleaning existing assets..."
-            ASSETS=$(gh api repos/${{ github.repository }}/releases/tags/latest-build --jq '.assets[].id' 2>/dev/null || echo "")
-            for ASSET_ID in $ASSETS; do
+            ASSETS_JSON=$(gh api repos/${{ github.repository }}/releases/tags/latest-build 2>/dev/null || echo '{}')
+            while IFS=$'\t' read -r ASSET_ID ASSET_NAME; do
+              [ -z "$ASSET_ID" ] || [ "$ASSET_ID" = "null" ] && continue
+              if [ "${PRESERVE_REVPACK:-false}" = "true" ] && [[ "$ASSET_NAME" == revpack-* ]]; then
+                echo "Preserving existing revpack asset: $ASSET_NAME"
+                continue
+              fi
               gh api -X DELETE repos/${{ github.repository }}/releases/assets/$ASSET_ID || true
-            done
+            done < <(echo "$ASSETS_JSON" | jq -r '.assets[]? | [.id, .name] | @tsv' 2>/dev/null || true)
             
             # Upload new assets
             echo "Uploading new assets..."

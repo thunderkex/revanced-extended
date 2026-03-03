@@ -303,7 +303,7 @@ excluded-patches = "'Patch2'"    # Patches to exclude
 
 ---
 
-## � RevPack — Combined Module
+## 🎁 RevPack — All-In-One Module
 
 RevPack bundles every built Magisk/KernelSU module into **one flashable zip**. Instead of flashing each patched app separately, flash RevPack once and get everything.
 
@@ -361,7 +361,7 @@ After flashing RevPack, open **KernelSU Manager → Modules → RevPack → WebU
 
 ---
 
-## �🛠️ Build ReVanced Extended Yourself
+## 🛠️ Build ReVanced Extended Yourself
 
 ### Prerequisites (Build Requirements)
 
