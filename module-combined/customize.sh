@@ -1,7 +1,20 @@
-ui_print ""
+﻿ui_print ""
 ui_print "* RevPack Installer"
 ui_print "  by Thunderkex"
 ui_print ""
+
+# Vol+ = Yes (return 0), Vol- = No (return 1), timeout = Yes (return 0)
+_choose() {
+	local KEY TIMEOUT=5
+	KEY=$(timeout "$TIMEOUT" getevent -lc 16 2>/dev/null | awk '/EV_KEY.*KEY_VOLUME.*DOWN/{print $3; exit}')
+	case "$KEY" in
+		KEY_VOLUMEUP) return 0 ;;
+		KEY_VOLUMEDOWN) return 1 ;;
+		*)
+			ui_print "  Timeout reached, defaulting to Yes"
+			return 0 ;;
+	esac
+}
 
 if [ "$ARCH" = "arm" ]; then
 	ARCH_LIB=armeabi-v7a
@@ -39,6 +52,13 @@ install_app() {
 	ui_print ""
 	ui_print "---------------------------------------"
 	ui_print "* $PKG_NAME  v$PKG_VER"
+	ui_print "  Install this app? (auto-yes in 5s)"
+	ui_print "  Vol+ = Yes  |  Vol- = No"
+	if ! _choose; then
+		ui_print "* Skipped by user: $PKG_NAME"
+		return 0
+	fi
+	ui_print "* Installing $PKG_NAME..."
 
 	local RVPATH=/data/adb/rvhc/${MODPATH##*/}-${PKG_NAME}.apk
 	local BASEPATH INS IS_SYS

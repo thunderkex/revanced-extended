@@ -1,4 +1,4 @@
-. "$MODPATH/config"
+﻿. "$MODPATH/config"
 
 ui_print ""
 if [ -n "$MODULE_ARCH" ] && [ "$MODULE_ARCH" != "$ARCH" ]; then

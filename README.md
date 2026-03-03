@@ -1,4 +1,4 @@
-# ReVanced Extended: Android App Patching, Customization & Ad-Blocking
+## ReVanced Extended | Morphed Extended | All In One
 
 <div align="center">
 
@@ -32,7 +32,7 @@
   </a>
 </p>
 
-**Auto-built APKs, Magisk Modules, and Advanced Android App Customization Tools**
+**Auto-built APKs, Modules, and Patched apps modules**
 
 [📥 Downloads](#-download-revanced-extended-apks--modules) • [📖 Documentation](#-documentation-configuration--support) • [🛠️ Build](#️-build-revanced-extended-yourself) • [❓ FAQ](#-frequently-asked-questions-faq)
 

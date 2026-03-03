@@ -1,4 +1,4 @@
-#!/bin/bash
+﻿#!/bin/bash
 
 # Script to delete all GitHub releases using the GitHub API
 # Usage: GITHUB_TOKEN=your_token ./delete-releases.sh

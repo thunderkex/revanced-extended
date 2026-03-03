@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 # ============================================
 # APK Architecture Splitter
 # Splits universal APKs into architecture-specific variants

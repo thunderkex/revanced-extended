@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 # ============================================
 # Changelog Generator
 # Generates changelogs from patch sources and build outputs

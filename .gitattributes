@@ -1,0 +1,8 @@
+* text=auto
+*.sh text eol=lf
+module/customize.sh text eol=lf
+module-combined/customize.sh text eol=lf
+module/service.sh text eol=lf
+module-combined/service.sh text eol=lf
+module/uninstall.sh text eol=lf
+module-combined/uninstall.sh text eol=lf

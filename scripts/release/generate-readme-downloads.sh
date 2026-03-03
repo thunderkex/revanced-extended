@@ -1,4 +1,4 @@
-set -euo pipefail
+﻿set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="${SCRIPT_DIR}/../.."
@@ -274,7 +274,48 @@ generate_downloads_section() {
 
     output+="---\n\n"
 
+    # ---- RevPack dedicated section ----
+    if [[ -n "${app_files[RevPack]+x}" ]]; then
+        local revpack_rows=""
+        IFS='|' read -ra _entries <<< "${app_files[RevPack]}"
+        for _entry in "${_entries[@]}"; do
+            [[ -z "$_entry" ]] && continue
+            local filename size download_url
+            if [[ "$_entry" == local:* ]]; then
+                local file="${_entry#local:}"
+                [[ -f "$file" ]] || continue
+                filename=$(basename "$file")
+                parse_filename "$filename"
+                size=$(get_file_size "$file")
+                download_url="${repo_url}/releases/download/${RELEASE_TAG}/${filename}"
+            elif [[ "$_entry" == release:* ]]; then
+                local _rdata="${_entry#release:}"
+                filename=$(echo "$_rdata" | awk -F'\|\|\|' '{print $1}')
+                size=$(echo    "$_rdata" | awk -F'\|\|\|' '{print $2}')
+                download_url=$(echo "$_rdata" | awk -F'\|\|\|' '{print $3}')
+                parse_filename "$filename"
+            else
+                continue
+            fi
+            [[ -z "$download_url" ]] && continue
+            local badge_label
+            badge_label=$(echo "⬇_Download" | sed 's/ /_/g')
+            local download_badge="[![Download]($(generate_badge "$badge_label" "blue"))](${download_url})"
+            revpack_rows+="| 🎁 Bundle | v${APP_VERSION:-N/A} | 🌐 All | ${size} | ${download_badge} |\n"
+        done
+        if [[ -n "$revpack_rows" ]]; then
+            output+="### $(get_app_logo RevPack) — All-in-One Bundle\n\n"
+            output+="> Contains all patched Magisk/KernelSU module zips in a single flashable archive.\n\n"
+            output+="| Type | Version | Architecture | Size | Download |\n"
+            output+="|:----:|:-------:|:------------:|:----:|:--------:|\n"
+            output+="${revpack_rows}"
+            output+="\n---\n\n"
+        fi
+    fi
+
+    # ---- Per-app sections ----
     for app in "${apps_order[@]}"; do
+        [[ "$app" == "RevPack" ]] && continue
         local app_logo
         app_logo=$(get_app_logo "$app")
         local app_rows=""
@@ -407,7 +448,49 @@ EOF
         done <<< "$_release_lines"
     fi
 
+    # ---- RevPack dedicated section ----
+    if [[ -n "${app_files[RevPack]+x}" ]]; then
+        local revpack_rows=""
+        IFS='|' read -ra _entries <<< "${app_files[RevPack]}"
+        for _entry in "${_entries[@]}"; do
+            [[ -z "$_entry" ]] && continue
+            local filename size download_url
+            if [[ "$_entry" == local:* ]]; then
+                local file="${_entry#local:}"
+                [[ -f "$file" ]] || continue
+                filename=$(basename "$file")
+                parse_filename "$filename"
+                size=$(get_file_size "$file")
+                download_url="${repo_url}/releases/download/${RELEASE_TAG}/${filename}"
+            elif [[ "$_entry" == release:* ]]; then
+                local _rdata="${_entry#release:}"
+                filename=$(echo "$_rdata" | awk -F'\|\|\|' '{print $1}')
+                size=$(echo    "$_rdata" | awk -F'\|\|\|' '{print $2}')
+                download_url=$(echo "$_rdata" | awk -F'\|\|\|' '{print $3}')
+                parse_filename "$filename"
+            else
+                continue
+            fi
+            [[ -z "$download_url" ]] && continue
+            local download_badge="[![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](${download_url})"
+            revpack_rows+="| 🎁 Bundle | v${APP_VERSION:-N/A} | 🌐 All | ${size} | ${download_badge} |\n"
+        done
+        if [[ -n "$revpack_rows" ]]; then
+            echo "### $(get_app_logo RevPack) — All-in-One Bundle"
+            echo ""
+            echo "> Contains all patched Magisk/KernelSU module zips in a single flashable archive."
+            echo ""
+            echo "| Type | Version | Architecture | Size | Download |"
+            echo "|:----:|:-------:|:------------:|:----:|:--------:|"
+            echo -e "${revpack_rows}"
+            echo "---"
+            echo ""
+        fi
+    fi
+
+    # ---- Per-app sections ----
     for app in "${apps_order[@]}"; do
+        [[ "$app" == "RevPack" ]] && continue
         local app_logo
         app_logo=$(get_app_logo "$app")
         local app_rows=""
