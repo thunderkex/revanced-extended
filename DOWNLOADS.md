@@ -1,6 +1,16 @@
 ### 📥 Available APKs
 
-> **Last Updated:** 2026-03-03 01:53:51 UTC
+> **Last Updated:** 2026-03-03 05:19:23 UTC
+
+### ![RevPack](https://img.shields.io/badge/RevPack-7C4DFF?style=flat-square&logo=android&logoColor=white) — All-in-One Bundle
+
+> Contains all patched Magisk/KernelSU module zips in a single flashable archive.
+
+| Type | Version | Architecture | Size | Download |
+|:----:|:-------:|:------------:|:----:|:--------:|
+| 🎁 Bundle | v20260303 | 🌐 All | 1.9G | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260303.zip) |
+
+---
 
 ### ![Facebook](https://img.shields.io/badge/Facebook-1877F2?style=flat-square&logo=facebook&logoColor=white)
 
@@ -20,8 +30,8 @@
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 📦 APK | v418.0.0 | 📱 arm64-v8a | 141M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-v418.0.0.51.77-arm64-v8a.apk) |
-| 🧩 Module | v418.0.0 | 📱 arm64-v8a | 226M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-module-v418.0.0.51.77-arm64-v8a.zip) |
+| 📦 APK | v418.0.0 | 📱 arm64-v8a | 140M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-v418.0.0.51.77-arm64-v8a.apk) |
+| 🧩 Module | v418.0.0 | 📱 arm64-v8a | 225M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-module-v418.0.0.51.77-arm64-v8a.zip) |
 
 ### ![lightroom-ex](https://img.shields.io/badge/lightroom-ex-3DDC84?style=flat-square&logo=android&logoColor=white)
 
@@ -48,7 +58,7 @@
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
 | 📦 APK | v2025.05.27 | 📱 arm64-v8a | 76M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/soundcloud-ex-revanced-v2025.05.27-release-arm64-v8a.apk) |
-| 🧩 Module | v2025.05.27 | 📱 arm64-v8a | 113M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/soundcloud-ex-revanced-module-v2025.05.27-release-arm64-v8a.zip) |
+| 🧩 Module | v2025.05.27 | 📱 arm64-v8a | 114M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/soundcloud-ex-revanced-module-v2025.05.27-release-arm64-v8a.zip) |
 
 ### ![Spotify](https://img.shields.io/badge/Spotify-1DB954?style=flat-square&logo=spotify&logoColor=white)
 
@@ -83,10 +93,4 @@
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
 | 🧩 Module | v9.3.0 | 📱 arm64-v8a | 189M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/lightroom-ex-revanced-module-v9.3.0-arm64-v8a.zip) |
-
-### ![RevPack](https://img.shields.io/badge/RevPack-7C4DFF?style=flat-square&logo=android&logoColor=white)
-
-| Type | Version | Architecture | Size | Download |
-|:----:|:-------:|:------------:|:----:|:--------:|
-| 🧩 Module | v20260303 | 🌐 all | 1.9G | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260303.zip) |
 

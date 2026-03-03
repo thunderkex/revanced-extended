@@ -77,7 +77,7 @@
 <!-- DOWNLOADS_START -->
 ## 📥 Download ReVanced Extended APKs & Modules
 
-> **Last Updated:** 2026-03-03 01:53:42 UTC
+> **Last Updated:** 2026-03-03 05:19:14 UTC
 
 ### 🔗 Quick Links
 
@@ -113,6 +113,16 @@
 
 ---
 
+### ![RevPack](https://img.shields.io/badge/RevPack-7C4DFF?style=flat-square&logo=android&logoColor=white) — All-in-One Bundle
+
+> Contains all patched Magisk/KernelSU module zips in a single flashable archive.
+
+| Type | Version | Architecture | Size | Download |
+|:----:|:-------:|:------------:|:----:|:--------:|
+| 🎁 Bundle | v20260303 | 🌐 All | 1.9G | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260303.zip) |
+
+---
+
 ### ![Facebook](https://img.shields.io/badge/Facebook-1877F2?style=flat-square&logo=facebook&logoColor=white)
 
 | Type | Version | Architecture | Size | Download |
@@ -131,8 +141,8 @@
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 📦 APK | v418.0.0 | 📱 arm64-v8a | 141M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-v418.0.0.51.77-arm64-v8a.apk) |
-| 🧩 Module | v418.0.0 | 📱 arm64-v8a | 226M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-module-v418.0.0.51.77-arm64-v8a.zip) |
+| 📦 APK | v418.0.0 | 📱 arm64-v8a | 140M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-v418.0.0.51.77-arm64-v8a.apk) |
+| 🧩 Module | v418.0.0 | 📱 arm64-v8a | 225M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-module-v418.0.0.51.77-arm64-v8a.zip) |
 
 ### ![lightroom-ex](https://img.shields.io/badge/lightroom-ex-3DDC84?style=flat-square&logo=android&logoColor=white)
 
@@ -159,7 +169,7 @@
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
 | 📦 APK | v2025.05.27 | 📱 arm64-v8a | 76M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/soundcloud-ex-revanced-v2025.05.27-release-arm64-v8a.apk) |
-| 🧩 Module | v2025.05.27 | 📱 arm64-v8a | 113M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/soundcloud-ex-revanced-module-v2025.05.27-release-arm64-v8a.zip) |
+| 🧩 Module | v2025.05.27 | 📱 arm64-v8a | 114M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/soundcloud-ex-revanced-module-v2025.05.27-release-arm64-v8a.zip) |
 
 ### ![Spotify](https://img.shields.io/badge/Spotify-1DB954?style=flat-square&logo=spotify&logoColor=white)
 
@@ -195,39 +205,33 @@
 |:----:|:-------:|:------------:|:----:|:--------:|
 | 🧩 Module | v9.3.0 | 📱 arm64-v8a | 189M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/lightroom-ex-revanced-module-v9.3.0-arm64-v8a.zip) |
 
-### ![RevPack](https://img.shields.io/badge/RevPack-7C4DFF?style=flat-square&logo=android&logoColor=white)
-
-| Type | Version | Architecture | Size | Download |
-|:----:|:-------:|:------------:|:----:|:--------:|
-| 🧩 Module | v20260303 | 🌐 all | 1.9G | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260303.zip) |
-
 <details>
 <summary>🔐 <b>File Checksums (MD5)</b></summary>
 
 ```
-c582757805d343f8a7c59589e99e4570  facebook-ex-revanced-v490.0.0.63.82-arm64-v8a.apk
-83cf3fa62eec1d573d143f0d401fea5c  gphotos-ex-revanced-v7.65.0.874788995-arm64-v8a.apk
-a761b0b24ab44ed34233341900be7d5e  instagram-ex-revanced-v418.0.0.51.77-arm64-v8a.apk
-3946655d5d7729e321a1cc3127b2366b  lightroom-ex-revanced-v9.3.0-arm64-v8a.apk
-10bf5cf31e0d592d41c7b8d134cbc900  music-ex-morphed-revanced-v8.30.54-arm64-v8a.apk
-d63877bec2bcccc0d6127e7343b913c8  reddit-ex-revanced-v2026.04.0-arm64-v8a.apk
-9e7c5ac3e1f150fa3f84e5b1a7206f66  soundcloud-ex-revanced-v2025.05.27-release-arm64-v8a.apk
-cc2b6d3969e5bdb726b42643476c7fe5  spotify-ex-revanced-v9.0.96.819-arm64-v8a.apk
-c2f4c20c49ee5c507606641b9a4e1dba  strava-ex-revanced-v452.10-arm64-v8a.apk
-5d32b0c92d2fe7bb29909bb1d2448796  tiktok-revanced-v36.5.4-arm64-v8a.apk
-07d1e7832322a3e8fdc75b029e3454cb  youtube-ex-morphed-revanced-v20.05.46-arm64-v8a.apk
-df9f93d76b7cd61b623792fd30bc267f  facebook-ex-revanced-module-v490.0.0.63.82-arm64-v8a.zip
-30d52b3da0cba97fa94577a8e0b5dad7  gphotos-ex-revanced-module-v7.65.0.874788995-arm64-v8a.zip
-4949e77bf90e59fc81d060921749d057  instagram-ex-revanced-module-v418.0.0.51.77-arm64-v8a.zip
-f826aa4c288b80edef1a8c8603f3c275  lightroom-ex-revanced-module-v9.3.0-arm64-v8a.zip
-d41ee925e580f1d63b163d17282c3190  music-ex-morphed-revanced-module-v8.30.54-arm64-v8a.zip
-1e68e7ea215528370b1beee2760676b0  reddit-ex-revanced-module-v2026.04.0-arm64-v8a.zip
-9d9efab1f6ee5c99be7dd61231a4c02c  revpack-v20260303.zip
-75612622d6cf883071966cb11ddb73cf  soundcloud-ex-revanced-module-v2025.05.27-release-arm64-v8a.zip
-0c3be28fcf17dd57591e10a5929151c2  spotify-ex-revanced-module-v9.0.96.819-arm64-v8a.zip
-f205c151031ccbf0a64e4ba694059153  strava-ex-revanced-module-v452.10-arm64-v8a.zip
-744c2dad2d5f8ae1dc11484dfa7f0d69  tiktok-revanced-module-v36.5.4-arm64-v8a.zip
-5240a7b3d7d061b383b062b3f3858946  youtube-ex-morphed-revanced-module-v20.05.46-arm64-v8a.zip
+64a3bf9555bfa43e7deeca7f041bd525  facebook-ex-revanced-v490.0.0.63.82-arm64-v8a.apk
+2e66224ad813e189fcd41d78253cd521  gphotos-ex-revanced-v7.65.0.874788995-arm64-v8a.apk
+7b77fbbcf05ef47d20ffc5fd2a9b1ae8  instagram-ex-revanced-v418.0.0.51.77-arm64-v8a.apk
+61ede6ed6a79d6bb3af3d215fbb079b0  lightroom-ex-revanced-v9.3.0-arm64-v8a.apk
+d5c14edaad22904fdbc9d104546d87e1  music-ex-morphed-revanced-v8.30.54-arm64-v8a.apk
+9b80a5722da7732dd8b2f1417a82b951  reddit-ex-revanced-v2026.04.0-arm64-v8a.apk
+5b714fce1a5052b5207ba9f0cfd497eb  soundcloud-ex-revanced-v2025.05.27-release-arm64-v8a.apk
+0840b05c61e51ef443938b5762fabeac  spotify-ex-revanced-v9.0.96.819-arm64-v8a.apk
+92623471608e002e79aaf86ff360e593  strava-ex-revanced-v452.10-arm64-v8a.apk
+484a142dee29d928181ee70943747db1  tiktok-revanced-v36.5.4-arm64-v8a.apk
+6e60c6791bd9507088daaa09595a51cb  youtube-ex-morphed-revanced-v20.05.46-arm64-v8a.apk
+e48f71d0d05d2d1931d8577c95d7325c  facebook-ex-revanced-module-v490.0.0.63.82-arm64-v8a.zip
+675c0a2966ba872408ac42a7ee1280ea  gphotos-ex-revanced-module-v7.65.0.874788995-arm64-v8a.zip
+1d048cbbd822f2d200c9f6ed93cf4967  instagram-ex-revanced-module-v418.0.0.51.77-arm64-v8a.zip
+227b6f99be08d4adbc5c48c8c6c29790  lightroom-ex-revanced-module-v9.3.0-arm64-v8a.zip
+4e07fbe2dc8b7ad2cf127f90da4d695c  music-ex-morphed-revanced-module-v8.30.54-arm64-v8a.zip
+da4ae5bde51504ce3a0bcffd9db77445  reddit-ex-revanced-module-v2026.04.0-arm64-v8a.zip
+49763cc6992e085a4972b64e0f1382c5  revpack-v20260303.zip
+bceca25114f46970c09f6eaea3017958  soundcloud-ex-revanced-module-v2025.05.27-release-arm64-v8a.zip
+f11f23eebfe9ac35dbc50bc85681c260  spotify-ex-revanced-module-v9.0.96.819-arm64-v8a.zip
+a5bb4b684d68dcd6ca28743f14fa0c87  strava-ex-revanced-module-v452.10-arm64-v8a.zip
+f050cb1877b5def233a4da99a77e7705  tiktok-revanced-module-v36.5.4-arm64-v8a.zip
+3b1b98de11c45ec59643583a81ef0a83  youtube-ex-morphed-revanced-module-v20.05.46-arm64-v8a.zip
 ```
 
 </details>
