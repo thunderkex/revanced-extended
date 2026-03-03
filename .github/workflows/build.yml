@@ -177,12 +177,12 @@ jobs:
                   continue
               if in_main:
                   if pack_re.match(line):
-                      val = ", ".join(f'"{a}"' for a in pack_list) if pack_list else '""'
+                      val = '"' + ' '.join(pack_list) + '"' if pack_list else '""'
                       output.append(f'pack-apps = {val}\n')
                       pack_written = True
                       continue
                   if excl_re.match(line):
-                      val = ", ".join(f'"{a}"' for a in exclude_list) if exclude_list else '""'
+                      val = '"' + ' '.join(exclude_list) + '"' if exclude_list else '""'
                       output.append(f'pack-exclude-apps = {val}\n')
                       exclude_written = True
                       continue
@@ -207,10 +207,10 @@ jobs:
               for line in output:
                   final.append(line)
                   if "combine-modules" in line and "=" in line and not pack_written:
-                      val = ", ".join(f'"{a}"' for a in pack_list) if pack_list else '""'
+                      val = '"' + ' '.join(pack_list) + '"' if pack_list else '""'
                       final.append(f'pack-apps = {val}\n')
                       pack_written = True
-                      val2 = ", ".join(f'"{a}"' for a in exclude_list) if exclude_list else '""'
+                      val2 = '"' + ' '.join(exclude_list) + '"' if exclude_list else '""'
                       final.append(f'pack-exclude-apps = {val2}\n')
                       exclude_written = True
               output = final
@@ -247,7 +247,7 @@ jobs:
           NEXT_VER_CODE: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
 
       - name: Build lite variants
-        if: ${{ inputs.build_lite == true }}
+        if: ${{ inputs.build_lite == true && inputs.from_configurator != true }}
         env:
           BUILD_DIR: "build"
           LITE_BUILD_MODULES: "true"
@@ -260,7 +260,7 @@ jobs:
           fi
 
       - name: Split APKs by architecture
-        if: ${{ inputs.target_arch == 'all' }}
+        if: ${{ inputs.target_arch == 'all' && inputs.from_configurator != true }}
         run: |
           if command -v ./scripts/utilities/split-apk.sh &>/dev/null; then
             ./scripts/utilities/split-apk.sh
@@ -314,8 +314,22 @@ jobs:
             fi
           done
 
+      - name: Keep RevPack only (Configurator builds)
+        if: ${{ inputs.from_configurator == true }}
+        run: |
+          cd build
+          for f in *; do
+            [ -f "$f" ] || continue
+            [[ "$f" == revpack-* ]] && continue
+            echo "Removing non-revpack artifact: $f"
+            rm -f "$f"
+          done
+          echo "Remaining files:"
+          ls -lh || true
+
       - name: Generate changelog
         id: changelog
+        if: ${{ inputs.from_configurator != true }}
         run: |
           chmod +x ./scripts/utilities/generate-changelog.sh 2>/dev/null || true
           if [ -f "./scripts/utilities/generate-changelog.sh" ]; then
@@ -343,6 +357,7 @@ jobs:
           RELEASE_NAME: "ReVanced Extended - Latest Build"
           BUILD_DIR: "build"
           PRESERVE_REVPACK: ${{ inputs.from_configurator && 'true' || 'false' }}
+          FROM_CONFIGURATOR: ${{ inputs.from_configurator && 'true' || 'false' }}
         run: |
           chmod +x ./scripts/release/post-build-release.sh 2>/dev/null || true
           if [ -f "./scripts/release/post-build-release.sh" ]; then
@@ -373,20 +388,29 @@ jobs:
             
             # Upload new assets
             echo "Uploading new assets..."
-            for file in build/*.apk build/*.zip; do
-              [ -f "$file" ] || continue
-              gh release upload "latest-build" "$file" --clobber || true
-            done
+            if [ "${FROM_CONFIGURATOR:-false}" != "true" ]; then
+              for file in build/*.apk build/*.zip; do
+                [ -f "$file" ] || continue
+                gh release upload "latest-build" "$file" --clobber || true
+              done
+            else
+              for file in build/*.zip; do
+                [ -f "$file" ] || continue
+                gh release upload "latest-build" "$file" --clobber || true
+              done
+            fi
             
-            # Update release body
-            gh release edit "latest-build" \
-              --title "ReVanced Extended - Latest Build" \
-              --notes-file release_notes.md \
-              --latest
+            # Update release body (skip when from configurator)
+            if [ "${FROM_CONFIGURATOR:-false}" != "true" ]; then
+              gh release edit "latest-build" \
+                --title "ReVanced Extended - Latest Build" \
+                --notes-file release_notes.md \
+                --latest
+            fi
           fi
 
       - name: Upload to versioned release (Legacy)
-        if: ${{ inputs.single_release == false }}
+        if: ${{ inputs.single_release == false && inputs.from_configurator != true }}
         uses: svenstaro/upload-release-action@v2
         with:
           body_path: release_notes.md
@@ -408,6 +432,7 @@ jobs:
 
       - name: Update changelog and update json
         id: update_config
+        if: ${{ inputs.from_configurator != true }}
         env:
           SINGLE_RELEASE: ${{ inputs.single_release }}
         run: |
@@ -459,7 +484,7 @@ jobs:
           TG_TOKEN: ${{ secrets.TG_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
           SINGLE_RELEASE: ${{ inputs.single_release }}
-        if: env.TG_TOKEN != null
+        if: ${{ env.TG_TOKEN != null && inputs.from_configurator != true }}
         run: |
           cd build || { echo "build folder not found"; exit 1; }
 
@@ -505,6 +530,7 @@ jobs:
           curl -X POST --data-urlencode "parse_mode=Markdown" --data-urlencode "disable_web_page_preview=true" --data-urlencode "text=${MSG}" --data-urlencode "message_thread_id=26772" --data-urlencode "chat_id=${CHAT_ID}" "$POST"
 
       - uses: stefanzweifel/git-auto-commit-action@v7.1.0
+        if: ${{ inputs.from_configurator != true }}
         with:
           branch: update
           skip_checkout: true
