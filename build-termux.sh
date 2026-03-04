@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env bash
+#!/usr/bin/env bash
 # ============================================
 # ReVanced Extended - Termux Build Script
 # Enhanced with better UX and error handling

@@ -1,4 +1,4 @@
-﻿#!/system/bin/sh
+#!/system/bin/sh
 {
 	until [ "$(getprop sys.boot_completed)" = 1 ]; do sleep 1; done
 	until [ -d "/sdcard/Android" ]; do sleep 1; done

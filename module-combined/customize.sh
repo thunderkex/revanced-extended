@@ -1,4 +1,4 @@
-﻿ui_print ""
+ui_print ""
 ui_print "* RevPack Installer"
 ui_print "  by Thunderkex"
 ui_print ""

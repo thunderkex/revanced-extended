@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env bash
+#!/usr/bin/env bash
 # ============================================
 # Lite APK & Module Builder
 # Creates resource-stripped "lite" versions of APKs and Magisk modules
