@@ -1,6 +1,6 @@
 ### 📥 Available APKs
 
-> **Last Updated:** 2026-03-03 17:28:41 UTC
+> **Last Updated:** 2026-03-04 07:32:51 UTC
 
 ### ![RevPack](https://img.shields.io/badge/RevPack-7C4DFF?style=flat-square&logo=android&logoColor=white) — All-in-One Bundle
 
@@ -8,7 +8,7 @@
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 🎁 Bundle | v20260303 | 🌐 All | 1.9G | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260303.zip) |
+| 🎁 Bundle | v20260304 | 🌐 All | 1.9G | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260304.zip) |
 
 ---
 
@@ -30,8 +30,8 @@
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 📦 APK | v418.0.0 | 📱 arm64-v8a | 140M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-v418.0.0.51.77-arm64-v8a.apk) |
-| 🧩 Module | v418.0.0 | 📱 arm64-v8a | 225M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-module-v418.0.0.51.77-arm64-v8a.zip) |
+| 📦 APK | v418.0.0 | 📱 arm64-v8a | 141M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-v418.0.0.51.77-arm64-v8a.apk) |
+| 🧩 Module | v418.0.0 | 📱 arm64-v8a | 226M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-module-v418.0.0.51.77-arm64-v8a.zip) |
 
 ### ![lightroom-ex](https://img.shields.io/badge/lightroom-ex-3DDC84?style=flat-square&logo=android&logoColor=white)
 
@@ -71,8 +71,8 @@
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 📦 APK | vN/A | 📱 arm64-v8a | 124M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/strava-ex-revanced-v452.10-arm64-v8a.apk) |
-| 🧩 Module | vN/A | 📱 arm64-v8a | 179M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/strava-ex-revanced-module-v452.10-arm64-v8a.zip) |
+| 📦 APK | vN/A | 📱 arm64-v8a | 145M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/strava-ex-revanced-v453.11-arm64-v8a.apk) |
+| 🧩 Module | vN/A | 📱 arm64-v8a | 182M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/strava-ex-revanced-module-v453.11-arm64-v8a.zip) |
 
 ### ![TikTok](https://img.shields.io/badge/TikTok-000000?style=flat-square&logo=tiktok&logoColor=white)
 
