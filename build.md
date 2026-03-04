@@ -5,7 +5,7 @@ Lightroom-Ex: 9.3.0
 Music-Ex-morphed: 8.30.54  
 Soundcloud-Ex: 2025.05.27-release  
 Spotify-Ex: 9.0.96.819  
-Strava-Ex: 452.10  
+Strava-Ex: 453.11  
 TikTok: 36.5.4  
 Youtube-Ex-morphed: 20.05.46  
 reddit-Ex: 2026.04.0  
