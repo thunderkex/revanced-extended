@@ -247,8 +247,8 @@ upload_assets() {
     
     local failed=0
     if [[ $PARALLEL_UPLOADS -gt 1 ]] && command -v parallel &>/dev/null; then
-        export -f delete_asset_by_name upload_file log warn error debug
-        export RELEASE_TAG GITHUB_REPOSITORY RETRY_COUNT RETRY_DELAY DEBUG
+        export -f delete_asset_by_name delete_assets_by_pattern upload_file log warn error debug
+        export RELEASE_TAG GITHUB_REPOSITORY RETRY_COUNT RETRY_DELAY DEBUG PRESERVE_REVPACK
         printf '%s\n' "${files[@]}" | parallel -j "$PARALLEL_UPLOADS" upload_file {}
         failed=$((${PIPESTATUS[0]:-0}))
     else
