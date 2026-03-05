@@ -2,10 +2,10 @@ Facebook-Ex: 490.0.0.63.82
 Gphotos-Ex: 7.65.0.874788995  
 Instagram-Ex: 418.0.0.51.77  
 Lightroom-Ex: 9.3.0  
-Music-Ex-morphed: 8.30.54  
+Music-Ex-morphed: 8.40.54  
 Soundcloud-Ex: 2025.05.27-release  
 Spotify-Ex: 9.0.96.819  
 Strava-Ex: 453.11  
 TikTok: 36.5.4  
-Youtube-Ex-morphed: 20.05.46  
+Youtube-Ex-morphed: 20.40.45  
 reddit-Ex: 2026.04.0  
