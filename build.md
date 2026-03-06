@@ -1,6 +1,6 @@
 Facebook-Ex: 490.0.0.63.82  
-Gphotos-Ex: 7.65.0.874788995  
-Instagram-Ex: 418.0.0.51.77  
+Gphotos-Ex: 7.66.0.876414181  
+Instagram-Ex: 419.0.0.49.71  
 Lightroom-Ex: 9.3.0  
 Music-Ex-morphed: 8.40.54  
 Soundcloud-Ex: 2025.05.27-release  
@@ -9,3 +9,7 @@ Strava-Ex: 453.11
 TikTok: 36.5.4  
 Youtube-Ex-morphed: 20.40.45  
 reddit-Ex: 2026.04.0  
+Patches: ReVanced/patches-5.48.0.rvp  
+Patches: ReVanced/patches-5.50.2.rvp  
+Patches: MorpheApp/patches-1.16.0.mpp  
+Patches: crimera/patches-2.0.0.rvp  
