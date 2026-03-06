@@ -518,12 +518,18 @@ jobs:
           BODY="$(sed 's/^\* \*\*/↪ \*\*/g; s/^\* `/↪ \*\*/g; s/`/\*/g; s/^\* /\↪/g; s/\*\*/\*/g; s/###//g; s/^- /↪ /g; /^==/d;' ../build.md)"
           LINE="━━━━━━━━━━━━━━━━━━━━"
 
+          RECENT=""
+          while IFS='|' read -r hash subject date; do
+            RECENT+="${NL}↪ ${subject} (${date})"
+          done < <(git log --format="%h|%s|%ad" --date=short 2>/dev/null | grep -v "GitHub Action" | head -5)
+          RECENT=${RECENT#"$NL"}
+
           # Build optional RevPack section (LINE must be defined first)
           REVPACK_SECTION=""
           if [ -n "$REVPACK" ]; then
             REVPACK_SECTION="${NL}${NL}📦 *RevPack (All-in-One Module):*${NL}${REVPACK}${NL}${LINE}"
           fi
-          MSG="🚀 *ReVanced Extended - New Build*${NL}${LINE}${NL}${NL}📋 *Changelog:*${NL}${BODY}${NL}${NL}🏗️ *Architecture:* \`${ARCH}\`${NL}${NL}${LINE}${NL}📥 *Downloads*${REVPACK_SECTION}${NL}${NL}🧩 *Magisk Modules:*${NL}${MODULES}${NL}${NL}📱 *APK Files:*${NL}${APKS}${NL}${LINE}"
+          MSG="🚀 *ReVanced Extended - New Build*${NL}${LINE}${NL}${NL}📝 *Recent Changes:*${NL}${RECENT}${NL}${NL}🏗️ *Architecture:* \`${ARCH}\`${NL}${NL}${LINE}${NL}📥 *Downloads*${REVPACK_SECTION}${NL}${NL}🧩 *Magisk Modules:*${NL}${MODULES}${NL}${NL}📱 *APK Files:*${NL}${APKS}${NL}${LINE}"
           echo "'$MSG'"
           MSG=${MSG:0:9450}
           POST="https://api.telegram.org/bot${TG_TOKEN}/sendMessage"

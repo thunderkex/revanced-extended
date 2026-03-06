@@ -199,7 +199,19 @@ generate_downloads_section() {
     
     output+="## 📥 Download ReVanced Extended APKs & Modules\n\n"
     output+="> **Last Updated:** ${build_date}\n\n"
-    
+
+    local recent_changes_lines
+    recent_changes_lines=$(git -C "$PROJECT_ROOT" log --format="%h|%s|%ad" --date=short 2>/dev/null | \
+        grep -v "GitHub Action" | \
+        head -5 | \
+        while IFS='|' read -r hash subject date; do
+            echo "- [\`${hash}\`](${repo_url}/commit/${hash}) ${subject} (${date})"
+        done)
+    if [[ -n "$recent_changes_lines" ]]; then
+        output+="### 📝 Recent Changes\n\n"
+        output+="${recent_changes_lines}\n\n"
+    fi
+
     output+="### 🔗 Quick Links\n\n"
     output+="| Resource | Link |\n"
     output+="|:---------|:-----|\n"
