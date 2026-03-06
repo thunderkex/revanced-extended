@@ -206,15 +206,14 @@ config_update() {
 			query+=".key == \"$table\""
 		done
 		jq "to_entries | map(select(${query} or (.value | type != \"object\"))) | from_entries" <<<"$__TOML__"
-		# Echo human-readable update info including source and version differences
-		echo "Updates available for the following tables:"
+		echo "Updates available for the following tables:" >&2
 		for t in "${upped[@]}"; do
-			echo " - $t:"
-			echo "     from: ${src[$t]}/${orig_ver[$t]}"
-			echo "     new asset: ${updated_asset[$t]:-}"
+			echo " - $t:" >&2
+			echo "     from: ${src[$t]}/${orig_ver[$t]}" >&2
+			echo "     new asset: ${updated_asset[$t]:-}" >&2
 		done
 	else
-		echo "No updates found"
+		echo "No updates found" >&2
 	fi
 }
 
