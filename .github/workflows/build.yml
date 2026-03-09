@@ -249,7 +249,7 @@ jobs:
           # Set architecture from input
           export TARGET_ARCH="${{ inputs.target_arch || 'arm64-v8a' }}"
           export BUILD_LITE="${{ inputs.build_lite || 'false' }}"
-          
+
           if [ -f "config.json" ]; then
             ./build.sh config.json
           else
@@ -392,16 +392,20 @@ jobs:
                 --latest
             fi
             
-            echo "Cleaning existing assets..."
-            ASSETS_JSON=$(gh api repos/${{ github.repository }}/releases/tags/latest-build 2>/dev/null || echo '{}')
-            while IFS=$'\t' read -r ASSET_ID ASSET_NAME; do
-              [ -z "$ASSET_ID" ] || [ "$ASSET_ID" = "null" ] && continue
-              if [ "${PRESERVE_REVPACK:-false}" = "true" ] && [[ "$ASSET_NAME" == "${PACK_PREFIX:-revpack}-"* ]]; then
-                echo "Preserving existing revpack asset: $ASSET_NAME"
-                continue
-              fi
-              gh api -X DELETE repos/${{ github.repository }}/releases/assets/$ASSET_ID || true
-            done < <(echo "$ASSETS_JSON" | jq -r '.assets[]? | [.id, .name] | @tsv' 2>/dev/null || true)
+            if [ "${FROM_CONFIGURATOR:-false}" = "true" ]; then
+              echo "Configurator build — preserving all existing release assets"
+            else
+              echo "Cleaning existing assets..."
+              ASSETS_JSON=$(gh api repos/${{ github.repository }}/releases/tags/latest-build 2>/dev/null || echo '{}')
+              while IFS=$'\t' read -r ASSET_ID ASSET_NAME; do
+                [ -z "$ASSET_ID" ] || [ "$ASSET_ID" = "null" ] && continue
+                if [[ "$ASSET_NAME" == "${PACK_PREFIX:-revpack}-"* ]]; then
+                  echo "Preserving existing revpack asset: $ASSET_NAME"
+                  continue
+                fi
+                gh api -X DELETE repos/${{ github.repository }}/releases/assets/$ASSET_ID || true
+              done < <(echo "$ASSETS_JSON" | jq -r '.assets[]? | [.id, .name] | @tsv' 2>/dev/null || true)
+            fi
             
             # Upload new assets
             echo "Uploading new assets..."
@@ -447,6 +451,42 @@ jobs:
           path: ./build/*
           retention-days: 7
 
+      - name: Commit configurator revpack update JSON
+        if: ${{ inputs.from_configurator == true }}
+        env:
+          PACK_PREFIX: ${{ inputs.pack_name || 'revpack' }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          NEXT_VER_CODE: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
+          SINGLE_RELEASE: ${{ inputs.single_release }}
+        run: |
+          cd build
+          CUSTOM_ZIP=$(ls ${PACK_PREFIX}-*-custom-*.zip 2>/dev/null | sort -r | head -1 || true)
+          if [ -z "$CUSTOM_ZIP" ]; then
+            echo "No custom revpack found, skipping update JSON"
+            exit 0
+          fi
+          VER=$(unzip -p "$CUSTOM_ZIP" module.prop 2>/dev/null | grep '^version=' | cut -d= -f2 || echo "v${NEXT_VER_CODE}")
+          if [ "${SINGLE_RELEASE:-true}" != "false" ]; then
+            DLURL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/download/latest-build/${CUSTOM_ZIP}"
+          else
+            DLURL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/download/${NEXT_VER_CODE}/${CUSTOM_ZIP}"
+          fi
+          UPDATE_JSON_NAME="${PACK_PREFIX}-update.json"
+          printf '{"version":"%s","versionCode":%s,"zipUrl":"%s","changelog":"https://raw.githubusercontent.com/%s/update/build.md"}\n' \
+            "$VER" "$NEXT_VER_CODE" "$DLURL" "$GITHUB_REPOSITORY" \
+            > "/tmp/${UPDATE_JSON_NAME}"
+          cd ..
+          git checkout -f update || git switch --discard-changes --orphan update
+          cp -f "/tmp/${UPDATE_JSON_NAME}" "./${UPDATE_JSON_NAME}"
+
+      - uses: stefanzweifel/git-auto-commit-action@v7.1.0
+        if: ${{ inputs.from_configurator == true }}
+        with:
+          branch: update
+          skip_checkout: true
+          file_pattern: '*-update.json'
+          commit_message: Bump configurator revpack ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
+
       - name: Update changelog and update json
         id: update_config
         if: ${{ inputs.from_configurator != true }}
@@ -478,6 +518,8 @@ jobs:
           cd build || { echo "build folder not found"; exit 1; }
           for OUTPUT in *.zip; do
             [ "$OUTPUT" = "*.zip" ] && continue
+            # Skip custom configurator revpacks — they must not overwrite individual
+            [[ "$OUTPUT" == *-custom-*.zip ]] && continue
             ZIP_S=$(unzip -p "$OUTPUT" module.prop)
             if ! UPDATE_JSON=$(echo "$ZIP_S" | grep updateJson); then continue; fi
             UPDATE_JSON="${UPDATE_JSON##*/}"
