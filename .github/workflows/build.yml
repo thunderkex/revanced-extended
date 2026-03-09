@@ -518,11 +518,11 @@ jobs:
           BODY="$(sed 's/^\* \*\*/↪ \*\*/g; s/^\* `/↪ \*\*/g; s/`/\*/g; s/^\* /\↪/g; s/\*\*/\*/g; s/###//g; s/^- /↪ /g; /^==/d;' ../build.md)"
           LINE="━━━━━━━━━━━━━━━━━━━━"
 
-          RECENT=""
-          while IFS='|' read -r hash subject date; do
+            RECENT=""
+            while IFS='|' read -r hash subject date; do
             RECENT+="${NL}↪ ${subject} (${date})"
-          done < <(git log --format="%h|%s|%ad" --date=short 2>/dev/null | grep -v "GitHub Action" | head -5)
-          RECENT=${RECENT#"$NL"}
+            done < <(git log origin/ex --format="%h|%s|%ad" --date=short 2>/dev/null | grep -v "GitHub Action\|skip ci" | head -5)
+            RECENT=${RECENT#"$NL"}
 
           # Build optional RevPack section (LINE must be defined first)
           REVPACK_SECTION=""
