@@ -158,7 +158,7 @@ jobs:
           def csv(s):
               return [x.strip() for x in s.split(",") if x.strip()] if s else []
 
-          # None = enable all; empty or "all" also means enable all
+          # None = keep current config.toml state; only disabled_list overrides
           enabled_list  = csv(enabled_raw) if enabled_raw and enabled_raw.lower() != "all" else None
           disabled_list = set(csv(disabled_raw))
           pack_list     = csv(pack_raw)
@@ -206,7 +206,7 @@ jobs:
                   if current in disabled_list:
                       new_val = "false"
                   elif enabled_list is None:
-                      new_val = "true"
+                      new_val = en_m.group(2)
                   elif current in enabled_list:
                       new_val = "true"
                   else:

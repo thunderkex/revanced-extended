@@ -8,7 +8,7 @@ on:
           Apps to BUILD (comma-separated section names from config.toml).
           Use "all" to enable every app, or leave blank to keep current state.
         required: false
-        default: 'all'
+        default: ''
       disabled_apps:
         description: >
           Apps to DISABLE (comma-separated). Always takes priority over enabled_apps.
