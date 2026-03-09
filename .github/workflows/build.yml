@@ -231,6 +231,17 @@ jobs:
           with open(cfg_path, "w") as f:
               f.writelines(output)
 
+          # picks up pack-name when it prefers config.json over config.toml.
+          import json as _json
+          cfg_json_path = "config.json"
+          if pack_name_raw and os.path.exists(cfg_json_path):
+              with open(cfg_json_path, "r") as f:
+                  cfg_json = _json.load(f)
+              cfg_json["pack-name"] = pack_name_raw
+              with open(cfg_json_path, "w") as f:
+                  _json.dump(cfg_json, f, indent=2)
+              print(f"Also updated config.json: pack-name -> {pack_name_raw}")
+
           print("Applied custom app configuration to config.toml")
           print(f"  enabled:      {enabled_raw or 'all'}")
           print(f"  disabled:     {disabled_raw or '(none)'}")
