@@ -706,7 +706,11 @@ build_rv() {
 		return 0
 	fi
 	local list_patches
-	list_patches=$(java -jar "$cli_jar" list-patches "$patches_jar" -f "$pkg_name" -v -p 2>&1)
+	if [[ "$cli_jar" == *morphe* ]] || [[ "$patches_jar" == *.mpp ]]; then
+		list_patches=$(java -jar "$cli_jar" list-patches --patches="$patches_jar" -f "$pkg_name" -v -p 2>&1)
+	else
+		list_patches=$(java -jar "$cli_jar" list-patches "$patches_jar" -f "$pkg_name" -v -p 2>&1)
+	fi
 
 	local get_latest_ver=false
 	if [ "$version_mode" = auto ]; then
