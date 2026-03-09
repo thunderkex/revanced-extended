@@ -45,6 +45,10 @@ on:
         description: 'Apps to exclude from RevPack (comma-separated)'
         required: false
         default: ''
+      pack_name:
+        description: 'Custom RevPack zip filename (without .zip). Leave blank to use config.toml value.'
+        required: false
+        default: ''
       release_mode:
         description: 'Release mode'
         required: false
@@ -79,6 +83,7 @@ jobs:
       DISABLED_APPS: ${{ steps.build_config.outputs.DISABLED_APPS }}
       PACK_APPS: ${{ steps.build_config.outputs.PACK_APPS }}
       PACK_EXCLUDE_APPS: ${{ steps.build_config.outputs.PACK_EXCLUDE_APPS }}
+      PACK_NAME: ${{ steps.build_config.outputs.PACK_NAME }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -163,6 +168,7 @@ jobs:
           echo "DISABLED_APPS=${{ github.event.inputs.disabled_apps || '' }}" >> $GITHUB_OUTPUT
           echo "PACK_APPS=${{ github.event.inputs.pack_apps || '' }}" >> $GITHUB_OUTPUT
           echo "PACK_EXCLUDE_APPS=${{ github.event.inputs.pack_exclude_apps || '' }}" >> $GITHUB_OUTPUT
+          echo "PACK_NAME=${{ github.event.inputs.pack_name || '' }}" >> $GITHUB_OUTPUT
 
   build:
     permissions: write-all
@@ -179,6 +185,7 @@ jobs:
       disabled_apps: ${{ needs.check.outputs.DISABLED_APPS }}
       pack_apps: ${{ needs.check.outputs.PACK_APPS }}
       pack_exclude_apps: ${{ needs.check.outputs.PACK_EXCLUDE_APPS }}
+      pack_name: ${{ needs.check.outputs.PACK_NAME }}
     secrets: inherit
 
   # Cleanup old workflow runs (keep last 15)

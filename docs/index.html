@@ -1,409 +1,890 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RevPack Configurator</title>
-<style>
-  :root {
-    --bg:       #0f0f0f;
-    --surface:  #1a1a1a;
-    --surface2: #242424;
-    --border:   #2e2e2e;
-    --text:     #f0f0f0;
-    --text2:    #999;
-    --accent:   #212d33;
-    --green:    #4caf50;
-    --yellow:   #ffb300;
-    --red:      #e53935;
-    --blue:     #42a5f5;
-    --radius:   12px;
-    --shadow:   0 2px 12px rgba(0,0,0,.5);
-    --header-bg: #212d33;
-  }
-  @media (prefers-color-scheme: light) {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RevPack Configurator</title>
+  <style>
     :root {
-      --bg:      #f5f5f5;
-      --surface: #ffffff;
-      --surface2:#f0f0f0;
-      --border:  #e0e0e0;
-      --text:    #1a1a1a;
-      --text2:   #666;
-      --shadow:  0 2px 12px rgba(0,0,0,.12);
+      --bg: #0f0f0f;
+      --surface: #1a1a1a;
+      --surface2: #242424;
+      --border: #2e2e2e;
+      --text: #f0f0f0;
+      --text2: #999;
+      --accent: #212d33;
+      --green: #4caf50;
+      --yellow: #ffb300;
+      --red: #e53935;
+      --blue: #42a5f5;
+      --radius: 12px;
+      --shadow: 0 2px 12px rgba(0, 0, 0, .5);
+      --header-bg: #212d33;
     }
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-size: 14px;
-    min-height: 100vh;
-  }
 
-  .header {
-    background: var(--header-bg);
-    color: #fff;
-    padding: 18px 20px 14px;
-    position: sticky; top: 0; z-index: 10;
-    box-shadow: 0 2px 8px rgba(0,0,0,.4);
-  }
-  .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -.3px; }
-  .header p  { font-size: 12px; opacity: .75; margin-top: 2px; }
-  .header .by {
-    font-size: 11px; opacity: .55; margin-top: 4px;
-    letter-spacing: .03em;
-  }
-  .header .by a {
-    color: inherit; text-decoration: none; opacity: 1;
-    border-bottom: 1px solid rgba(255,255,255,.3);
-    transition: opacity .15s;
-  }
-  .header .by a:hover { opacity: .85; }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f5f5f5;
+        --surface: #ffffff;
+        --surface2: #f0f0f0;
+        --border: #e0e0e0;
+        --text: #1a1a1a;
+        --text2: #666;
+        --shadow: 0 2px 12px rgba(0, 0, 0, .12);
+      }
+    }
 
-  .auth-bar {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 12px 20px;
-    display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
-  }
-  .auth-bar input {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    font-size: 13px;
-    padding: 7px 11px;
-    outline: none;
-    transition: border-color .15s;
-  }
-  .auth-bar input:focus { border-color: var(--blue); }
-  .auth-bar input[name="repo"] { width: 220px; }
-  .auth-bar input[name="token"] { width: 260px; }
-  .btn {
-    border: none; border-radius: 8px; cursor: pointer;
-    font-size: 13px; font-weight: 600; padding: 7px 16px;
-    transition: opacity .15s, transform .08s;
-  }
-  .btn:active { transform: scale(.97); }
-  .btn-load  { background: var(--blue);  color: #fff; }
-  .btn-apply { background: var(--green); color: #fff; }
-  .btn-apply:disabled { opacity: .4; cursor: not-allowed; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  .main { max-width: 900px; margin: 0 auto; padding: 20px 16px 60px; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-size: 14px;
+      min-height: 100vh;
+    }
 
-  .banner {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    color: var(--text2);
-    text-align: center;
-    margin-bottom: 20px;
-  }
+    .header {
+      background: var(--header-bg);
+      color: #fff;
+      padding: 18px 20px 14px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .4);
+    }
 
-  .section-title {
-    font-size: 11px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: .08em; color: var(--text2);
-    margin: 24px 0 10px; display: flex; align-items: center; gap: 8px;
-  }
-  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -.3px;
+    }
 
-  .action-bar {
-    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
-    margin-bottom: 16px;
-  }
-  .action-bar label { font-size: 12px; color: var(--text2); }
-  .action-bar select {
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 8px; color: var(--text); font-size: 13px;
-    padding: 6px 10px; outline: none;
-  }
-  .btn-sm {
-    font-size: 12px; padding: 5px 12px; border-radius: 7px; border: none;
-    cursor: pointer; background: var(--surface2); color: var(--text);
-    border: 1px solid var(--border); font-weight: 600;
-  }
-  .btn-sm:hover { border-color: var(--blue); }
+    .header p {
+      font-size: 12px;
+      opacity: .75;
+      margin-top: 2px;
+    }
 
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 12px;
-  }
+    .header .by {
+      font-size: 11px;
+      opacity: .55;
+      margin-top: 4px;
+      letter-spacing: .03em;
+    }
 
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px;
-    display: flex; flex-direction: column; gap: 10px;
-    transition: border-color .15s;
-  }
-  .card.disabled-card { opacity: .55; }
-  .card-name {
-    font-weight: 700; font-size: 14px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .card-meta { font-size: 11px; color: var(--text2); }
+    .header .by a {
+      color: inherit;
+      text-decoration: none;
+      opacity: 1;
+      border-bottom: 1px solid rgba(255, 255, 255, .3);
+      transition: opacity .15s;
+    }
 
-  .toggle-row {
-    display: flex; justify-content: space-between; align-items: center;
-    font-size: 13px;
-  }
-  .toggle-label { color: var(--text2); }
+    .header .by a:hover {
+      opacity: .85;
+    }
 
-  .toggle { position: relative; display: inline-block; width: 40px; height: 22px; }
-  .toggle input { opacity: 0; width: 0; height: 0; }
-  .slider {
-    position: absolute; inset: 0;
-    background: var(--border); border-radius: 22px;
-    cursor: pointer; transition: background .2s;
-  }
-  .slider::before {
-    content: ''; position: absolute;
-    width: 16px; height: 16px; border-radius: 50%;
-    background: #fff; left: 3px; top: 3px;
-    transition: transform .2s;
-  }
-  .toggle input:checked + .slider { background: var(--green); }
-  .toggle input:checked + .slider::before { transform: translateX(18px); }
-  .pack-toggle input:checked + .slider { background: var(--blue); }
+    .auth-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
 
-  .apply-bar {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    padding: 10px 20px;
-    display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
-    justify-content: space-between;
-    z-index: 10;
-  }
-  .apply-bar .info { font-size: 12px; color: var(--text2); }
-  .apply-bar .info b { color: var(--text); }
-  .apply-bar-right { display: flex; gap: 8px; align-items: center; }
-  .apply-bar select {
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 8px; color: var(--text); font-size: 13px;
-    padding: 6px 10px; outline: none;
-  }
+    .auth-bar input {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 13px;
+      padding: 7px 11px;
+      outline: none;
+      transition: border-color .15s;
+    }
 
-  .toast {
-    position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%);
-    background: #333; color: #fff; padding: 10px 20px; border-radius: 20px;
-    font-size: 13px; z-index: 100; display: none;
-    box-shadow: 0 4px 16px rgba(0,0,0,.5);
-  }
+    .auth-bar input:focus {
+      border-color: var(--blue);
+    }
 
-  .spinner {
-    display: inline-block; width: 14px; height: 14px;
-    border: 2px solid rgba(255,255,255,.3);
-    border-top-color: #fff; border-radius: 50%;
-    animation: spin .6s linear infinite; vertical-align: middle;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
+    .auth-bar input[name="repo"] {
+      width: 220px;
+    }
 
-  .tag {
-    display: inline-block; font-size: 10px; font-weight: 700;
-    border-radius: 4px; padding: 1px 5px; margin-left: 4px;
-    text-transform: uppercase; letter-spacing: .05em;
-  }
-  .tag-dev { background: rgba(255,179,0,.15); color: var(--yellow); border: 1px solid rgba(255,179,0,.3); }
-  .tag-mod { background: rgba(66,165,245,.12); color: var(--blue);   border: 1px solid rgba(66,165,245,.3); }
-</style>
+    .auth-bar input[name="token"] {
+      width: 260px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 7px 16px;
+      transition: opacity .15s, transform .08s;
+    }
+
+    .btn:active {
+      transform: scale(.97);
+    }
+
+    .btn-load {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .btn-apply {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .btn-apply:disabled {
+      opacity: .4;
+      cursor: not-allowed;
+    }
+
+    .main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px 16px 60px;
+    }
+
+    .banner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      color: var(--text2);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text2);
+      margin: 24px 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .action-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .action-bar label {
+      font-size: 12px;
+      color: var(--text2);
+    }
+
+    .action-bar select {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 13px;
+      padding: 6px 10px;
+      outline: none;
+    }
+
+    .btn-sm {
+      font-size: 12px;
+      padding: 5px 12px;
+      border-radius: 7px;
+      border: none;
+      cursor: pointer;
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      font-weight: 600;
+    }
+
+    .btn-sm:hover {
+      border-color: var(--blue);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: border-color .15s;
+    }
+
+    .card.disabled-card {
+      opacity: .55;
+    }
+
+    .card-name {
+      font-weight: 700;
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-meta {
+      font-size: 11px;
+      color: var(--text2);
+    }
+
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .toggle-label {
+      color: var(--text2);
+    }
+
+    .toggle {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 22px;
+    }
+
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: var(--border);
+      border-radius: 22px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .slider::before {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #fff;
+      left: 3px;
+      top: 3px;
+      transition: transform .2s;
+    }
+
+    .toggle input:checked+.slider {
+      background: var(--green);
+    }
+
+    .toggle input:checked+.slider::before {
+      transform: translateX(18px);
+    }
+
+    .pack-toggle input:checked+.slider {
+      background: var(--blue);
+    }
+
+    .apply-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 10px 20px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      z-index: 10;
+    }
+
+    .apply-bar .info {
+      font-size: 12px;
+      color: var(--text2);
+    }
+
+    .apply-bar .info b {
+      color: var(--text);
+    }
+
+    .apply-bar-right {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .apply-bar select {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 13px;
+      padding: 6px 10px;
+      outline: none;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 13px;
+      z-index: 100;
+      display: none;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, .5);
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, .3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      border-radius: 4px;
+      padding: 1px 5px;
+      margin-left: 4px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .tag-dev {
+      background: rgba(255, 179, 0, .15);
+      color: var(--yellow);
+      border: 1px solid rgba(255, 179, 0, .3);
+    }
+
+    .tag-mod {
+      background: rgba(66, 165, 245, .12);
+      color: var(--blue);
+      border: 1px solid rgba(66, 165, 245, .3);
+    }
+
+    /* ── Build Monitor Panel ── */
+    .build-panel {
+      position: fixed;
+      right: 20px;
+      bottom: 66px;
+      width: 340px;
+      max-height: 70vh;
+      overflow-y: auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, .6);
+      z-index: 50;
+    }
+
+    .build-panel-head {
+      background: var(--surface2);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+    }
+
+    .build-panel-head h3 {
+      font-size: 13px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .build-panel-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text2);
+      font-size: 20px;
+      line-height: 1;
+      padding: 0 2px;
+    }
+
+    .build-panel-close:hover {
+      color: var(--text);
+    }
+
+    .build-panel-body {
+      padding: 14px;
+    }
+
+    .build-status-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .bp-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .bp-text .bp-label {
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .bp-text .bp-sub {
+      color: var(--text2);
+      font-size: 11px;
+      margin-top: 2px;
+    }
+
+    .build-links {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .build-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 12px;
+      transition: border-color .15s;
+    }
+
+    .build-link:hover {
+      border-color: var(--blue);
+    }
+
+    .build-link .lk-name {
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+    }
+
+    .build-link .lk-size {
+      color: var(--text2);
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .build-progress {
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .build-progress-bar {
+      height: 100%;
+      background: var(--blue);
+      border-radius: 2px;
+      width: 30%;
+      animation: bp-slide 1.5s ease-in-out infinite;
+    }
+
+    .build-panel.bp-success .build-progress-bar {
+      background: var(--green);
+      animation: none;
+      width: 100%;
+    }
+
+    .build-panel.bp-failure .build-progress-bar,
+    .build-panel.bp-cancelled .build-progress-bar {
+      background: var(--red);
+      animation: none;
+      width: 100%;
+    }
+
+    .build-panel.bp-not-found .build-progress-bar {
+      animation: none;
+      width: 0;
+    }
+
+    @keyframes bp-slide {
+      0% {
+        transform: translateX(-100%);
+      }
+
+      100% {
+        transform: translateX(500%);
+      }
+    }
+
+    /* ── Minimize button ── */
+    .bp-minimize {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text2);
+      font-size: 16px;
+      line-height: 1;
+      padding: 0 3px;
+      margin-right: 2px;
+    }
+
+    .bp-minimize:hover {
+      color: var(--text);
+    }
+
+    .bp-head-btns {
+      display: flex;
+      gap: 2px;
+      align-items: center;
+    }
+
+    /* ── Actions History (in main) ── */
+    .ht-entry {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      margin-bottom: 8px;
+    }
+
+    .ht-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .ht-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .ht-label {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .ht-sub {
+      font-size: 11px;
+      color: var(--text2);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ht-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text2);
+      font-size: 12px;
+      padding: 4px 10px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: border-color .12s, color .12s;
+    }
+
+    .ht-btn:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="header">
-  <h1>RevPack Configurator</h1>
-  <p id="header-sub">Load config to get started</p>
-  <p class="by">by <a href="https://github.com/thunderkex" target="_blank" rel="noopener">thunderkex</a></p>
-</div>
-
-<div class="auth-bar">
-  <input name="repo"  placeholder="owner/repo" value="thunderkex/revanced-extended" />
-  <input name="branch" placeholder="branch" value="ex" style="width:80px" />
-  <input name="token" type="password" placeholder="GitHub token (for private repo access)" />
-  <button class="btn btn-load" onclick="loadConfig()">Load Config</button>
-</div>
-
-<div class="main">
-  <div class="banner" id="status-banner">
-    Enter your repo details above and click <b>Load Config</b>.
+  <div class="header">
+    <h1>RevPack Configurator</h1>
+    <p id="header-sub">Load config to get started</p>
+    <p class="by">by <a href="https://github.com/thunderkex" target="_blank" rel="noopener">thunderkex</a></p>
   </div>
 
-  <div id="app-area" style="display:none">
-    <div class="action-bar">
-      <button class="btn-sm" onclick="setAll(true,  'build')">Enable all builds</button>
-      <button class="btn-sm" onclick="setAll(false, 'build')">Disable all builds</button>
-      <button class="btn-sm" onclick="setAll(true,  'pack')">Pack all enabled</button>
-      <button class="btn-sm" onclick="setAll(false, 'pack')">Clear pack list</button>
+  <div class="auth-bar">
+    <input name="repo" placeholder="owner/repo" value="thunderkex/revanced-extended" />
+    <input name="branch" placeholder="branch" value="ex" style="width:80px" />
+    <input name="token" type="password" placeholder="Github Token" />
+    <button class="btn btn-load" onclick="loadConfig()">Load Config</button>
+  </div>
+
+  <div class="main">
+    <div class="banner" id="status-banner">
+      Enter your repo details above and click <b>Load Config</b>.
     </div>
 
-    <div class="section-title">Apps</div>
-    <div class="grid" id="app-grid"></div>
+    <div id="app-area" style="display:none">
+      <div class="action-bar">
+        <button class="btn-sm" onclick="setAll(true,  'build')">Enable all builds</button>
+        <button class="btn-sm" onclick="setAll(false, 'build')">Disable all builds</button>
+        <button class="btn-sm" onclick="setAll(true,  'pack')">Pack all enabled</button>
+        <button class="btn-sm" onclick="setAll(false, 'pack')">Clear pack list</button>
+      </div>
 
-    <div class="section-title" id="dev-section-title" style="display:none">Dev / Experimental</div>
-    <div class="grid" id="dev-grid"></div>
+      <div class="section-title">Apps</div>
+      <div class="grid" id="app-grid"></div>
+
+      <div class="section-title" id="dev-section-title" style="display:none">Dev / Experimental</div>
+      <div class="grid" id="dev-grid"></div>
+    </div>
+
+    <div id="history-section" style="display:none">
+      <div class="section-title">Actions History</div>
+      <div id="ht-body"></div>
+    </div>
   </div>
-</div>
 
-<div class="apply-bar" id="apply-bar" style="display:none">
-  <div class="info" id="apply-info"></div>
-  <div class="apply-bar-right">
-    <select id="arch-select">
-      <option value="arm64-v8a">arm64-v8a</option>
-      <option value="armeabi-v7a">armeabi-v7a</option>
-      <option value="x86_64">x86_64</option>
-      <option value="universal">universal</option>
-      <option value="all">all</option>
-    </select>
-    <label style="font-size:12px;display:flex;align-items:center;gap:4px;color:var(--text2)">
-      <input type="checkbox" id="trigger-build-cb" checked> Trigger build
-    </label>
-    <button class="btn btn-apply" id="apply-btn" onclick="applyConfig()">Apply</button>
+  <div class="apply-bar" id="apply-bar" style="display:none">
+    <div class="info" id="apply-info"></div>
+    <div class="apply-bar-right">
+      <input type="text" id="pack-name-input" placeholder="pack name" title="Custom RevPack zip filename (without .zip)"
+        style="width:130px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;padding:6px 10px;outline:none;"
+        oninput="this._userEdited=!!this.value">
+      <select id="arch-select">
+        <option value="arm64-v8a">arm64-v8a</option>
+        <option value="armeabi-v7a">armeabi-v7a</option>
+        <option value="x86_64">x86_64</option>
+        <option value="universal">universal</option>
+        <option value="all">all</option>
+      </select>
+      <label style="font-size:12px;display:flex;align-items:center;gap:4px;color:var(--text2)">
+        <input type="checkbox" id="trigger-build-cb" checked> Trigger build
+      </label>
+      <button class="btn btn-apply" id="apply-btn" onclick="applyConfig()">Apply</button>
+    </div>
   </div>
-</div>
 
-<div class="toast" id="toast"></div>
+  <div class="toast" id="toast"></div>
 
-<script>
-let APPS = [];       // parsed app sections
-let REPO = '';
-let BRANCH = '';
-let TOKEN = '';
+  <!-- Build Monitor Panel -->
+  <div class="build-panel" id="build-panel" style="display:none">
+    <div class="build-panel-head">
+      <h3>Build Monitor</h3>
+      <div class="bp-head-btns">
+        <button class="bp-minimize" onclick="minimizeBuildPanel()" title="Minimize to Actions History">─</button>
+        <button class="build-panel-close" onclick="closeBuildPanel()" title="Close">×</button>
+      </div>
+    </div>
+    <div class="build-panel-body">
+      <div class="build-status-row">
+        <div class="bp-icon" id="bp-icon">⏳</div>
+        <div class="bp-text">
+          <div class="bp-label" id="bp-label">Searching for run…</div>
+          <div class="bp-sub" id="bp-sub"></div>
+        </div>
+      </div>
+      <div id="bp-links" class="build-links"></div>
+      <div class="build-progress">
+        <div class="build-progress-bar" id="bp-bar"></div>
+      </div>
+    </div>
+  </div>
 
-// ── Helpers ──
-const $ = id => document.getElementById(id);
-function showToast(msg, ms = 2800) {
-  const t = $('toast'); t.textContent = msg; t.style.display = 'block';
-  setTimeout(() => t.style.display = 'none', ms);
-}
+  <script>
+    let APPS = [];
+    let REPO = '';
+    let BRANCH = '';
+    let TOKEN = '';
+    let PACK_NAME_CONFIG = 'revpack';
 
-function parseToml(text) {
-  const apps = [];
-  const lines = text.split('\n');
+    (function () {
+      const saved = sessionStorage.getItem('revpack_token');
+      if (saved) document.querySelector('input[name="token"]').value = saved;
+    })();
 
-  let packApps = [];
-  let packExclude = [];
+    const $ = id => document.getElementById(id);
+    function showToast(msg, ms = 2800) {
+      const t = $('toast'); t.textContent = msg; t.style.display = 'block';
+      setTimeout(() => t.style.display = 'none', ms);
+    }
 
-  let current = null;
-  let inMain = true;
+    function parseToml(text) {
+      const apps = [];
+      const lines = text.split('\n');
 
-  for (let line of lines) {
-    line = line.replace(/\r/g, '');
-    const secM = line.match(/^\[([^\]]+)\]/);
-    if (secM) {
+      let packApps = [];
+      let packExclude = [];
+      let packName = 'revpack';
+
+      let current = null;
+      let inMain = true;
+
+      for (let line of lines) {
+        line = line.replace(/\r/g, '');
+        const secM = line.match(/^\[([^\]]+)\]/);
+        if (secM) {
+          if (current) apps.push(current);
+          inMain = false;
+          current = {
+            name: secM[1],
+            enabled: true,
+            buildMode: 'apk',
+            isDev: false,
+            patchesSource: '',
+          };
+          continue;
+        }
+        if (inMain) {
+          const packM = line.match(/^pack-apps\s*=\s*(.+)/);
+          if (packM) {
+            packApps = packM[1].split(',').map(s => s.trim().replace(/^"|"$/g, '')).filter(Boolean);
+          }
+          const exclM = line.match(/^pack-exclude-apps\s*=\s*(.+)/);
+          if (exclM) {
+            packExclude = exclM[1].split(',').map(s => s.trim().replace(/^"|"$/g, '')).filter(Boolean);
+          }
+          const nameM = line.match(/^pack-name\s*=\s*"?([^"#\s]+)"?/);
+          if (nameM) { packName = nameM[1]; }
+          continue;
+        }
+        if (!current) continue;
+        const enM = line.match(/^\s*enabled\s*=\s*(true|false)/);
+        if (enM) { current.enabled = enM[1] === 'true'; continue; }
+        const bmM = line.match(/^\s*build-mode\s*=\s*"?([^"#\s]+)"?/);
+        if (bmM) { current.buildMode = bmM[1]; continue; }
+        const psM = line.match(/^\s*patches-source\s*=\s*"([^"]+)"/);
+        if (psM) { current.patchesSource = psM[1]; }
+        if (/patches-version\s*=\s*"?dev"?/.test(line)) { current.isDev = true; }
+      }
       if (current) apps.push(current);
-      inMain = false;
-      current = {
-        name: secM[1],
-        enabled: true,
-        buildMode: 'apk',
-        isDev: false,
-        patchesSource: '',
-      };
-      continue;
-    }
-    if (inMain) {
-      const packM = line.match(/^pack-apps\s*=\s*(.+)/);
-      if (packM) {
-        packApps = packM[1].split(',').map(s => s.trim().replace(/^"|"$/g, '')).filter(Boolean);
+
+      for (const a of apps) {
+        if (a.name.toLowerCase().includes('dev') || a.isDev) a.isDev = true;
       }
-      const exclM = line.match(/^pack-exclude-apps\s*=\s*(.+)/);
-      if (exclM) {
-        packExclude = exclM[1].split(',').map(s => s.trim().replace(/^"|"$/g, '')).filter(Boolean);
+
+      const hasPackList = packApps.length > 0;
+      for (const a of apps) {
+        if (packExclude.includes(a.name)) {
+          a.inPack = false;
+        } else if (hasPackList) {
+          a.inPack = packApps.includes(a.name);
+        } else {
+          a.inPack = a.enabled;
+        }
       }
-      continue;
+
+      return { apps, packName };
     }
-    if (!current) continue;
-    const enM = line.match(/^\s*enabled\s*=\s*(true|false)/);
-    if (enM) { current.enabled = enM[1] === 'true'; continue; }
-    const bmM = line.match(/^\s*build-mode\s*=\s*"?([^"#\s]+)"?/);
-    if (bmM) { current.buildMode = bmM[1]; continue; }
-    const psM = line.match(/^\s*patches-source\s*=\s*"([^"]+)"/);
-    if (psM) { current.patchesSource = psM[1]; }
-    if (/patches-version\s*=\s*"?dev"?/.test(line)) { current.isDev = true; }
-  }
-  if (current) apps.push(current);
 
-  for (const a of apps) {
-    if (a.name.toLowerCase().includes('dev') || a.isDev) a.isDev = true;
-  }
+    async function loadConfig() {
+      REPO = document.querySelector('input[name="repo"]').value.trim();
+      BRANCH = document.querySelector('input[name="branch"]').value.trim() || 'ex';
+      const inputToken = document.querySelector('input[name="token"]').value.trim();
+      TOKEN = inputToken || sessionStorage.getItem('revpack_token') || '';
+      if (inputToken) sessionStorage.setItem('revpack_token', inputToken);
 
-  const hasPackList = packApps.length > 0;
-  for (const a of apps) {
-    if (packExclude.includes(a.name)) {
-      a.inPack = false;
-    } else if (hasPackList) {
-      a.inPack = packApps.includes(a.name);
-    } else {
-      a.inPack = a.enabled; // default: all enabled apps are packed
-    }
-  }
+      if (!REPO) { showToast('Enter a repo (owner/repo)'); return; }
 
-  return apps;
-}
+      $('status-banner').innerHTML = '<span class="spinner"></span> Loading config.toml…';
+      $('status-banner').style.display = '';
+      $('app-area').style.display = 'none';
+      $('apply-bar').style.display = 'none';
 
-async function loadConfig() {
-  REPO   = document.querySelector('input[name="repo"]').value.trim();
-  BRANCH = document.querySelector('input[name="branch"]').value.trim() || 'ex';
-  TOKEN  = document.querySelector('input[name="token"]').value.trim();
+      const url = `https://api.github.com/repos/${REPO}/contents/config.toml?ref=${BRANCH}`;
+      const headers = { Accept: 'application/vnd.github.v3.raw' };
+      if (TOKEN) headers['Authorization'] = `Bearer ${TOKEN}`;
 
-  if (!REPO) { showToast('Enter a repo (owner/repo)'); return; }
-
-  $('status-banner').innerHTML = '<span class="spinner"></span> Loading config.toml…';
-  $('status-banner').style.display = '';
-  $('app-area').style.display = 'none';
-  $('apply-bar').style.display = 'none';
-
-  const url = `https://api.github.com/repos/${REPO}/contents/config.toml?ref=${BRANCH}`;
-  const headers = { Accept: 'application/vnd.github.v3.raw' };
-  if (TOKEN) headers['Authorization'] = `Bearer ${TOKEN}`;
-
-  try {
-    const resp = await fetch(url, { headers });
-    if (!resp.ok) throw new Error(`HTTP ${resp.status} – ${resp.statusText}`);
-    const text = await resp.text();
-    APPS = parseToml(text);
-    renderApps();
-  } catch (e) {
-    $('status-banner').innerHTML = `❌ Failed to load config: <b>${e.message}</b><br>
+      try {
+        const resp = await fetch(url, { headers });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status} – ${resp.statusText}`);
+        const text = await resp.text();
+        const parsed = parseToml(text);
+        APPS = parsed.apps;
+        PACK_NAME_CONFIG = parsed.packName;
+        renderApps();
+      } catch (e) {
+        $('status-banner').innerHTML = `❌ Failed to load config: <b>${e.message}</b><br>
       <small>Make sure the repo is public, or provide a token with <code>repo</code> scope.</small>`;
-  }
-}
+      }
+    }
 
-function renderApps() {
-  const grid    = $('app-grid');
-  const devGrid = $('dev-grid');
-  grid.innerHTML = ''; devGrid.innerHTML = '';
+    function renderApps() {
+      const grid = $('app-grid');
+      const devGrid = $('dev-grid');
+      grid.innerHTML = ''; devGrid.innerHTML = '';
 
-  const normal = APPS.filter(a => !a.isDev);
-  const dev    = APPS.filter(a => a.isDev);
+      const pni = $('pack-name-input');
+      if (pni && !pni._userEdited) pni.value = PACK_NAME_CONFIG;
 
-  for (const a of normal) grid.appendChild(makeCard(a));
-  for (const a of dev)    devGrid.appendChild(makeCard(a));
+      const normal = APPS.filter(a => !a.isDev);
+      const dev = APPS.filter(a => a.isDev);
 
-  $('dev-section-title').style.display = dev.length ? '' : 'none';
-  $('app-area').style.display = '';
-  $('apply-bar').style.display = '';
-  $('status-banner').style.display = 'none';
+      for (const a of normal) grid.appendChild(makeCard(a));
+      for (const a of dev) devGrid.appendChild(makeCard(a));
 
-  updateInfo();
-  $('header-sub').textContent = `${APPS.length} apps loaded from ${REPO}`;
-}
+      $('dev-section-title').style.display = dev.length ? '' : 'none';
+      $('app-area').style.display = '';
+      $('apply-bar').style.display = '';
+      $('status-banner').style.display = 'none';
 
-function makeCard(app) {
-  const div = document.createElement('div');
-  div.className = 'card' + (app.enabled ? '' : ' disabled-card');
-  div.id = 'card-' + slug(app.name);
+      updateInfo();
+      $('header-sub').textContent = `${APPS.length} apps loaded from ${REPO}`;
+    }
 
-  const devTag = app.isDev
-    ? '<span class="tag tag-dev">dev</span>' : '';
-  const modTag = app.patchesSource && !app.patchesSource.startsWith('ReVanced/')
-    ? `<span class="tag tag-mod" title="${app.patchesSource}">mod</span>` : '';
+    function makeCard(app) {
+      const div = document.createElement('div');
+      div.className = 'card' + (app.enabled ? '' : ' disabled-card');
+      div.id = 'card-' + slug(app.name);
 
-  div.innerHTML = `
+      const devTag = app.isDev
+        ? '<span class="tag tag-dev">dev</span>' : '';
+      const modTag = app.patchesSource && !app.patchesSource.startsWith('ReVanced/')
+        ? `<span class="tag tag-mod" title="${app.patchesSource}">mod</span>` : '';
+
+      div.innerHTML = `
     <div>
       <div class="card-name">${app.name}${devTag}${modTag}</div>
       <div class="card-meta">mode: ${app.buildMode}${app.patchesSource ? ' · ' + app.patchesSource.split('/')[0] : ''}</div>
@@ -424,125 +905,353 @@ function makeCard(app) {
         <span class="slider"></span>
       </label>
     </div>`;
-  return div;
-}
+      return div;
+    }
 
-function slug(name) { return name.replace(/[^a-zA-Z0-9]/g, '-'); }
+    function slug(name) { return name.replace(/[^a-zA-Z0-9]/g, '-'); }
 
-function onBuildToggle(name, checked) {
-  const app = APPS.find(a => a.name === name);
-  if (!app) return;
-  app.enabled = checked;
-  const card = $('card-' + slug(name));
-  if (card) card.className = 'card' + (checked ? '' : ' disabled-card');
-  if (!checked) {
-    app.inPack = false;
-    const pc = $('pack-' + slug(name));
-    if (pc) pc.checked = false;
-  }
-  updateInfo();
-}
-
-function onPackToggle(name, checked) {
-  const app = APPS.find(a => a.name === name);
-  if (!app) return;
-  app.inPack = checked;
-  if (checked && !app.enabled) {
-    app.enabled = true;
-    const bc = $('build-' + slug(name));
-    if (bc) bc.checked = true;
-    const card = $('card-' + slug(name));
-    if (card) card.className = 'card';
-  }
-  updateInfo();
-}
-
-function setAll(val, type) {
-  for (const app of APPS) {
-    if (type === 'build') {
-      app.enabled = val;
-      const bc = $('build-' + slug(app.name));
-      if (bc) bc.checked = val;
-      const card = $('card-' + slug(app.name));
-      if (card) card.className = 'card' + (val ? '' : ' disabled-card');
-      if (!val) {
+    function onBuildToggle(name, checked) {
+      const app = APPS.find(a => a.name === name);
+      if (!app) return;
+      app.enabled = checked;
+      const card = $('card-' + slug(name));
+      if (card) card.className = 'card' + (checked ? '' : ' disabled-card');
+      if (!checked) {
         app.inPack = false;
-        const pc = $('pack-' + slug(app.name));
+        const pc = $('pack-' + slug(name));
         if (pc) pc.checked = false;
       }
-    } else {
-      const newVal = val && app.enabled;
-      app.inPack = newVal;
-      const pc = $('pack-' + slug(app.name));
-      if (pc) pc.checked = newVal;
+      updateInfo();
     }
-  }
-  updateInfo();
-}
 
-function updateInfo() {
-  const enabledCount = APPS.filter(a => a.enabled).length;
-  const packCount    = APPS.filter(a => a.inPack).length;
-  $('apply-info').innerHTML =
-    `Build: <b>${enabledCount}</b> apps &nbsp;|&nbsp; RevPack: <b>${packCount}</b> apps`;
-}
-
-async function applyConfig() {
-  TOKEN = document.querySelector('input[name="token"]').value.trim();
-  if (!TOKEN) {
-    showToast('⚠️ A GitHub token is required to trigger workflows', 4000);
-    return;
-  }
-
-  const btn = $('apply-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Applying…';
-
-  const enabledApps  = APPS.filter(a =>  a.enabled).map(a => a.name);
-  const disabledApps = APPS.filter(a => !a.enabled).map(a => a.name);
-  const packApps     = APPS.filter(a =>  a.inPack).map(a => a.name);
-  const packExclude  = APPS.filter(a =>  a.enabled && !a.inPack).map(a => a.name);
-
-  const arch   = $('arch-select').value;
-  const triggerBuild = $('trigger-build-cb').checked;
-
-  const inputs = {
-    enabled_apps:       enabledApps.join(',') || 'all',
-    disabled_apps:      disabledApps.join(','),
-    pack_apps:          packApps.join(','),
-    pack_exclude_apps:  packExclude.join(','),
-    trigger_build:      String(triggerBuild),
-    build_arch:         arch,
-  };
-
-  try {
-    const resp = await fetch(
-      `https://api.github.com/repos/${REPO}/actions/workflows/configure-apps.yml/dispatches`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization:  `Bearer ${TOKEN}`,
-          Accept:         'application/vnd.github+json',
-          'Content-Type': 'application/json',
-          'X-GitHub-Api-Version': '2022-11-28',
-        },
-        body: JSON.stringify({ ref: BRANCH, inputs }),
+    function onPackToggle(name, checked) {
+      const app = APPS.find(a => a.name === name);
+      if (!app) return;
+      app.inPack = checked;
+      if (checked && !app.enabled) {
+        app.enabled = true;
+        const bc = $('build-' + slug(name));
+        if (bc) bc.checked = true;
+        const card = $('card-' + slug(name));
+        if (card) card.className = 'card';
       }
-    );
-
-    if (resp.status === 204) {
-      showToast(`✅ Workflow triggered! ${triggerBuild ? 'Build starting…' : 'Config saved.'}`, 4000);
-    } else {
-      const body = await resp.text();
-      throw new Error(`HTTP ${resp.status}: ${body}`);
+      updateInfo();
     }
-  } catch (e) {
-    showToast(`❌ Error: ${e.message}`, 5000);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Apply';
-  }
-}
-</script>
+
+    function setAll(val, type) {
+      for (const app of APPS) {
+        if (type === 'build') {
+          app.enabled = val;
+          const bc = $('build-' + slug(app.name));
+          if (bc) bc.checked = val;
+          const card = $('card-' + slug(app.name));
+          if (card) card.className = 'card' + (val ? '' : ' disabled-card');
+          if (!val) {
+            app.inPack = false;
+            const pc = $('pack-' + slug(app.name));
+            if (pc) pc.checked = false;
+          }
+        } else {
+          const newVal = val && app.enabled;
+          app.inPack = newVal;
+          const pc = $('pack-' + slug(app.name));
+          if (pc) pc.checked = newVal;
+        }
+      }
+      updateInfo();
+    }
+
+    function updateInfo() {
+      const enabledCount = APPS.filter(a => a.enabled).length;
+      const packCount = APPS.filter(a => a.inPack).length;
+      $('apply-info').innerHTML =
+        `Build: <b>${enabledCount}</b> apps &nbsp;|&nbsp; RevPack: <b>${packCount}</b> apps`;
+    }
+
+    async function applyConfig() {
+      const inputToken = document.querySelector('input[name="token"]').value.trim();
+      TOKEN = inputToken || localStorage.getItem('revpack_token') || '';
+      if (!TOKEN) {
+        showToast('⚠️ A GitHub token is required to trigger workflows', 4000);
+        return;
+      }
+      sessionStorage.setItem('revpack_token', TOKEN);
+      if (!inputToken) document.querySelector('input[name="token"]').value = TOKEN;
+
+      const btn = $('apply-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Applying…';
+
+      const enabledApps = APPS.filter(a => a.enabled).map(a => a.name);
+      const disabledApps = APPS.filter(a => !a.enabled).map(a => a.name);
+      const packApps = APPS.filter(a => a.inPack).map(a => a.name);
+      const packExclude = APPS.filter(a => a.enabled && !a.inPack).map(a => a.name);
+
+      const arch = $('arch-select').value;
+      const triggerBuild = $('trigger-build-cb').checked;
+      const packNameVal = ($('pack-name-input').value.trim()) || PACK_NAME_CONFIG;
+
+      const inputs = {
+        enabled_apps: enabledApps.join(',') || 'all',
+        disabled_apps: disabledApps.join(','),
+        pack_apps: packApps.join(','),
+        pack_exclude_apps: packExclude.join(','),
+        pack_name: packNameVal,
+        trigger_build: String(triggerBuild),
+        build_arch: arch,
+      };
+
+      try {
+        const resp = await fetch(
+          `https://api.github.com/repos/${REPO}/actions/workflows/configure-apps.yml/dispatches`,
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${TOKEN}`,
+              Accept: 'application/vnd.github+json',
+              'Content-Type': 'application/json',
+              'X-GitHub-Api-Version': '2022-11-28',
+            },
+            body: JSON.stringify({ ref: BRANCH, inputs }),
+          }
+        );
+
+        if (resp.status === 204) {
+          showToast(`✅ Workflow triggered! ${triggerBuild ? 'Build starting…' : 'Config saved.'}`, 4000);
+          if (triggerBuild) startBuildMonitor(Date.now());
+        } else if (resp.status === 403) {
+          throw new Error('Token lacks permission — add the "workflow" scope (classic PAT) or "Actions: Read and write" (fine-grained PAT).');
+        } else if (resp.status === 401) {
+          throw new Error('Token invalid or expired. Re-generate your PAT and try again.');
+        } else if (resp.status === 404) {
+          throw new Error(`Workflow not found. Check that "configure-apps.yml" exists on branch "${BRANCH}" and the repo name is correct.`);
+        } else {
+          const body = await resp.text();
+          throw new Error(`HTTP ${resp.status}: ${body}`);
+        }
+      } catch (e) {
+        showToast(`❌ ${e.message}`, 7000);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Apply';
+      }
+    }
+
+    let _monitorTimer = null;
+    let BUILD_HISTORY = [];
+    let _currentHistoryId = null;
+
+    function closeBuildPanel() {
+      clearTimeout(_monitorTimer);
+      $('build-panel').style.display = 'none';
+      _currentHistoryId = null;
+    }
+
+    function minimizeBuildPanel() {
+      const entry = BUILD_HISTORY.find(e => e.id === _currentHistoryId);
+      if (entry) entry.minimized = true;
+      $('build-panel').style.display = 'none';
+      updateHistoryTab();
+    }
+
+    function restoreBuildFromHistory(id) {
+      const entry = BUILD_HISTORY.find(e => e.id === id);
+      if (!entry) return;
+      _currentHistoryId = id;
+      entry.minimized = false;
+      showBuildPanel(entry.state, entry.run, entry.assets);
+      updateHistoryTab();
+    }
+
+    function generateId() {
+      return Math.random().toString(36).slice(2, 10);
+    }
+
+    function updateHistoryTab() {
+      const body = $('ht-body');
+      const section = $('history-section');
+      const entries = BUILD_HISTORY.filter(e => e.minimized);
+      section.style.display = entries.length > 0 ? '' : 'none';
+      if (entries.length === 0) {
+        body.innerHTML = '';
+        return;
+      }
+      const icons = { searching: '🔍', queued: '⏳', in_progress: '🔄', success: '✅', failure: '❌', cancelled: '⚠️', 'not-found': '❓' };
+      const labels = { searching: 'Searching…', queued: 'Queued', in_progress: 'In progress…', success: 'Succeeded', failure: 'Failed', cancelled: 'Cancelled', 'not-found': 'Not found' };
+      body.innerHTML = '';
+      for (const e of entries) {
+        const sub = e.run
+          ? `Run #${e.run.run_number} · ${new Date(e.run.created_at).toLocaleTimeString()}`
+          : `Started ${new Date(e.triggeredAt).toLocaleTimeString()}`;
+        const div = document.createElement('div');
+        div.className = 'ht-entry';
+        div.id = 'ht-entry-' + e.id;
+        div.innerHTML = `<span class="ht-icon">${icons[e.state] || '⏳'}</span><div class="ht-info"><div class="ht-label">${labels[e.state] || e.state}</div><div class="ht-sub">${sub}</div></div><button class="ht-btn" onclick="restoreBuildFromHistory('${e.id}')">Restore</button>`;
+        body.appendChild(div);
+      }
+    }
+
+    function updateHistoryEntry(id, state, run, assets) {
+      const e = BUILD_HISTORY.find(e => e.id === id);
+      if (!e) return;
+      e.state = state; e.run = run; e.assets = assets;
+      if (e.minimized) updateHistoryTab();
+    }
+
+    function showBuildPanel(state, run, assets) {
+      const panel = $('build-panel');
+      panel.style.display = '';
+      panel.className = 'build-panel bp-' + state.replace('_', '-');
+
+      const icons = {
+        searching: '🔍',
+        queued: '⏳',
+        in_progress: '🔄',
+        success: '✅',
+        failure: '❌',
+        cancelled: '⚠️',
+        'not-found': '❓',
+      };
+      const labels = {
+        searching: 'Searching for run…',
+        queued: 'Queued — waiting to start',
+        in_progress: 'Build in progress…',
+        success: 'Build succeeded!',
+        failure: 'Build failed',
+        cancelled: 'Build was cancelled',
+        'not-found': 'Run not found',
+      };
+
+      $('bp-icon').textContent = icons[state] || '⏳';
+      $('bp-label').textContent = labels[state] || state;
+      $('bp-sub').textContent = run
+        ? `Run #${run.run_number} · ${new Date(run.created_at).toLocaleTimeString()}`
+        : '';
+
+      const linksEl = $('bp-links');
+      linksEl.innerHTML = '';
+
+      if (state === 'success') {
+        if (assets && assets.length > 0) {
+          for (const asset of assets) {
+            const sz = asset.size >= 1048576
+              ? `${(asset.size / 1048576).toFixed(1)} MB`
+              : `${(asset.size / 1024).toFixed(0)} KB`;
+            const a = document.createElement('a');
+            a.className = 'build-link';
+            a.href = asset.browser_download_url;
+            a.target = '_blank'; a.rel = 'noopener';
+            a.innerHTML = `<span class="lk-name">⬇ ${asset.name}</span><span class="lk-size">${sz}</span>`;
+            linksEl.appendChild(a);
+          }
+        } else {
+          const a = document.createElement('a');
+          a.className = 'build-link';
+          a.href = `https://github.com/${REPO}/releases/tag/latest-build`;
+          a.target = '_blank'; a.rel = 'noopener';
+          a.innerHTML = '<span class="lk-name">🔗 View latest-build release</span>';
+          linksEl.appendChild(a);
+        }
+      } else if ((state === 'failure' || state === 'cancelled') && run) {
+        const a = document.createElement('a');
+        a.className = 'build-link';
+        a.href = run.html_url;
+        a.target = '_blank'; a.rel = 'noopener';
+        a.innerHTML = '<span class="lk-name">🔍 View run logs on GitHub</span>';
+        linksEl.appendChild(a);
+      } else if (state === 'not-found') {
+        const a = document.createElement('a');
+        a.className = 'build-link';
+        a.href = `https://github.com/${REPO}/actions`;
+        a.target = '_blank'; a.rel = 'noopener';
+        a.innerHTML = '<span class="lk-name">🔗 Open Actions page</span>';
+        linksEl.appendChild(a);
+      }
+      if (_currentHistoryId) updateHistoryEntry(_currentHistoryId, state, run, assets);
+    }
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    async function apiGet(url) {
+      const headers = { Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
+      if (TOKEN) headers['Authorization'] = `Bearer ${TOKEN}`;
+      const resp = await fetch(url, { headers });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      return resp.json();
+    }
+
+    async function startBuildMonitor(triggeredAt) {
+      const id = generateId();
+      BUILD_HISTORY.push({ id, triggeredAt, state: 'searching', run: null, assets: null, minimized: false });
+      _currentHistoryId = id;
+      showBuildPanel('searching', null, null);
+      await sleep(12000);
+      pollForRun(triggeredAt, 0);
+    }
+
+    async function pollForRun(triggeredAt, attempts) {
+      if (attempts >= 20) {
+        showBuildPanel('not-found', null, null);
+        return;
+      }
+      try {
+        const data = await apiGet(
+          `https://api.github.com/repos/${REPO}/actions/workflows/ci.yml/runs?per_page=5&branch=${encodeURIComponent(BRANCH)}`
+        );
+        const run = (data.workflow_runs || []).find(
+          r => new Date(r.created_at).getTime() >= triggeredAt - 60000
+        );
+        if (run) {
+          if (run.status === 'completed') {
+            await handleRunComplete(run);
+          } else {
+            showBuildPanel(run.status, run, null);
+            _monitorTimer = setTimeout(() => pollRunStatus(run.id), 15000);
+          }
+        } else {
+          _monitorTimer = setTimeout(() => pollForRun(triggeredAt, attempts + 1), 15000);
+        }
+      } catch (_) {
+        _monitorTimer = setTimeout(() => pollForRun(triggeredAt, attempts + 1), 20000);
+      }
+    }
+
+    async function pollRunStatus(runId) {
+      try {
+        const run = await apiGet(`https://api.github.com/repos/${REPO}/actions/runs/${runId}`);
+        if (run.status === 'completed') {
+          await handleRunComplete(run);
+        } else {
+          showBuildPanel(run.status, run, null);
+          _monitorTimer = setTimeout(() => pollRunStatus(runId), 15000);
+        }
+      } catch (_) {
+        _monitorTimer = setTimeout(() => pollRunStatus(runId), 20000);
+      }
+    }
+
+    async function handleRunComplete(run) {
+      if (run.conclusion === 'success') {
+        try {
+          const release = await apiGet(
+            `https://api.github.com/repos/${REPO}/releases/tags/latest-build`
+          );
+          const allAssets = release.assets || [];
+          // Show only the most recently uploaded custom revpack (configurator build)
+          const packPrefix = ($('pack-name-input') && $('pack-name-input').value.trim()) || PACK_NAME_CONFIG || 'revpack';
+          const customAssets = allAssets
+            .filter(a => a.name.startsWith(packPrefix + '-') && a.name.includes('-custom-'))
+            .sort((a, b) => b.name.localeCompare(a.name));
+          const displayAssets = customAssets.length > 0 ? [customAssets[0]] : allAssets;
+          showBuildPanel('success', run, displayAssets);
+        } catch (_) {
+          showBuildPanel('success', run, []);
+        }
+      } else {
+        showBuildPanel(run.conclusion === 'cancelled' ? 'cancelled' : 'failure', run, null);
+      }
+    }
+  </script>
 </body>
+
 </html>

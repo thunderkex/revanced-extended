@@ -30,6 +30,10 @@ on:
         required: false
         default: true
         type: boolean
+      pack_name:
+        description: 'Custom RevPack zip filename (without .zip). Leave blank to use config.toml value.'
+        required: false
+        default: ''
       build_arch:
         description: 'Architecture for the triggered build'
         required: false
@@ -67,12 +71,14 @@ jobs:
             --field enabled_apps="${{ inputs.enabled_apps }}" \
             --field disabled_apps="${{ inputs.disabled_apps }}" \
             --field pack_apps="${{ inputs.pack_apps }}" \
-            --field pack_exclude_apps="${{ inputs.pack_exclude_apps }}"
+            --field pack_exclude_apps="${{ inputs.pack_exclude_apps }}" \
+            --field pack_name="${{ inputs.pack_name }}"
           echo "CI build triggered — arch: ${{ inputs.build_arch }}"
           echo "  enabled_apps:      ${{ inputs.enabled_apps }}"
           echo "  disabled_apps:     ${{ inputs.disabled_apps }}"
           echo "  pack_apps:         ${{ inputs.pack_apps }}"
           echo "  pack_exclude_apps: ${{ inputs.pack_exclude_apps }}"
+          echo "  pack_name:         ${{ inputs.pack_name }}"
 
       - name: Skipped
         if: ${{ inputs.trigger_build == false }}

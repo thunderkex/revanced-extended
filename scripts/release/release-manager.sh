@@ -192,10 +192,11 @@ upload_file() {
     local file="$1"
     local filename
     filename=$(basename "$file")
+    local _pack_prefix="${PACK_PREFIX:-revpack}"
 
-    if [[ "$filename" == revpack-*.zip ]]; then
+    if [[ "$filename" == ${_pack_prefix}-*.zip ]]; then
         if [[ "${PRESERVE_REVPACK:-false}" != "true" ]]; then
-            delete_assets_by_pattern "revpack-*.zip"
+            delete_assets_by_pattern "${_pack_prefix}-*.zip"
         else
             debug "PRESERVE_REVPACK=true — keeping existing revpack assets alongside $filename"
         fi

@@ -47,6 +47,11 @@ on:
         required: false
         default: ''
         description: "Apps to exclude from RevPack"
+      pack_name:
+        type: string
+        required: false
+        default: ''
+        description: "Custom RevPack zip filename (without .zip). Leave blank to use config.toml value."
 
   workflow_dispatch:
     inputs:
@@ -129,12 +134,13 @@ jobs:
           fi
 
       - name: Apply app custom configuration
-        if: ${{ inputs.enabled_apps != '' || inputs.disabled_apps != '' || inputs.pack_apps != '' || inputs.pack_exclude_apps != '' }}
+        if: ${{ inputs.enabled_apps != '' || inputs.disabled_apps != '' || inputs.pack_apps != '' || inputs.pack_exclude_apps != '' || inputs.pack_name != '' }}
         env:
           ENABLED_APPS:      ${{ inputs.enabled_apps }}
           DISABLED_APPS:     ${{ inputs.disabled_apps }}
           PACK_APPS:         ${{ inputs.pack_apps }}
           PACK_EXCLUDE_APPS: ${{ inputs.pack_exclude_apps }}
+          PACK_NAME:         ${{ inputs.pack_name }}
         run: |
           python3 - <<'PYEOF'
           import os, re
@@ -147,6 +153,7 @@ jobs:
           disabled_raw = os.environ.get("DISABLED_APPS",     "").strip()
           pack_raw     = os.environ.get("PACK_APPS",         "").strip()
           exclude_raw  = os.environ.get("PACK_EXCLUDE_APPS", "").strip()
+          pack_name_raw = os.environ.get("PACK_NAME",        "").strip()
 
           def csv(s):
               return [x.strip() for x in s.split(",") if x.strip()] if s else []
@@ -162,11 +169,13 @@ jobs:
           in_main         = True
           pack_written    = False
           exclude_written = False
+          pack_name_written = False
 
-          section_re = re.compile(r"^\[([^\]]+)\]")
-          enabled_re = re.compile(r"^(\s*enabled\s*=\s*)(true|false)(.*)")
-          pack_re    = re.compile(r"^(\s*pack-apps\s*=\s*)")
-          excl_re    = re.compile(r"^(\s*pack-exclude-apps\s*=\s*)")
+          section_re   = re.compile(r"^\[([^\]]+)\]")
+          enabled_re   = re.compile(r"^(\s*enabled\s*=\s*)(true|false)(.*)")
+          pack_re      = re.compile(r"^(\s*pack-apps\s*=\s*)")
+          excl_re      = re.compile(r"^(\s*pack-exclude-apps\s*=\s*)")
+          pack_name_re = re.compile(r"^(\s*pack-name\s*=\s*)")
 
           for line in lines:
               sec_m = section_re.match(line.rstrip())
@@ -185,6 +194,10 @@ jobs:
                       val = '"' + ' '.join(exclude_list) + '"' if exclude_list else '""'
                       output.append(f'pack-exclude-apps = {val}\n')
                       exclude_written = True
+                      continue
+                  if pack_name_re.match(line) and pack_name_raw:
+                      output.append(f'pack-name = "{pack_name_raw}"\n')
+                      pack_name_written = True
                       continue
                   output.append(line)
                   continue
@@ -223,6 +236,7 @@ jobs:
           print(f"  disabled:     {disabled_raw or '(none)'}")
           print(f"  pack-apps:    {pack_raw or '(all enabled)'}")
           print(f"  pack-exclude: {exclude_raw or '(none)'}")
+          print(f"  pack-name:    {pack_name_raw or '(from config.toml)'}")
           PYEOF
 
       - name: Get next version code
@@ -296,9 +310,10 @@ jobs:
           cd build
           ARCH="${{ inputs.target_arch || 'arm64-v8a' }}"
           FROM_CONFIGURATOR="${{ inputs.from_configurator || 'false' }}"
+          PACK_PREFIX="${{ inputs.pack_name || 'revpack' }}"
           for f in *.apk *.zip; do
             [ -f "$f" ] || continue
-            if [[ "$f" == revpack-* ]]; then
+            if [[ "$f" == "${PACK_PREFIX}-"* ]]; then
               if [ "$FROM_CONFIGURATOR" = "true" ]; then
                 TS=$(date +%Y%m%d%H%M)
                 base="${f%.zip}"
@@ -318,9 +333,10 @@ jobs:
         if: ${{ inputs.from_configurator == true }}
         run: |
           cd build
+          PACK_PREFIX="${{ inputs.pack_name || 'revpack' }}"
           for f in *; do
             [ -f "$f" ] || continue
-            [[ "$f" == revpack-* ]] && continue
+            [[ "$f" == "${PACK_PREFIX}-"* ]] && continue
             echo "Removing non-revpack artifact: $f"
             rm -f "$f"
           done
@@ -358,6 +374,7 @@ jobs:
           BUILD_DIR: "build"
           PRESERVE_REVPACK: ${{ inputs.from_configurator && 'true' || 'false' }}
           FROM_CONFIGURATOR: ${{ inputs.from_configurator && 'true' || 'false' }}
+          PACK_PREFIX: ${{ inputs.pack_name || 'revpack' }}
         run: |
           chmod +x ./scripts/release/post-build-release.sh 2>/dev/null || true
           if [ -f "./scripts/release/post-build-release.sh" ]; then
@@ -379,7 +396,7 @@ jobs:
             ASSETS_JSON=$(gh api repos/${{ github.repository }}/releases/tags/latest-build 2>/dev/null || echo '{}')
             while IFS=$'\t' read -r ASSET_ID ASSET_NAME; do
               [ -z "$ASSET_ID" ] || [ "$ASSET_ID" = "null" ] && continue
-              if [ "${PRESERVE_REVPACK:-false}" = "true" ] && [[ "$ASSET_NAME" == revpack-* ]]; then
+              if [ "${PRESERVE_REVPACK:-false}" = "true" ] && [[ "$ASSET_NAME" == "${PACK_PREFIX:-revpack}-"* ]]; then
                 echo "Preserving existing revpack asset: $ASSET_NAME"
                 continue
               fi

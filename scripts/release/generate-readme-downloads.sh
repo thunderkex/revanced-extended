@@ -3,14 +3,12 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="${SCRIPT_DIR}/../.."
 
-# Configuration
 BUILD_DIR="${BUILD_DIR:-${PROJECT_ROOT}/build}"
 README_FILE="${README_FILE:-${PROJECT_ROOT}/README.md}"
 DOWNLOADS_MD="${DOWNLOADS_MD:-${PROJECT_ROOT}/DOWNLOADS.md}"
 REPO_URL="${REPO_URL:-}"
 RELEASE_TAG="${RELEASE_TAG:-latest-build}"
 
-# Colors for terminal output
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
@@ -20,7 +18,6 @@ log() { echo -e "${GREEN}[+]${NC} $1"; }
 warn() { echo -e "${YELLOW}[!]${NC} $1"; }
 info() { echo -e "${BLUE}[i]${NC} $1"; }
 
-# Detect repository URL
 detect_repo_url() {
     if [[ -n "$REPO_URL" ]]; then
         echo "$REPO_URL"
@@ -32,11 +29,9 @@ detect_repo_url() {
         return
     fi
     
-    # Try to detect from git
     local url
     url=$(git -C "$PROJECT_ROOT" remote get-url origin 2>/dev/null || echo "")
     if [[ -n "$url" ]]; then
-        # Convert SSH to HTTPS
         url=$(echo "$url" | sed -E 's|git@github\.com:|https://github.com/|;s|\.git$||')
         echo "$url"
         return
@@ -45,7 +40,6 @@ detect_repo_url() {
     echo ""
 }
 
-# Get human-readable file size
 get_file_size() {
     local file="$1"
     if [[ -f "$file" ]]; then
@@ -55,7 +49,6 @@ get_file_size() {
     fi
 }
 
-# Get MD5 checksum (short version for display)
 get_checksum() {
     local file="$1"
     if [[ -f "$file" ]] && command -v md5sum &>/dev/null; then
@@ -98,13 +91,11 @@ parse_filename() {
     IS_MODULE="false"
     FILE_TYPE="apk"
     
-    # Check file type
     if [[ "$extension" == "zip" ]]; then
         IS_MODULE="true"
         FILE_TYPE="module"
     fi
     
-    # Check if lite
     if [[ "$basename" == *"-lite"* ]]; then
         IS_LITE="true"
         basename="${basename%-lite}"
@@ -242,11 +233,20 @@ generate_downloads_section() {
        declare -A app_files
     declare -A _seen_filenames
     local apps_order=()
+    local custom_revpack_entries=()
 
     for file in "$BUILD_DIR"/*.apk "$BUILD_DIR"/*.zip; do
         [[ -f "$file" ]] || continue
         local filename
         filename=$(basename "$file")
+        if [[ "$filename" == *"-custom-"*.zip ]]; then
+            local _lfsize _lfurl
+            _lfsize=$(get_file_size "$file")
+            _lfurl="${repo_url}/releases/download/${RELEASE_TAG}/${filename}"
+            custom_revpack_entries+=("${filename}|||${_lfsize}|||${_lfurl}")
+            _seen_filenames["$filename"]=1
+            continue
+        fi
         parse_filename "$filename"
         _seen_filenames["$filename"]=1
 
@@ -267,8 +267,12 @@ generate_downloads_section() {
             _rsize=$(echo "$_line" | awk -F'\|\|\|' '{print $2}')
             _rurl=$(echo  "$_line" | awk -F'\|\|\|' '{print $3}')
 
-            # Skip if we already have it from local build
             [[ -n "${_seen_filenames[$_rname]+x}" ]] && continue
+
+            if [[ "$_rname" == *"-custom-"*.zip ]]; then
+                custom_revpack_entries+=("${_rname}|||${_rsize}|||${_rurl}")
+                continue
+            fi
 
             parse_filename "$_rname"
             if [[ -z "${app_files[$APP_NAME]+x}" ]]; then
@@ -286,7 +290,6 @@ generate_downloads_section() {
 
     output+="---\n\n"
 
-    # ---- RevPack dedicated section ----
     if [[ -n "${app_files[RevPack]+x}" ]]; then
         local revpack_rows=""
         IFS='|' read -ra _entries <<< "${app_files[RevPack]}"
@@ -321,11 +324,43 @@ generate_downloads_section() {
             output+="| Type | Version | Architecture | Size | Download |\n"
             output+="|:----:|:-------:|:------------:|:----:|:--------:|\n"
             output+="${revpack_rows}"
-            output+="\n---\n\n"
+            output+="\n"
         fi
     fi
 
-    # ---- Per-app sections ----
+    if [[ ${#custom_revpack_entries[@]} -gt 0 ]]; then
+        local sorted_customs=()
+        while IFS= read -r _cl; do
+            sorted_customs+=("$_cl")
+        done < <(printf '%s\n' "${custom_revpack_entries[@]}" | sort -r | head -3)
+        local custom_rows=""
+        for _c in "${sorted_customs[@]}"; do
+            [[ -z "$_c" ]] && continue
+            local cfn csz curl ts_label="—"
+            cfn=$(echo "$_c" | awk -F'\|\|\|' '{print $1}')
+            csz=$(echo "$_c" | awk -F'\|\|\|' '{print $2}')
+            curl=$(echo "$_c" | awk -F'\|\|\|' '{print $3}')
+            if [[ "$cfn" =~ -custom-([0-9]{12}) ]]; then
+                local raw="${BASH_REMATCH[1]}"
+                ts_label="${raw:0:4}-${raw:4:2}-${raw:6:2} ${raw:8:2}:${raw:10:2}"
+            fi
+            local cbadge="[![Download]($(generate_badge "⬇_Download" "7C4DFF"))](${curl})"
+            custom_rows+="| 🎨 Custom | ${ts_label} | 🌐 All | ${csz} | ${cbadge} |\n"
+        done
+        if [[ -n "$custom_rows" ]]; then
+            output+="### 🎨 RevPack — Custom Builds *(latest 3)*\n\n"
+            output+="> Built via [RevPack Configurator](https://thunderkex.github.io/revanced-extended/). Preserved alongside standard builds.\n\n"
+            output+="| Type | Built | Architecture | Size | Download |\n"
+            output+="|:----:|:-----:|:------------:|:----:|:--------:|\n"
+            output+="${custom_rows}"
+            output+="\n"
+        fi
+    fi
+
+    if [[ -n "${app_files[RevPack]+x}" ]] || [[ ${#custom_revpack_entries[@]} -gt 0 ]]; then
+        output+="---\n\n"
+    fi
+
     for app in "${apps_order[@]}"; do
         [[ "$app" == "RevPack" ]] && continue
         local app_logo
@@ -428,11 +463,20 @@ EOF
     declare -A app_files
     declare -A _seen_filenames
     local apps_order=()
+    local custom_revpack_entries=()
 
     for file in "$BUILD_DIR"/*.apk "$BUILD_DIR"/*.zip; do
         [[ -f "$file" ]] || continue
         local filename
         filename=$(basename "$file")
+        if [[ "$filename" == *"-custom-"*.zip ]]; then
+            local _lfsize _lfurl
+            _lfsize=$(get_file_size "$file")
+            _lfurl="${repo_url}/releases/download/${RELEASE_TAG}/${filename}"
+            custom_revpack_entries+=("${filename}|||${_lfsize}|||${_lfurl}")
+            _seen_filenames["$filename"]=1
+            continue
+        fi
         parse_filename "$filename"
         _seen_filenames["$filename"]=1
 
@@ -452,6 +496,10 @@ EOF
             _rsize=$(echo "$_line" | awk -F'\|\|\|' '{print $2}')
             _rurl=$(echo  "$_line" | awk -F'\|\|\|' '{print $3}')
             [[ -n "${_seen_filenames[$_rname]+x}" ]] && continue
+            if [[ "$_rname" == *"-custom-"*.zip ]]; then
+                custom_revpack_entries+=("${_rname}|||${_rsize}|||${_rurl}")
+                continue
+            fi
             parse_filename "$_rname"
             if [[ -z "${app_files[$APP_NAME]+x}" ]]; then
                 apps_order+=("$APP_NAME")
@@ -460,7 +508,6 @@ EOF
         done <<< "$_release_lines"
     fi
 
-    # ---- RevPack dedicated section ----
     if [[ -n "${app_files[RevPack]+x}" ]]; then
         local revpack_rows=""
         IFS='|' read -ra _entries <<< "${app_files[RevPack]}"
@@ -495,12 +542,44 @@ EOF
             echo "| Type | Version | Architecture | Size | Download |"
             echo "|:----:|:-------:|:------------:|:----:|:--------:|"
             echo -e "${revpack_rows}"
-            echo "---"
-            echo ""
         fi
     fi
 
-    # ---- Per-app sections ----
+    if [[ ${#custom_revpack_entries[@]} -gt 0 ]]; then
+        local sorted_customs=()
+        while IFS= read -r _cl; do
+            sorted_customs+=("$_cl")
+        done < <(printf '%s\n' "${custom_revpack_entries[@]}" | sort -r | head -3)
+        local custom_rows=""
+        for _c in "${sorted_customs[@]}"; do
+            [[ -z "$_c" ]] && continue
+            local cfn csz curl ts_label="—"
+            cfn=$(echo "$_c" | awk -F'\|\|\|' '{print $1}')
+            csz=$(echo "$_c" | awk -F'\|\|\|' '{print $2}')
+            curl=$(echo "$_c" | awk -F'\|\|\|' '{print $3}')
+            if [[ "$cfn" =~ -custom-([0-9]{12}) ]]; then
+                local raw="${BASH_REMATCH[1]}"
+                ts_label="${raw:0:4}-${raw:4:2}-${raw:6:2} ${raw:8:2}:${raw:10:2}"
+            fi
+            local cbadge="[![Download](https://img.shields.io/badge/⬇_Download-7C4DFF?style=flat-square)](${curl})"
+            custom_rows+="| 🎨 Custom | ${ts_label} | 🌐 All | ${csz} | ${cbadge} |\n"
+        done
+        if [[ -n "$custom_rows" ]]; then
+            echo "### 🎨 RevPack — Custom Builds *(latest 3)*"
+            echo ""
+            echo "> Built via RevPack Configurator. Preserved alongside standard builds."
+            echo ""
+            echo "| Type | Built | Architecture | Size | Download |"
+            echo "|:----:|:-----:|:------------:|:----:|:--------:|"
+            echo -e "${custom_rows}"
+        fi
+    fi
+
+    if [[ -n "${app_files[RevPack]+x}" ]] || [[ ${#custom_revpack_entries[@]} -gt 0 ]]; then
+        echo "---"
+        echo ""
+    fi
+
     for app in "${apps_order[@]}"; do
         [[ "$app" == "RevPack" ]] && continue
         local app_logo
