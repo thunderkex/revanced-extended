@@ -186,12 +186,12 @@ jobs:
                   continue
               if in_main:
                   if pack_re.match(line):
-                      val = '"' + ' '.join(pack_list) + '"' if pack_list else '""'
+                      val = '"' + ', '.join(pack_list) + '"' if pack_list else '""'
                       output.append(f'pack-apps = {val}\n')
                       pack_written = True
                       continue
                   if excl_re.match(line):
-                      val = '"' + ' '.join(exclude_list) + '"' if exclude_list else '""'
+                      val = '"' + ', '.join(exclude_list) + '"' if exclude_list else '""'
                       output.append(f'pack-exclude-apps = {val}\n')
                       exclude_written = True
                       continue
@@ -220,10 +220,10 @@ jobs:
               for line in output:
                   final.append(line)
                   if "combine-modules" in line and "=" in line and not pack_written:
-                      val = '"' + ' '.join(pack_list) + '"' if pack_list else '""'
+                      val = '"' + ', '.join(pack_list) + '"' if pack_list else '""'
                       final.append(f'pack-apps = {val}\n')
                       pack_written = True
-                      val2 = '"' + ' '.join(exclude_list) + '"' if exclude_list else '""'
+                      val2 = '"' + ', '.join(exclude_list) + '"' if exclude_list else '""'
                       final.append(f'pack-exclude-apps = {val2}\n')
                       exclude_written = True
               output = final
