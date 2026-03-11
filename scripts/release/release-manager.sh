@@ -161,6 +161,7 @@ delete_asset_by_name() {
 
 delete_assets_by_pattern() {
     local pattern="$1"
+    local exclude_pattern="${2:-}"
     local api_response
     
     set +o pipefail
@@ -168,6 +169,11 @@ delete_assets_by_pattern() {
     
     while IFS=$'\t' read -r asset_id asset_name; do
         [[ -z "$asset_id" || "$asset_id" == "null" ]] && continue
+        if [[ -n "$exclude_pattern" ]]; then
+            case "$asset_name" in
+                $exclude_pattern) debug "Preserving asset '$asset_name' (excluded)"; continue ;;
+            esac
+        fi
         case "$asset_name" in
             $pattern)
                 debug "Deleting old asset '$asset_name' (ID: $asset_id)..."
@@ -196,7 +202,11 @@ upload_file() {
 
     if [[ "$filename" == ${_pack_prefix}-*.zip ]]; then
         if [[ "${PRESERVE_REVPACK:-false}" != "true" ]]; then
-            delete_assets_by_pattern "${_pack_prefix}-*.zip"
+            if [[ "$filename" == *"-custom-"* ]]; then
+                delete_assets_by_pattern "*-custom-*.zip"
+            else
+                delete_assets_by_pattern "${_pack_prefix}-*.zip" "*-custom-*.zip"
+            fi
         else
             debug "PRESERVE_REVPACK=true — keeping existing revpack assets alongside $filename"
         fi

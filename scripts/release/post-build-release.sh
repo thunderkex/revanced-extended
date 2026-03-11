@@ -187,7 +187,7 @@ main() {
                 echo "Committing documentation updates..."
                 git config --local user.email "action@github.com"
                 git config --local user.name "GitHub Action"
-                git add README.md DOWNLOADS.md 2>/dev/null || true
+                git add README.md DOWNLOADS.md .downloads-cache.tsv 2>/dev/null || true
                 git diff --staged --quiet || git commit -m "📝 Update downloads [skip ci]" 2>/dev/null || true
                 git push 2>/dev/null || echo "Warning: Failed to push documentation updates"
             fi
