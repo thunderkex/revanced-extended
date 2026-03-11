@@ -8,11 +8,14 @@ README_FILE="${README_FILE:-${PROJECT_ROOT}/README.md}"
 DOWNLOADS_MD="${DOWNLOADS_MD:-${PROJECT_ROOT}/DOWNLOADS.md}"
 REPO_URL="${REPO_URL:-}"
 RELEASE_TAG="${RELEASE_TAG:-latest-build}"
+CACHE_FILE="${CACHE_FILE:-${PROJECT_ROOT}/.downloads-cache.tsv}"
 
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
+
+declare -A _dl_cache
 
 log() { echo -e "${GREEN}[+]${NC} $1"; }
 warn() { echo -e "${YELLOW}[!]${NC} $1"; }
@@ -56,6 +59,91 @@ get_checksum() {
     else
         echo ""
     fi
+}
+
+load_dl_cache() {
+    _dl_cache=()
+    [[ -f "$CACHE_FILE" ]] || return 0
+    local _lapp _ltype _larch _lver _lsz _lurl
+    while IFS=$'\t' read -r _lapp _ltype _larch _lver _lsz _lurl; do
+        [[ -z "$_lapp" || "${_lapp:0:1}" == "#" ]] && continue
+        _dl_cache["${_lapp}|||${_ltype}|||${_larch}"]="${_lver}	${_lsz}	${_lurl}"
+    done < "$CACHE_FILE"
+}
+
+save_dl_cache() {
+    {
+        printf '# app_name\ttype_key\tarch\tversion\tsize\tdownload_url\n'
+        local _sck
+        for _sck in "${!_dl_cache[@]}"; do
+            local _sa="${_sck%%|||*}"
+            local _sr="${_sck#*|||}"
+            local _st="${_sr%%|||*}"
+            local _scarch="${_sr##*|||}"
+            local _sv _ss _su
+            IFS=$'\t' read -r _sv _ss _su <<< "${_dl_cache[$_sck]}"
+            printf '%s\t%s\t%s\t%s\t%s\t%s\n' "$_sa" "$_st" "$_scarch" "$_sv" "$_ss" "$_su"
+        done | sort
+    } > "$CACHE_FILE"
+}
+
+upsert_dl_cache() {
+    _dl_cache["${1}|||${2}|||${3}"]="${4}	${5}	${6}"
+}
+
+init_cache_from_readme() {
+    [[ -f "$CACHE_FILE" ]] && return 0
+    [[ -f "$README_FILE" ]] || return 0
+    local _in=0 _cur_app=""
+    while IFS= read -r _rline; do
+        [[ "$_rline" == "<!-- DOWNLOADS_START -->" ]] && { _in=1; continue; }
+        [[ "$_rline" == "<!-- DOWNLOADS_END -->" ]]   && break
+        [[ $_in -eq 0 ]] && continue
+        if [[ "$_rline" =~ ^###[[:space:]]\!\[([^]]+)\] ]]; then
+            _cur_app="${BASH_REMATCH[1]}"
+            continue
+        fi
+        if [[ "$_rline" =~ ^###[[:space:]].*RevPack.*Custom ]]; then
+            _cur_app="RevPack"
+            continue
+        fi
+        [[ "$_rline" == *"| Type |"* ]] && continue
+        [[ "$_rline" =~ ^\|[[:space:]]*:- ]] && continue
+        if [[ -n "$_cur_app" && "$_rline" =~ ^\| ]]; then
+            IFS='|' read -ra _rcols <<< "$_rline"
+            local _rtype _rver _rarch _rsz _rdl
+            _rtype=$(echo "${_rcols[1]:-}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+            _rver=$(echo  "${_rcols[2]:-}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+            _rarch=$(echo "${_rcols[3]:-}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+            _rsz=$(echo   "${_rcols[4]:-}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+            _rdl=$(echo   "${_rcols[5]:-}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+            local _rurl=""
+            [[ "$_rdl" =~ \]\(([^)]+)\)[[:space:]]*$ ]] && _rurl="${BASH_REMATCH[1]}"
+            [[ -z "$_rurl" ]] && continue
+            [[ "$_rver" == "—" ]] && continue
+            local _rver_clean="${_rver#v}"
+            local _rarch_clean
+            _rarch_clean=$(printf '%s' "$_rarch" | sed 's/^[^ ]* //' | tr '[:upper:]' '[:lower:]' | sed 's/^[[:space:]]*//')
+            [[ -z "$_rarch_clean" ]] && _rarch_clean="all"
+            local _rtk
+            case "$_rtype" in
+                *"Module Lite"*|*"⚡"*) _rtk="module-lite" ;;
+                *"Module"*|*"🧩"*)      _rtk="module" ;;
+                *"Lite"*|*"🪶"*)        _rtk="lite" ;;
+                *"Bundle"*|*"🎁"*)      _rtk="bundle" ;;
+                *"Custom"*|*"🎨"*)
+                    local _rts="$_rver_clean"
+                    [[ "$_rver_clean" =~ ^([0-9]{4})-([0-9]{2})-([0-9]{2})[[:space:]]([0-9]{2}):([0-9]{2}) ]] && \
+                        _rts="${BASH_REMATCH[1]}${BASH_REMATCH[2]}${BASH_REMATCH[3]}${BASH_REMATCH[4]}${BASH_REMATCH[5]}"
+                    _rtk="custom-${_rts}"
+                    ;;
+                *) _rtk="apk" ;;
+            esac
+            local _rck="${_cur_app}|||${_rtk}|||${_rarch_clean}"
+            [[ -n "${_dl_cache[$_rck]+x}" ]] && continue
+            _dl_cache["$_rck"]="${_rver_clean}	${_rsz}	${_rurl}"
+        fi
+    done < "$README_FILE"
 }
 
 fetch_release_assets() {
@@ -282,6 +370,99 @@ generate_downloads_section() {
         done <<< "$_release_lines"
     fi
 
+    load_dl_cache
+    init_cache_from_readme
+
+    local __app __entry __fn __fsz __furl __tk
+    for __app in "${apps_order[@]}"; do
+        IFS='|' read -ra _up_entries <<< "${app_files[$__app]}"
+        for __entry in "${_up_entries[@]}"; do
+            [[ -z "$__entry" ]] && continue
+            if [[ "$__entry" == local:* ]]; then
+                local __fl="${__entry#local:}"
+                [[ -f "$__fl" ]] || continue
+                __fn=$(basename "$__fl")
+                parse_filename "$__fn"
+                __fsz=$(get_file_size "$__fl")
+                __furl="${repo_url}/releases/download/${RELEASE_TAG}/${__fn}"
+            elif [[ "$__entry" == release:* ]]; then
+                local __rd="${__entry#release:}"
+                __fn=$(echo "$__rd" | awk -F'\|\|\|' '{print $1}')
+                __fsz=$(echo "$__rd" | awk -F'\|\|\|' '{print $2}')
+                __furl=$(echo "$__rd" | awk -F'\|\|\|' '{print $3}')
+                parse_filename "$__fn"
+            else
+                continue
+            fi
+            if [[ "$APP_NAME" == "RevPack" ]]; then __tk="bundle"
+            elif [[ "$IS_MODULE" == "true" && "$IS_LITE" == "true" ]]; then __tk="module-lite"
+            elif [[ "$IS_MODULE" == "true" ]]; then __tk="module"
+            elif [[ "$IS_LITE" == "true" ]]; then __tk="lite"
+            else __tk="apk"; fi
+            upsert_dl_cache "$APP_NAME" "$__tk" "${APP_ARCH:-all}" "${APP_VERSION:-N/A}" "$__fsz" "$__furl"
+        done
+    done
+
+    local __cc __cfn2 __csz2 __curl2 __cts
+    for __cc in "${custom_revpack_entries[@]}"; do
+        __cts="unknown"
+        __cfn2=$(printf '%s' "$__cc" | awk -F'\|\|\|' '{print $1}')
+        __csz2=$(printf '%s' "$__cc" | awk -F'\|\|\|' '{print $2}')
+        __curl2=$(printf '%s' "$__cc" | awk -F'\|\|\|' '{print $3}')
+        [[ "$__cfn2" =~ -custom-([0-9]{12}) ]] && __cts="${BASH_REMATCH[1]}"
+        upsert_dl_cache "RevPack" "custom-${__cts}" "all" "$__cts" "$__csz2" "$__curl2"
+    done
+
+    local __ck __ca __cr __ct __carch __cv __csz3 __curl3
+    for __ck in "${!_dl_cache[@]}"; do
+        __ca="${__ck%%|||*}"
+        __cr="${__ck#*|||}"
+        __ct="${__cr%%|||*}"
+        __carch="${__cr##*|||}"
+        IFS=$'\t' read -r __cv __csz3 __curl3 <<< "${_dl_cache[$__ck]}"
+
+        if [[ "$__ct" == custom-* ]]; then
+            local __cts3="${__ct#custom-}"
+            local __alr=0
+            local __ce3
+            for __ce3 in "${custom_revpack_entries[@]}"; do
+                [[ "$__ce3" == *"${__curl3}"* ]] && { __alr=1; break; }
+            done
+            [[ $__alr -eq 0 ]] && custom_revpack_entries+=("revpack-custom-${__cts3}.zip|||${__csz3}|||${__curl3}")
+            continue
+        fi
+
+        local __cov=0
+        if [[ -n "${app_files[$__ca]+x}" ]]; then
+            local __te
+            IFS='|' read -ra _cov_entries <<< "${app_files[$__ca]}"
+            for __te in "${_cov_entries[@]}"; do
+                [[ -z "$__te" ]] && continue
+                local __tfn
+                if [[ "$__te" == local:* ]]; then
+                    __tfn=$(basename "${__te#local:}")
+                elif [[ "$__te" == release:* ]]; then
+                    __tfn=$(printf '%s' "${__te#release:}" | awk -F'\|\|\|' '{print $1}')
+                else continue; fi
+                parse_filename "$__tfn"
+                local __ftk
+                if [[ "$APP_NAME" == "RevPack" ]]; then __ftk="bundle"
+                elif [[ "$IS_MODULE" == "true" && "$IS_LITE" == "true" ]]; then __ftk="module-lite"
+                elif [[ "$IS_MODULE" == "true" ]]; then __ftk="module"
+                elif [[ "$IS_LITE" == "true" ]]; then __ftk="lite"
+                else __ftk="apk"; fi
+                [[ "$__ftk" == "$__ct" && "${APP_ARCH:-all}" == "$__carch" ]] && { __cov=1; break; }
+            done
+        fi
+
+        if [[ $__cov -eq 0 ]]; then
+            [[ -z "${app_files[$__ca]+x}" ]] && apps_order+=("$__ca")
+            app_files["$__ca"]+="cached:${__cv}|||${__csz3}|||${__curl3}|||${__ct}|||${__carch}|"
+        fi
+    done
+
+    save_dl_cache
+
     if [[ ${#apps_order[@]} -eq 0 ]]; then
         output+="*No builds available yet. Run the build script first.*\n"
         echo -e "$output"
@@ -309,6 +490,12 @@ generate_downloads_section() {
                 size=$(echo    "$_rdata" | awk -F'\|\|\|' '{print $2}')
                 download_url=$(echo "$_rdata" | awk -F'\|\|\|' '{print $3}')
                 parse_filename "$filename"
+            elif [[ "$_entry" == cached:* ]]; then
+                local _cdata="${_entry#cached:}"
+                APP_VERSION=$(printf '%s' "$_cdata" | awk -F'\|\|\|' '{print $1}')
+                size=$(printf '%s' "$_cdata" | awk -F'\|\|\|' '{print $2}')
+                download_url=$(printf '%s' "$_cdata" | awk -F'\|\|\|' '{print $3}')
+                filename="revpack-v${APP_VERSION}.zip"
             else
                 continue
             fi
@@ -386,6 +573,22 @@ generate_downloads_section() {
                 size=$(echo    "$_rdata" | awk -F'\|\|\|' '{print $2}')
                 download_url=$(echo "$_rdata" | awk -F'\|\|\|' '{print $3}')
                 parse_filename "$filename"
+            elif [[ "$_entry" == cached:* ]]; then
+                local _cdata="${_entry#cached:}"
+                APP_VERSION=$(printf '%s' "$_cdata" | awk -F'\|\|\|' '{print $1}')
+                size=$(printf '%s' "$_cdata" | awk -F'\|\|\|' '{print $2}')
+                download_url=$(printf '%s' "$_cdata" | awk -F'\|\|\|' '{print $3}')
+                local _ctype_key
+                _ctype_key=$(printf '%s' "$_cdata" | awk -F'\|\|\|' '{print $4}')
+                APP_ARCH=$(printf '%s' "$_cdata" | awk -F'\|\|\|' '{print $5}')
+                APP_NAME="$app"
+                case "$_ctype_key" in
+                    module-lite) IS_MODULE="true";  IS_LITE="true";  FILE_TYPE="module" ;;
+                    module)      IS_MODULE="true";  IS_LITE="false"; FILE_TYPE="module" ;;
+                    lite)        IS_MODULE="false"; IS_LITE="true";  FILE_TYPE="apk"    ;;
+                    bundle)      IS_MODULE="true";  IS_LITE="false"; FILE_TYPE="module" ;;
+                    *)           IS_MODULE="false"; IS_LITE="false"; FILE_TYPE="apk"    ;;
+                esac
             else
                 continue
             fi
