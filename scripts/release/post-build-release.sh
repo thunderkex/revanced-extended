@@ -39,12 +39,9 @@ EOF
 
     echo "## 📝 Recent Changes" >> "$notes_file"
     echo "" >> "$notes_file"
-    git log --format="%h|%s|%ad|%an" --date=short | \
-        grep -v "|GitHub Action$" | \
-        head -5 | \
-        while IFS='|' read -r hash subject date author; do
-            echo "- [\`${hash}\`](../../commit/${hash}) ${subject} (${date})" >> "$notes_file"
-        done
+    while IFS='|' read -r hash subject date author; do
+        echo "- [\`${hash}\`](../../commit/${hash}) ${subject} (${date})" >> "$notes_file"
+    done < <(git log --format="%h|%s|%ad|%an" --date=short | grep -v "|GitHub Action$" | head -5 || true)
     echo "" >> "$notes_file"
 
     echo "## 📥 Download Latest ReVanced Extended APK & Modules" >> "$notes_file"
