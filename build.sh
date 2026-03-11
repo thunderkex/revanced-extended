@@ -2,7 +2,7 @@
 
 set -euo pipefail
 shopt -s nullglob
-trap "rm -rf temp/*tmp.* temp/*/*tmp.* temp/*-temporary-files; exit 130" INT
+trap "rm -rf temp/*tmp.* temp/*/*tmp.* temp/*-temporary-files; kill 0; exit 130" INT
 
 # Color output
 RED='\033[0;31m'
