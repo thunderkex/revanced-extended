@@ -25,7 +25,6 @@ check_env() {
     fi
     
     if [[ -z "${GITHUB_REPOSITORY:-}" ]]; then
-        # Try to detect from git remote
         GITHUB_REPOSITORY=$(git remote get-url origin 2>/dev/null | sed -E 's|.*github\.com[:/]||;s|\.git$||' || echo "")
         if [[ -z "$GITHUB_REPOSITORY" ]]; then
             error "GITHUB_REPOSITORY is required (format: owner/repo)"
@@ -203,12 +202,16 @@ upload_file() {
     if [[ "$filename" == ${_pack_prefix}-*.zip ]]; then
         if [[ "${PRESERVE_REVPACK:-false}" != "true" ]]; then
             if [[ "$filename" == *"-custom-"* ]]; then
-                delete_assets_by_pattern "*-custom-*.zip"
+                delete_assets_by_pattern "${_pack_prefix}-*-custom-*.zip"
             else
                 delete_assets_by_pattern "${_pack_prefix}-*.zip" "*-custom-*.zip"
             fi
         else
-            debug "PRESERVE_REVPACK=true — keeping existing revpack assets alongside $filename"
+            if [[ "$filename" == *"-custom-"* ]]; then
+                # Only clean up old custom builds; regular revpacks are preserved
+                delete_assets_by_pattern "${_pack_prefix}-*-custom-*.zip"
+            fi
+            debug "PRESERVE_REVPACK=true — uploading $filename (cleaned up old custom builds)"
         fi
     else
         delete_asset_by_name "$filename"

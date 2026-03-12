@@ -164,33 +164,32 @@ main() {
 
     upload_assets
 
-    # Skip release notes and README update when triggered by RevPack Configurator
     if [[ "${FROM_CONFIGURATOR:-false}" != "true" ]]; then
         update_body "$notes_file"
-
-        echo "Generating README downloads..."
-        if type generate_downloads_section &>/dev/null; then
-            export BUILD_DIR
-            export RELEASE_TAG
-            export REPO_URL="https://github.com/${GITHUB_REPOSITORY}"
-            export README_FILE="${PROJECT_ROOT}/README.md"
-            export DOWNLOADS_MD="${PROJECT_ROOT}/DOWNLOADS.md"
-            export USE_RELEASE_ASSETS=true
-
-            update_readme "$REPO_URL" 2>/dev/null || echo "Warning: Failed to update README"
-            generate_downloads_md "$REPO_URL" > "$DOWNLOADS_MD" 2>/dev/null || echo "Warning: Failed to generate DOWNLOADS.md"
-
-            if [[ -n "${GITHUB_ACTIONS:-}" ]]; then
-                echo "Committing documentation updates..."
-                git config --local user.email "action@github.com"
-                git config --local user.name "GitHub Action"
-                git add README.md DOWNLOADS.md .downloads-cache.tsv 2>/dev/null || true
-                git diff --staged --quiet || git commit -m "📝 Update downloads [skip ci]" 2>/dev/null || true
-                git push 2>/dev/null || echo "Warning: Failed to push documentation updates"
-            fi
-        fi
     else
-        echo "Configurator build — skipping release notes update and README regeneration."
+        echo "Configurator build — skipping release notes body update."
+    fi
+
+    echo "Generating README downloads..."
+    if type generate_downloads_section &>/dev/null; then
+        export BUILD_DIR
+        export RELEASE_TAG
+        export REPO_URL="https://github.com/${GITHUB_REPOSITORY}"
+        export README_FILE="${PROJECT_ROOT}/README.md"
+        export DOWNLOADS_MD="${PROJECT_ROOT}/DOWNLOADS.md"
+        export USE_RELEASE_ASSETS=true
+
+        update_readme "$REPO_URL" 2>/dev/null || echo "Warning: Failed to update README"
+        generate_downloads_md "$REPO_URL" > "$DOWNLOADS_MD" 2>/dev/null || echo "Warning: Failed to generate DOWNLOADS.md"
+
+        if [[ -n "${GITHUB_ACTIONS:-}" ]]; then
+            echo "Committing documentation updates..."
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git add README.md DOWNLOADS.md .downloads-cache.tsv 2>/dev/null || true
+            git diff --staged --quiet || git commit -m "📝 Update downloads [skip ci]" 2>/dev/null || true
+            git push 2>/dev/null || echo "Warning: Failed to push documentation updates"
+        fi
     fi
     
     echo ""
