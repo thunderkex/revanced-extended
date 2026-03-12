@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>RevPack</title>
 <style>
   :root {
@@ -17,16 +17,57 @@
     --green:     #4caf50;
     --yellow:    #ffb300;
     --red:       #e53935;
+
+    --status-success-bg:     rgba(76, 175,  80, .12);
+    --status-success-border: rgba(76, 175,  80, .30);
+    --status-success-text:   #4caf50;
+    --status-warn-bg:        rgba(255,179,   0, .12);
+    --status-warn-border:    rgba(255,179,   0, .30);
+    --status-warn-text:      #ffb300;
+    --status-error-bg:       rgba(229,  57,  53, .12);
+    --status-error-border:   rgba(229,  57,  53, .30);
+    --status-error-text:     #e53935;
+
+    --radius-xs:  6px;
+    --radius-sm:  8px;
     --radius:    14px;
-    --radius-sm: 8px;
-    --shadow:    0 2px 12px rgba(0,0,0,.45);
-    --header-bg: #212d33;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+
+    --shadow-sm:  0 1px 4px  rgba(0,0,0,.30);
+    --shadow:     0 2px 12px rgba(0,0,0,.45);
+    --shadow-lg:  0 8px 24px rgba(0,0,0,.55);
+
+    --sp-1:  4px;
+    --sp-2:  8px;
+    --sp-3: 12px;
+    --sp-4: 16px;
+    --sp-5: 20px;
+    --sp-6: 24px;
+    --sp-8: 32px;
+
+    --text-xs:   11px;
+    --text-sm:   12px;
+    --text-base: 14px;
+    --text-md:   15px;
+    --text-lg:   clamp(18px, 5vw, 22px);
+    --font-ui:   -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-mono: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+
+    --dur-fast:   120ms;
+    --dur-base:   200ms;
+    --dur-slow:   350ms;
+    --ease-std:   cubic-bezier(0.2, 0, 0, 1);
+    --ease-in:    cubic-bezier(0.3, 0, 1, 1);
+    --ease-out:   cubic-bezier(0, 0, 0, 1);
+
+    --header-bg:        #212d33;
     --header-text:      #ffffff;
     --header-text-sub:  rgba(255,255,255,.75);
     --header-btn-bg:    rgba(255,255,255,.18);
     --header-btn-hover: rgba(255,255,255,.28);
   }
-  /* ── Static fallback palette (light) ── */
+
   @media (prefers-color-scheme: light) {
     :root {
       --bg:       #f5f5f5;
@@ -36,10 +77,12 @@
       --text:     #1a1a1a;
       --text2:    #666;
       --shadow:   0 2px 12px rgba(0,0,0,.10);
+      --shadow-sm: 0 1px 4px rgba(0,0,0,.08);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,.14);
       --header-bg: #212d33;
     }
   }
-  /* ── Material You dynamic color — Android 12+ ── */
+
   @media (dynamic-color) {
     @media (prefers-color-scheme: dark) {
       :root {
@@ -67,21 +110,46 @@
       }
     }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
+
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-size: 14px;
+    font-family: var(--font-ui);
+    font-size: var(--text-base);
+    line-height: 1.5;
     min-height: 100vh;
-    padding-bottom: 32px;
+    min-height: 100dvh;
+    padding-bottom: max(var(--sp-8), env(safe-area-inset-bottom));
   }
 
-  /* ── Header ── */
+  :focus-visible {
+    outline: 2px solid var(--accent-on);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+  button:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--accent);
+  }
+
   .header {
     background: var(--header-bg);
-    padding: 20px 20px 28px;
-    position: relative;
+    padding: max(var(--sp-5), env(safe-area-inset-top))
+             max(var(--sp-5), env(safe-area-inset-right))
+             28px
+             max(var(--sp-5), env(safe-area-inset-left));
+    position: sticky;
+    top: 0;
+    z-index: 10;
     overflow: hidden;
   }
   .header::after {
@@ -95,7 +163,7 @@
   .header-inner {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: var(--sp-3);
   }
   .logo {
     width: 46px; height: 46px;
@@ -105,67 +173,98 @@
     font-size: 24px;
     flex-shrink: 0;
   }
-  .header h1 { color: var(--header-text); font-size: 22px; font-weight: 700; line-height: 1.1; }
-  .header p  { color: var(--header-text-sub); font-size: 12px; margin-top: 2px; }
+  .header h1 {
+    color: var(--header-text);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    line-height: 1.1;
+  }
+  .header p { color: var(--header-text-sub); font-size: var(--text-sm); margin-top: 2px; }
+
   .refresh-btn {
     margin-left: auto;
     background: var(--header-btn-bg);
     border: none; color: var(--header-text);
-    width: 38px; height: 38px;
-    border-radius: 10px;
+    width: 48px; height: 48px;
+    border-radius: 12px;
     cursor: pointer;
     font-size: 18px;
     display: flex; align-items: center; justify-content: center;
-    transition: background .2s;
+    transition: background var(--dur-base) var(--ease-std),
+                transform  var(--dur-fast) var(--ease-std);
     flex-shrink: 0;
   }
   .refresh-btn:hover  { background: var(--header-btn-hover); }
-  .refresh-btn:active { background: var(--header-btn-hover); }
-  .spin { animation: spin .7s linear infinite; }
+  .refresh-btn:active { background: var(--header-btn-hover); transform: scale(0.90); }
+  .spin { animation: spin .7s linear infinite; will-change: transform; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ── Body padding ── */
-  .content { padding: 16px; max-width: 640px; margin: 0 auto; }
+  .content {
+    padding: var(--sp-4);
+    padding-left:  max(var(--sp-4), env(safe-area-inset-left));
+    padding-right: max(var(--sp-4), env(safe-area-inset-right));
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  @media (min-width: 600px) {
+    .content { max-width: 680px; padding: var(--sp-5); }
+  }
+  @media (min-width: 840px) {
+    .content { max-width: 860px; }
+    #app-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    #app-list .card { margin-bottom: 0; }
+    .section-title { grid-column: 1 / -1; }
+  }
 
-  /* ── Info chips ── */
   .chips {
-    display: flex; gap: 8px; flex-wrap: wrap;
-    margin-bottom: 16px;
+    display: flex; gap: var(--sp-2); flex-wrap: wrap;
+    margin-bottom: var(--sp-4);
   }
   .chip {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 20px;
+    border-radius: var(--radius-xl);
     padding: 5px 12px;
-    font-size: 12px;
+    font-size: var(--text-sm);
     color: var(--text2);
-    display: flex; align-items: center; gap: 5px;
+    display: flex; align-items: center; gap: var(--sp-1);
+    transition: border-color var(--dur-base);
   }
   .chip b { color: var(--text); }
 
-  /* ── Section title ── */
   .section-title {
-    font-size: 12px;
+    font-size: var(--text-sm);
     font-weight: 600;
     color: var(--text2);
     text-transform: uppercase;
     letter-spacing: .06em;
-    margin: 20px 0 10px;
+    margin: var(--sp-5) 0 var(--sp-3);
   }
 
-  /* ── App card ── */
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 14px 16px;
+    padding: 14px var(--sp-4);
     margin-bottom: 10px;
     box-shadow: var(--shadow);
-    transition: border-color .2s;
+    transition: border-color var(--dur-base) var(--ease-std),
+                box-shadow   var(--dur-base) var(--ease-std),
+                transform    var(--dur-base) var(--ease-std);
+    animation: fadeSlideIn var(--dur-base) var(--ease-out) both;
   }
   .card:last-child { margin-bottom: 0; }
+  .card:hover {
+    border-color: color-mix(in srgb, var(--border) 60%, var(--text2));
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-1px);
+  }
   .card-header {
-    display: flex; align-items: center; gap: 12px;
+    display: flex; align-items: center; gap: var(--sp-3);
   }
   .app-icon {
     width: 40px; height: 40px;
@@ -175,14 +274,15 @@
     font-size: 20px;
     flex-shrink: 0;
     border: 1px solid var(--border);
+    overflow: hidden;
   }
   .app-name {
     font-weight: 600;
-    font-size: 15px;
-    line-height: 1.2;
+    font-size: var(--text-md);
+    line-height: 1.25;
   }
   .app-pkg {
-    font-size: 11px;
+    font-size: var(--text-xs);
     color: var(--text2);
     margin-top: 2px;
     word-break: break-all;
@@ -190,120 +290,205 @@
   .status-badge {
     margin-left: auto;
     padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 11px;
+    border-radius: var(--radius-lg);
+    font-size: var(--text-xs);
     font-weight: 600;
     white-space: nowrap;
     flex-shrink: 0;
+    transition: background var(--dur-base), color var(--dur-base), border-color var(--dur-base);
   }
-  .badge-mounted  { background: rgba(76,175,80,.15);  color: var(--green); border: 1px solid rgba(76,175,80,.3); }
-  .badge-unmounted{ background: rgba(255,179,0,.15);   color: var(--yellow); border: 1px solid rgba(255,179,0,.3); }
-  .badge-missing  { background: rgba(229,57,53,.15);   color: var(--red); border: 1px solid rgba(229,57,53,.3); }
-  .badge-loading  { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+  .badge-mounted   { background: var(--status-success-bg);  color: var(--status-success-text); border: 1px solid var(--status-success-border); }
+  .badge-unmounted { background: var(--status-warn-bg);     color: var(--status-warn-text);    border: 1px solid var(--status-warn-border);   }
+  .badge-missing   { background: var(--status-error-bg);    color: var(--status-error-text);   border: 1px solid var(--status-error-border);  }
+  .badge-loading   { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
 
   .card-divider {
     height: 1px;
     background: var(--border);
-    margin: 12px -16px;
+    margin: var(--sp-3) calc(-1 * var(--sp-4));
   }
-  .card-rows { display: grid; gap: 7px; }
+  .card-rows { display: grid; gap: var(--sp-2); }
   .row {
-    display: flex; align-items: flex-start; gap: 8px;
-    font-size: 12.5px;
+    display: flex; align-items: flex-start; gap: var(--sp-2);
+    font-size: var(--text-sm);
   }
   .row-label {
     color: var(--text2);
     min-width: 90px;
     flex-shrink: 0;
+    line-height: 1.5;
   }
   .row-value {
     color: var(--text);
     word-break: break-all;
-    font-family: "SF Mono", "Fira Code", monospace;
-    font-size: 11.5px;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: 1.5;
   }
-  .row-value.na { color: var(--text2); font-family: inherit; font-size: 12.5px; }
-  .ver-match   { color: var(--green); }
-  .ver-mismatch{ color: var(--yellow); }
+  .row-value.na { color: var(--text2); font-family: var(--font-ui); font-size: var(--text-sm); }
+  .ver-match   { color: var(--status-success-text); }
+  .ver-mismatch{ color: var(--status-warn-text); }
 
-  /* ── Empty / Error states ── */
+  .skeleton-line {
+    display: inline-block;
+    height: 11px;
+    border-radius: var(--radius-xs);
+    background: linear-gradient(
+      90deg,
+      var(--surface2) 25%,
+      var(--border)   50%,
+      var(--surface2) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.4s ease infinite;
+  }
+  @keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton-line { animation: none; opacity: .4; }
+  }
+
   .state-card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 32px 20px;
+    padding: var(--sp-8) var(--sp-5);
     text-align: center;
     color: var(--text2);
   }
-  .state-card .icon { font-size: 36px; margin-bottom: 10px; }
-  .state-card h3 { color: var(--text); margin-bottom: 6px; }
-  .state-card p  { font-size: 12px; line-height: 1.5; }
+  .state-card .icon { font-size: 36px; margin-bottom: var(--sp-3); display: block; }
+  .state-card h3 { color: var(--text); margin-bottom: var(--sp-1); }
+  .state-card p  { font-size: var(--text-sm); line-height: 1.6; }
 
-  /* ── No-KSU banner ── */
   .banner {
-    background: rgba(255,179,0,.12);
-    border: 1px solid rgba(255,179,0,.35);
+    background: var(--status-warn-bg);
+    border: 1px solid var(--status-warn-border);
     border-radius: var(--radius-sm);
-    padding: 10px 14px;
-    font-size: 12px;
-    color: var(--yellow);
-    margin-bottom: 16px;
+    padding: var(--sp-3) 14px;
+    font-size: var(--text-sm);
+    color: var(--status-warn-text);
+    margin-bottom: var(--sp-4);
     line-height: 1.5;
   }
 
-  /* ── Mount action button ── */
   .mount-btn {
     display: none;
-    margin-top: 12px;
+    margin-top: var(--sp-3);
     width: 100%;
-    padding: 8px 0;
+    padding: 12px 0;
     border-radius: var(--radius-sm);
     border: none;
-    font-size: 13px;
+    font-size: var(--text-sm);
     font-weight: 600;
     cursor: pointer;
-    transition: opacity .15s;
+    transition: opacity var(--dur-fast),
+                transform var(--dur-fast) var(--ease-std);
   }
-  .mount-btn:active { opacity: .7; }
-  .mount-btn.unmount { background: rgba(229,57,53,.15); color: var(--red);    border: 1px solid rgba(229,57,53,.35); }
-  .mount-btn.mount   { background: rgba(76,175,80,.15);  color: var(--green); border: 1px solid rgba(76,175,80,.35); }
-  .mount-btn.busy    { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); cursor: default; }
+  .mount-btn:active { opacity: .75; transform: scale(0.97); }
+  .mount-btn.unmount { background: var(--status-error-bg);   color: var(--status-error-text);   border: 1px solid var(--status-error-border);   }
+  .mount-btn.mount   { background: var(--status-success-bg); color: var(--status-success-text); border: 1px solid var(--status-success-border); }
+  .mount-btn.busy    { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); cursor: default; pointer-events: none; }
+
+  .toast {
+    position: fixed;
+    bottom: max(24px, env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 10px 20px;
+    font-size: var(--text-sm);
+    color: var(--text);
+    box-shadow: var(--shadow-lg);
+    z-index: 100;
+    white-space: nowrap;
+    max-width: calc(100vw - 48px);
+    animation: fadeSlideIn var(--dur-base) var(--ease-out);
+    pointer-events: none;
+  }
 </style>
 </head>
 <body>
 
-<div class="header">
+<header class="header" role="banner">
   <div class="header-inner">
-    <div class="logo">⚡</div>
+    <div class="logo" aria-hidden="true">⚡</div>
     <div>
       <h1>RevPack</h1>
-      <p id="header-sub">Loading…</p>
+      <p id="header-sub" aria-live="polite">Loading…</p>
     </div>
-    <button class="refresh-btn" id="refresh-btn" title="Refresh" onclick="refresh()"><span id="refresh-icon">↻</span></button>
+    <button class="refresh-btn" id="refresh-btn"
+      aria-label="Refresh app status" aria-busy="false"
+      onclick="refresh()"><span id="refresh-icon" aria-hidden="true">↻</span></button>
   </div>
-</div>
+</header>
 
-<div class="content">
-  <div class="chips" id="chips"></div>
-  <div id="ksu-banner"></div>
-  <div class="section-title">Installed Apps</div>
-  <div id="app-list">
-    <div class="state-card">
-      <div class="icon">⏳</div>
+<main class="content">
+  <div class="chips" id="chips" role="list" aria-label="Module info"></div>
+  <div id="ksu-banner" role="alert" aria-live="assertive"></div>
+  <div class="section-title" aria-hidden="true">Installed Apps</div>
+  <div id="app-list" aria-live="polite" aria-label="Installed apps">
+    <div class="state-card" role="status">
+      <span class="icon" aria-hidden="true">⏳</span>
       <h3>Loading…</h3>
       <p>Fetching app status from device</p>
     </div>
   </div>
-</div>
+</main>
 
 <script>
 const $ = id => document.getElementById(id);
+
+const ICONS = {
+  'com.google.android.youtube':             '▶️',
+  'com.google.android.apps.youtube.music': '🎵',
+  'com.spotify.music':                      '🎧',
+  'com.reddit.frontpage':                   '🟠',
+  'com.twitter.android':                    '🐦',
+  'com.instagram.android':                  '📸',
+  'com.facebook.katana':                    '👤',
+  'com.zhiliaoapp.musically':               '🎶',
+  'com.soundcloud.android':                '☁️',
+  'com.strava':                             '🚴',
+  'com.adobe.lrmobile':                     '🌅',
+};
+
+const APP_NAMES = {
+  'com.google.android.youtube':             'YouTube',
+  'com.google.android.apps.youtube.music': 'YouTube Music',
+  'com.spotify.music':                      'Spotify',
+  'com.reddit.frontpage':                   'Reddit',
+  'com.twitter.android':                    'X (Twitter)',
+  'com.instagram.android':                  'Instagram',
+  'com.facebook.katana':                    'Facebook',
+  'com.zhiliaoapp.musically':               'TikTok',
+  'com.soundcloud.android':                'SoundCloud',
+  'com.strava':                             'Strava',
+  'com.adobe.lrmobile':                     'Lightroom',
+};
+
+function shortName(pkg) {
+  if (APP_NAMES[pkg]) return APP_NAMES[pkg];
+  const parts = pkg.split('.');
+  return parts[parts.length - 1].replace(/([A-Z])/g, ' $1').trim();
+}
+
+function appIcon(pkg) {
+  if (ICONS[pkg]) return ICONS[pkg];
+  const hue = pkg.split('').reduce((a, c) => a + c.charCodeAt(0), 0) % 360;
+  const letter = shortName(pkg)[0]?.toUpperCase() || '?';
+  return `<span style="display:inline-flex;align-items:center;justify-content:center;` +
+    `width:20px;height:20px;border-radius:50%;background:hsl(${hue},45%,38%);` +
+    `color:#fff;font-size:11px;font-weight:700;line-height:1">${letter}</span>`;
+}
 
 function exec(cmd, timeoutMs = 8000) {
   if (!window.ksu || typeof ksu.exec !== 'function') {
     return Promise.resolve({ ok: false, out: '', err: 'no-ksu' });
   }
-
   return new Promise(resolve => {
     const cbName = `_ksu_cb_${Date.now()}_${Math.random() * 1e6 | 0}`;
     const timer = setTimeout(() => {
@@ -329,142 +514,130 @@ function exec(cmd, timeoutMs = 8000) {
   });
 }
 
-const ICONS = {
-  'com.google.android.youtube':            '▶️',
-  'com.google.android.apps.youtube.music':'🎵',
-  'com.spotify.music':                     '🎧',
-  'com.reddit.frontpage':                  '🟠',
-  'com.twitter.android':                   '🐦',
-  'com.instagram.android':                 '📸',
-  'com.facebook.katana':                   '👤',
-  'com.zhiliaoapp.musically':              '🎶',
-  'com.soundcloud.android':               '☁️',
-  'com.strava':                            '🚴',
-  'com.adobe.lrmobile':                    '🌅',
-};
-const icon = pkg => ICONS[pkg] || '📱';
-
-function shortName(pkg) {
-  const map = {
-    'com.google.android.youtube':            'YouTube',
-    'com.google.android.apps.youtube.music':'YouTube Music',
-    'com.spotify.music':                     'Spotify',
-    'com.reddit.frontpage':                  'Reddit',
-    'com.twitter.android':                   'X (Twitter)',
-    'com.instagram.android':                 'Instagram',
-    'com.facebook.katana':                   'Facebook',
-    'com.zhiliaoapp.musically':              'TikTok',
-    'com.soundcloud.android':               'SoundCloud',
-    'com.strava':                            'Strava',
-    'com.adobe.lrmobile':                    'Lightroom',
-  };
-  if (map[pkg]) return map[pkg];
-  const parts = pkg.split('.');
-  return parts[parts.length - 1].replace(/([A-Z])/g, ' $1').trim();
-}
-
 let MODULE_ID = '';
-let MODPATH    = '';
+let MODPATH   = '';
+let MANIFEST  = null;
+let _archCache = null;
 
 async function resolveModulePath() {
-  if (window.ksu && ksu.moduleId) {
-    MODULE_ID = ksu.moduleId;
-  } else {
-    MODULE_ID = (window.REVPACK_MANIFEST && window.REVPACK_MANIFEST.id) || 'revpack';
-  }
+  MODULE_ID = (window.ksu?.moduleId) ||
+    (window.REVPACK_MANIFEST?.id) || 'revpack';
   MODPATH = '/data/adb/modules/' + MODULE_ID;
 }
-
-let MANIFEST = null;
 
 async function loadManifest() {
   try {
     const r = await fetch('./manifest.json');
+    if (!r.ok) throw new Error('fetch failed');
     MANIFEST = await r.json();
   } catch (_) {
     MANIFEST = null;
   }
 }
 
+async function getArch() {
+  if (_archCache !== null) return _archCache;
+  const r = await exec('uname -m');
+  _archCache = r.ok ? r.out : '';
+  return _archCache;
+}
+
 async function getLiveInfo(pkg) {
-  const logs = [];
-  async function run(label, cmd, timeoutMs) {
-    const res = await exec(cmd, timeoutMs || 5000);
-    logs.push({ label, cmd, ok: res.ok, out: res.out, err: res.err });
-    return res;
-  }
+  const [listRes, pathRes, verRes, disabledRes, rvhcRes] = await Promise.all([
+    exec(`pm list packages 2>&1 | grep "^package:${pkg}$"`),
+    exec(`pm path "${pkg}" 2>&1`),
+    exec(`dumpsys package "${pkg}" 2>&1 | grep -m1 versionName | sed 's/.*versionName[[:space:]]*=//'`, 10000),
+    exec(`pm list packages -d 2>&1 | grep "^package:${pkg}$"`),
+    exec(`[ -f "/data/adb/rvhc/${MODULE_ID}-${pkg}.apk" ] && echo yes || echo no`),
+  ]);
 
-  const listRes = await run('pm list packages',
-    `pm list packages 2>&1 | grep "^package:${pkg}$"`);
-  const inList = listRes.out.trim() !== '';
-
-  const pathRes = await run('pm path',
-    `pm path "${pkg}" 2>&1`);
-  const pmPathRaw = pathRes.out.trim();
+  const inList    = listRes.out !== '';
+  const pmPathRaw = pathRes.out;
   const pmPathOut = pmPathRaw.startsWith('package:') ? pmPathRaw.slice(8).trim() : pmPathRaw;
-
   const installed = inList || pmPathOut.length > 0;
   const basePath  = pmPathOut.replace('/base.apk', '');
-
-  const verRes = await run('versionName',
-    `dumpsys package "${pkg}" 2>&1 | grep -m1 versionName | sed 's/.*versionName[[:space:]]*=//'`,
-    10000);
-  const liveVer = verRes.out.trim();
-
-  // Check disabled state: pm list packages -d lists only disabled packages
-  const disabledRes = await run('pm list packages -d',
-    `pm list packages -d 2>&1 | grep "^package:${pkg}$"`);
-  const disabled = disabledRes.out.trim() !== '';
-
-  const archRes = await run('uname -m', `uname -m`);
-  const arch = archRes.out.trim();
-
-  const rvhcRes = await run('rvhc apk',
-    `[ -f "/data/adb/rvhc/${MODULE_ID}-${pkg}.apk" ] && echo yes || echo no`);
-  const rvhcOk = rvhcRes.out === 'yes';
+  const liveVer   = verRes.out;
+  const disabled  = disabledRes.out !== '';
+  const rvhcOk    = rvhcRes.out === 'yes';
+  const arch      = await getArch();
 
   return { installed, disabled, basePath, liveVer, arch, rvhcOk };
 }
 
 function renderChips(meta) {
-  const chips = $('chips');
-  chips.innerHTML = '';
-  const add = (icon, label, val) => {
+  const container = $('chips');
+  container.innerHTML = '';
+  const addChip = (emoji, label, val) => {
     const d = document.createElement('div');
     d.className = 'chip';
-    d.innerHTML = `${icon} <span>${label}: <b>${val}</b></span>`;
-    chips.appendChild(d);
+    d.setAttribute('role', 'listitem');
+    const icon = document.createTextNode(emoji + ' ');
+    const span = document.createElement('span');
+    const txt  = document.createTextNode(label + ': ');
+    const bold = document.createElement('b');
+    bold.textContent = val;
+    span.appendChild(txt);
+    span.appendChild(bold);
+    d.appendChild(icon);
+    d.appendChild(span);
+    container.appendChild(d);
   };
-  if (meta.version)    add('🏷️', 'Version', meta.version);
-  if (meta.totalApps)  add('📱', 'Apps', meta.totalApps);
-  if (meta.arch)       add('🏗️', 'Arch',    meta.arch);
-  if (meta.id)         add('🆔', 'ID',      meta.id);
+  if (meta.version)   addChip('🏷️', 'Version', meta.version);
+  if (meta.totalApps) addChip('📱', 'Apps',    meta.totalApps);
+  if (meta.arch)      addChip('🏗️', 'Arch',    meta.arch);
+  if (meta.id)        addChip('🆔', 'ID',       meta.id);
 }
 
 function cardId(pkg) { return 'card-' + pkg.replace(/\./g, '-'); }
 
-function renderCardSkeleton(pkg, moduleVer, moduleArch) {
+function renderCardSkeleton(pkg, moduleVer, moduleArch, index) {
+  const cid = cardId(pkg);
   const div = document.createElement('div');
   div.className = 'card';
-  div.id = cardId(pkg);
+  div.id = cid;
+  div.setAttribute('role', 'article');
+  div.setAttribute('aria-label', shortName(pkg));
+  div.style.animationDelay = `${index * 40}ms`;
+
+  const skLine = (w) =>
+    `<span class="skeleton-line" style="width:${w}" aria-hidden="true"></span>`;
+
   div.innerHTML = `
     <div class="card-header">
-      <div class="app-icon">${icon(pkg)}</div>
+      <div class="app-icon" aria-hidden="true">${appIcon(pkg)}</div>
       <div>
         <div class="app-name">${shortName(pkg)}</div>
         <div class="app-pkg">${pkg}</div>
       </div>
-      <span class="status-badge badge-loading" id="badge-${cardId(pkg)}">Checking…</span>
+      <span class="status-badge badge-loading" id="badge-${cid}"
+        role="status" aria-live="polite">Checking…</span>
     </div>
     <div class="card-divider"></div>
-    <div class="card-rows" id="rows-${cardId(pkg)}">
-      <div class="row"><span class="row-label">Module ver</span><span class="row-value">${moduleVer || '—'}</span></div>
-      <div class="row"><span class="row-label">Arch</span><span class="row-value">${moduleArch || '—'}</span></div>
-      <div class="row"><span class="row-label">Installed ver</span><span class="row-value na" id="lver-${cardId(pkg)}">…</span></div>
-      <div class="row"><span class="row-label">Base path</span><span class="row-value na" id="path-${cardId(pkg)}">…</span></div>
-      <div class="row"><span class="row-label">RVHC APK</span><span class="row-value na" id="rvhc-${cardId(pkg)}">…</span></div>
+    <div class="card-rows" id="rows-${cid}">
+      <div class="row">
+        <span class="row-label">Module ver</span>
+        <span class="row-value">${moduleVer || '—'}</span>
+      </div>
+      <div class="row">
+        <span class="row-label">Arch</span>
+        <span class="row-value">${moduleArch || '—'}</span>
+      </div>
+      <div class="row">
+        <span class="row-label">Installed ver</span>
+        <span class="row-value na" id="lver-${cid}">${skLine('70px')}</span>
+      </div>
+      <div class="row">
+        <span class="row-label">Base path</span>
+        <span class="row-value na" id="path-${cid}">${skLine('140px')}</span>
+      </div>
+      <div class="row">
+        <span class="row-label">RVHC APK</span>
+        <span class="row-value na" id="rvhc-${cid}">${skLine('55px')}</span>
+      </div>
     </div>
-    <button class="mount-btn" id="mbtn-${cardId(pkg)}" onclick="toggleEnabled('${pkg}')"></button>`;
+    <button class="mount-btn" id="mbtn-${cid}"
+      aria-label="Toggle ${shortName(pkg)}"
+      onclick="toggleEnabled('${pkg}')"></button>`;
   return div;
 }
 
@@ -476,14 +649,15 @@ function updateCardLive(pkg, info, moduleVer) {
   const rvhc  = $('rvhc-'  + cid);
   const mbtn  = $('mbtn-'  + cid);
 
+  if (!badge) return; 
   if (!info.installed) {
-    badge.className = 'status-badge badge-missing';
+    badge.className   = 'status-badge badge-missing';
     badge.textContent = '✗ Not installed';
   } else if (info.disabled) {
-    badge.className = 'status-badge badge-unmounted';
+    badge.className   = 'status-badge badge-unmounted';
     badge.textContent = '⊘ Disabled';
   } else {
-    badge.className = 'status-badge badge-mounted';
+    badge.className   = 'status-badge badge-mounted';
     badge.textContent = '● Enabled';
   }
 
@@ -491,9 +665,10 @@ function updateCardLive(pkg, info, moduleVer) {
     if (info.liveVer) {
       const match = moduleVer && info.liveVer === moduleVer;
       lver.textContent = info.liveVer;
-      lver.className = 'row-value ' + (match ? 'ver-match' : 'ver-mismatch');
+      lver.className   = 'row-value ' + (match ? 'ver-match' : 'ver-mismatch');
     } else {
-      lver.textContent = '—'; lver.className = 'row-value na';
+      lver.textContent = '—';
+      lver.className   = 'row-value na';
     }
   }
   if (path) {
@@ -508,13 +683,31 @@ function updateCardLive(pkg, info, moduleVer) {
   if (mbtn && info.installed) {
     mbtn.style.display = 'block';
     if (info.disabled) {
-      mbtn.className = 'mount-btn mount';
+      mbtn.className   = 'mount-btn mount';
       mbtn.textContent = '▲ Enable app';
+      mbtn.setAttribute('aria-label', `Enable ${shortName(pkg)}`);
     } else {
-      mbtn.className = 'mount-btn unmount';
+      mbtn.className   = 'mount-btn unmount';
       mbtn.textContent = '■ Disable app';
+      mbtn.setAttribute('aria-label', `Disable ${shortName(pkg)}`);
     }
   }
+}
+
+let _toastTimer = null;
+function showToast(msg) {
+  if (_toastTimer) clearTimeout(_toastTimer);
+  let t = document.querySelector('.toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.className = 'toast';
+    t.setAttribute('role', 'alert');
+    t.setAttribute('aria-live', 'assertive');
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.display = 'block';
+  _toastTimer = setTimeout(() => { t.style.display = 'none'; }, 3500);
 }
 
 async function toggleEnabled(pkg) {
@@ -522,7 +715,9 @@ async function toggleEnabled(pkg) {
   const mbtn = $('mbtn-' + cid);
   if (!mbtn || mbtn.classList.contains('busy')) return;
 
-  const shouldEnable = mbtn.classList.contains('mount'); // 'mount' class = currently disabled → enable
+  const shouldEnable = mbtn.classList.contains('mount');
+  const prevClass = mbtn.className;
+  const prevText  = mbtn.textContent;
 
   mbtn.className   = 'mount-btn busy';
   mbtn.textContent = '⌛ Working…';
@@ -531,63 +726,146 @@ async function toggleEnabled(pkg) {
     ? `pm enable "${pkg}" 2>&1 && echo ok`
     : `pm disable-user --user 0 "${pkg}" 2>&1 && echo ok`;
 
-  const res = await exec(cmd, 10000);
-
+  const res  = await exec(cmd, 10000);
   const badge = $('badge-' + cid);
-  // pm enable/disable prints a result line even on success; check last word
-  const succeeded = res.ok || res.out.includes('enabled') || res.out.includes('disabled') || res.out.trim().endsWith('ok');
+  const succeeded = res.ok ||
+    res.out.includes('enabled') ||
+    res.out.includes('disabled') ||
+    res.out.trim().endsWith('ok');
 
   if (succeeded) {
-    badge.className  = shouldEnable ? 'status-badge badge-mounted' : 'status-badge badge-unmounted';
-    badge.textContent = shouldEnable ? '● Enabled' : '⊘ Disabled';
+    if (badge) {
+      badge.className   = shouldEnable ? 'status-badge badge-mounted' : 'status-badge badge-unmounted';
+      badge.textContent = shouldEnable ? '● Enabled' : '⊘ Disabled';
+    }
+    mbtn.className   = shouldEnable ? 'mount-btn unmount' : 'mount-btn mount';
+    mbtn.textContent = shouldEnable ? '■ Disable app' : '▲ Enable app';
+    mbtn.setAttribute('aria-label',
+      shouldEnable ? `Disable ${shortName(pkg)}` : `Enable ${shortName(pkg)}`);
   } else {
-    badge.className  = 'status-badge badge-missing';
-    badge.textContent = 'Failed: ' + (res.err || res.out || 'unknown').slice(0, 80);
+    mbtn.className   = prevClass;
+    mbtn.textContent = prevText;
+    const errMsg = (res.err || res.out || 'unknown error').slice(0, 120);
+    showToast(`⚠️ ${shouldEnable ? 'Enable' : 'Disable'} failed: ${errMsg}`);
   }
 
   setTimeout(async () => {
-    const info    = await getLiveInfo(pkg);
-    const appMeta = MANIFEST && MANIFEST.apps && MANIFEST.apps.find(a => a.pkg === pkg);
-    updateCardLive(pkg, info, appMeta ? appMeta.moduleVer : '');
-  }, 800);
+    try {
+      const info    = await getLiveInfo(pkg);
+      const appMeta = MANIFEST?.apps?.find(a => a.pkg === pkg);
+      updateCardLive(pkg, info, appMeta?.moduleVer ?? '');
+    } catch (_) { /* silent — card already shows last known state */ }
+  }, 900);
+}
+
+async function renderAppsFromManifest(apps) {
+  const list = $('app-list');
+  list.innerHTML = '';
+  list.style.minHeight = `${apps.length * 220}px`;
+
+  apps.forEach((app, i) =>
+    list.appendChild(renderCardSkeleton(app.pkg, app.moduleVer, app.moduleArch, i)));
+
+  await Promise.allSettled(apps.map(async app => {
+    try {
+      const info = await getLiveInfo(app.pkg);
+      updateCardLive(app.pkg, info, app.moduleVer);
+    } catch (_) {
+      const badge = $('badge-' + cardId(app.pkg));
+      if (badge) { badge.className = 'status-badge badge-missing'; badge.textContent = '! Error'; }
+    }
+  }));
+
+  list.style.minHeight = '';
+}
+
+async function renderAppsFromPkgs(pkgs) {
+  const list = $('app-list');
+  list.innerHTML = '';
+  list.style.minHeight = `${pkgs.length * 220}px`;
+
+  const configs = await Promise.all(pkgs.map(pkg =>
+    exec(`cat "${MODPATH}/apps/${pkg}/config" 2>/dev/null`)
+  ));
+
+  pkgs.forEach((pkg, i) => {
+    let moduleVer = '', moduleArch = '';
+    if (configs[i].ok) {
+      for (const line of configs[i].out.split('\n')) {
+        if (line.startsWith('PKG_VER='))    moduleVer  = line.slice(8).trim();
+        if (line.startsWith('MODULE_ARCH=')) moduleArch = line.slice(12).trim();
+      }
+    }
+    list.appendChild(renderCardSkeleton(pkg, moduleVer, moduleArch, i));
+  });
+
+  await Promise.allSettled(pkgs.map(async (pkg, i) => {
+    try {
+      const moduleVer = configs[i].ok
+        ? (configs[i].out.split('\n').find(l => l.startsWith('PKG_VER=')) || '').slice(8).trim()
+        : '';
+      const info = await getLiveInfo(pkg);
+      updateCardLive(pkg, info, moduleVer);
+    } catch (_) {
+      const badge = $('badge-' + cardId(pkg));
+      if (badge) { badge.className = 'status-badge badge-missing'; badge.textContent = '! Error'; }
+    }
+  }));
+
+  list.style.minHeight = '';
 }
 
 async function render() {
   await resolveModulePath();
 
   if (!window.ksu) {
-    $('ksu-banner').innerHTML = `<div class="banner">
-      ⚠️ <b>KernelSU not detected.</b> Live status checks are unavailable.
-      Open this page from the <b>KernelSU Manager → Modules → RevPack → WebUI</b>.
-    </div>`;
+    const banner = $('ksu-banner');
+    banner.innerHTML = '';
+    const div = document.createElement('div');
+    div.className = 'banner';
+    div.innerHTML = '⚠️ <b>KernelSU not detected.</b> Live status checks are unavailable. ' +
+      'Open this page from the <b>KernelSU Manager → Modules → RevPack → WebUI</b>.';
+    banner.appendChild(div);
   }
 
-  await loadManifest();
-
-  const archRes = await exec('uname -m');
-  const arch    = archRes.ok ? archRes.out : (MANIFEST && MANIFEST.arch) || '';
+  const [_, arch] = await Promise.all([
+    loadManifest(),
+    getArch(),
+  ]);
 
   const meta = {
     id:        MODULE_ID,
-    version:   MANIFEST && MANIFEST.version || '',
-    totalApps: MANIFEST && MANIFEST.apps ? MANIFEST.apps.length : '?',
-    arch:      arch,
+    version:   MANIFEST?.version ?? '',
+    totalApps: MANIFEST?.apps ? MANIFEST.apps.length : '?',
+    arch,
   };
   renderChips(meta);
 
   $('header-sub').textContent =
     `${meta.totalApps} app${meta.totalApps !== 1 ? 's' : ''} • ${meta.version || 'unknown version'}`;
 
-  const apps = MANIFEST && MANIFEST.apps;
+  const apps = MANIFEST?.apps;
   if (!apps || apps.length === 0) {
     const lsRes = await exec(`ls "${MODPATH}/apps/" 2>/dev/null`);
     if (!lsRes.ok || !lsRes.out) {
-      $('app-list').innerHTML = `<div class="state-card">
-        <div class="icon">⚠️</div>
-        <h3>Could not read app list</h3>
-        <p>manifest.json not found and ksu.exec is unavailable.<br>
-        Try opening this page from KernelSU Manager.</p>
-      </div>`;
+      const list = $('app-list');
+      list.innerHTML = '';
+      const card = document.createElement('div');
+      card.className = 'state-card';
+      card.setAttribute('role', 'alert');
+      card.innerHTML = '<span class="icon" aria-hidden="true">⚠️</span>' +
+        '<h3>Could not read app list</h3>';
+      const p = document.createElement('p');
+      p.textContent = 'manifest.json not found and ksu.exec is unavailable. ' +
+        'Try opening this page from KernelSU Manager.';
+      const btn = document.createElement('button');
+      btn.className = 'mount-btn mount';
+      btn.style.cssText = 'display:block;margin-top:16px';
+      btn.textContent = '↻ Retry';
+      btn.onclick = refresh;
+      card.appendChild(p);
+      card.appendChild(btn);
+      list.appendChild(card);
       return;
     }
     const pkgs = lsRes.out.split('\n').map(s => s.trim()).filter(Boolean);
@@ -597,64 +875,40 @@ async function render() {
   }
 }
 
-async function renderAppsFromManifest(apps) {
-  const list = $('app-list');
-  list.innerHTML = '';
-
-  for (const app of apps) {
-    list.appendChild(renderCardSkeleton(app.pkg, app.moduleVer, app.moduleArch));
-  }
-
-  await Promise.allSettled(apps.map(async app => {
-    try {
-      const info = await getLiveInfo(app.pkg);
-      updateCardLive(app.pkg, info, app.moduleVer);
-    } catch (_) {
-    }
-  }));
-}
-
-async function renderAppsFromPkgs(pkgs) {
-  const list = $('app-list');
-  list.innerHTML = '';
-
-  for (const pkg of pkgs) {
-    const cfgRes = await exec(`cat "${MODPATH}/apps/${pkg}/config" 2>/dev/null`);
-    let moduleVer = '', moduleArch = '';
-    if (cfgRes.ok) {
-      for (const line of cfgRes.out.split('\n')) {
-        if (line.startsWith('PKG_VER='))   moduleVer  = line.slice(8).trim();
-        if (line.startsWith('MODULE_ARCH=')) moduleArch = line.slice(12).trim();
-      }
-    }
-    list.appendChild(renderCardSkeleton(pkg, moduleVer, moduleArch));
-  }
-
-  for (const pkg of pkgs) {
-    const cfgRes = await exec(`grep PKG_VER "${MODPATH}/apps/${pkg}/config" 2>/dev/null | cut -d= -f2`);
-    const moduleVer = cfgRes.ok ? cfgRes.out.trim() : '';
-    const info = await getLiveInfo(pkg);
-    updateCardLive(pkg, info, moduleVer);
-  }
-}
-
+let _refreshBusy = false;
 function refresh() {
-  const icon = $('refresh-icon');
-  icon.classList.add('spin');
+  if (_refreshBusy) return;
+  _refreshBusy = true;
+
+  const iconEl = $('refresh-icon');
+  const btn    = $('refresh-btn');
+  iconEl.classList.add('spin');
+  btn.setAttribute('aria-busy', 'true');
+  btn.setAttribute('disabled', '');
+
   render()
     .catch(err => {
-      $('app-list').innerHTML = `<div class="state-card">
-        <div class="icon">⚠️</div>
-        <h3>Error</h3>
-        <p>${err && err.message ? err.message : String(err)}</p>
-      </div>`;
+      const list = $('app-list');
+      list.innerHTML = '';
+      const card = document.createElement('div');
+      card.className = 'state-card';
+      card.setAttribute('role', 'alert');
+      card.innerHTML = '<span class="icon" aria-hidden="true">⚠️</span><h3>Error</h3>';
+      const p = document.createElement('p');
+      p.textContent = err?.message ?? String(err);
+      card.appendChild(p);
+      list.appendChild(card);
     })
-    .finally(() => icon.classList.remove('spin'));
+    .finally(() => {
+      iconEl.classList.remove('spin');
+      btn.setAttribute('aria-busy', 'false');
+      btn.removeAttribute('disabled');
+      _refreshBusy = false;
+    });
 }
 
-
 function applyDynamicColor() {
-  if (!CSS || !CSS.supports('color', 'env(--system-accent1-200, red)')) return;
+  if (!CSS?.supports('color', 'env(--system-accent1-200, red)')) return;
 
   const probe = document.createElement('div');
   probe.style.cssText = 'position:absolute;visibility:hidden;width:0;height:0;' +
@@ -663,35 +917,29 @@ function applyDynamicColor() {
   const bg = getComputedStyle(probe).backgroundColor;
   document.body.removeChild(probe);
 
-  if (bg === 'rgb(124, 77, 255)') return;
+  if (bg === 'rgb(124, 77, 255)') return; 
 
   document.documentElement.classList.add('has-dynamic-color');
-
   const dark = matchMedia('(prefers-color-scheme: dark)').matches;
 
   function readEnv(variable, fallback) {
     const el = document.createElement('div');
-    el.style.cssText = `position:absolute;visibility:hidden;` +
-      `background-color:env(${variable},${fallback})`;
+    el.style.cssText = `position:absolute;visibility:hidden;background-color:env(${variable},${fallback})`;
     document.body.appendChild(el);
     const v = getComputedStyle(el).backgroundColor;
     document.body.removeChild(el);
     return v;
   }
 
-  const a1hi = dark
-    ? readEnv('--system-accent1-700', '#212d33')
-    : readEnv('--system-accent1-700', '#212d33');
-
+  const a1hi    = readEnv('--system-accent1-700', '#212d33');
   const onColor = dark ? '#ffffff' : readEnv('--system-accent1-0', '#ffffff');
+  const root    = document.documentElement.style;
 
-  const root = document.documentElement.style;
-
-  root.setProperty('--header-bg', a1hi);
-  root.setProperty('--header-text',     onColor);
-  root.setProperty('--header-text-sub', onColor.startsWith('rgb(255') ? 'rgba(255,255,255,.75)' : 'rgba(0,0,0,.6)');
-  root.setProperty('--header-btn-bg',   onColor.startsWith('rgb(255') ? 'rgba(255,255,255,.18)' : 'rgba(0,0,0,.10)');
-  root.setProperty('--header-btn-hover',onColor.startsWith('rgb(255') ? 'rgba(255,255,255,.28)' : 'rgba(0,0,0,.18)');
+  root.setProperty('--header-bg',        a1hi);
+  root.setProperty('--header-text',      onColor);
+  root.setProperty('--header-text-sub',  onColor.startsWith('rgb(255') ? 'rgba(255,255,255,.75)' : 'rgba(0,0,0,.6)');
+  root.setProperty('--header-btn-bg',    onColor.startsWith('rgb(255') ? 'rgba(255,255,255,.18)' : 'rgba(0,0,0,.10)');
+  root.setProperty('--header-btn-hover', onColor.startsWith('rgb(255') ? 'rgba(255,255,255,.28)' : 'rgba(0,0,0,.18)');
 
   const chipAccent = dark
     ? readEnv('--system-accent1-200', '#b388ff')
