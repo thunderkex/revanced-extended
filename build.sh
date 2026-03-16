@@ -2,7 +2,6 @@
 
 set -euo pipefail
 shopt -s nullglob
-trap "rm -rf temp/*tmp.* temp/*/*tmp.* temp/*-temporary-files; kill 0; exit 130" INT
 
 # Color output
 RED='\033[0;31m'
@@ -25,6 +24,13 @@ if [ "${1-}" = "clean" ]; then
 fi
 
 source utils.sh
+
+trap "abort" INT
+
+if [ "${1-}" = "clean" ]; then
+	rm -r "$TEMP_DIR" "$BUILD_DIR" build.md
+	exit 0
+fi
 
 jq --version >/dev/null || abort "\`jq\` is not installed. install it with 'apt install jq' or equivalent"
 java --version >/dev/null || abort "\`openjdk 17\` is not installed. install it with 'apt install openjdk-17-jre' or equivalent"
