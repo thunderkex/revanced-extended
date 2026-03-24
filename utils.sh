@@ -259,47 +259,64 @@ config_update() {
 }
 
 _req() {
-	local ip="$1" op="$2"
-	shift 2
-	local raw_ip="$ip"
-	ip="$(sanitize_url "$ip")"
-	if [ -z "$ip" ]; then
-		wpr "Request failed: empty URL"
-		return 1
-	fi
-	local curl_opts=("-L" "--http2" "--compressed" "-c" "$TEMP_DIR/cookie.txt" "-b" "$TEMP_DIR/cookie.txt" "--connect-timeout" "10" "--retry" "0")
-	if [ "$op" = - ]; then
-		curl_opts+=("-s" "-S")
-	else
-		if [ -t 2 ] || [ "${GITHUB_ACTIONS-}" = "true" ]; then
-			curl_opts+=("--progress-bar")
-		else
-			curl_opts+=("-s" "-S")
-		fi
-	fi
+  local ip="$1" op="$2"
+  shift 2
+  local raw_ip="$ip"
+  ip="$(sanitize_url "$ip")"
 
-	if [ "$op" = - ]; then
-		if ! curl "${curl_opts[@]}" "$@" "$ip"; then
-			wpr "Request failed: $raw_ip"
-			[ "$raw_ip" != "$ip" ] && wpr "Sanitized URL: $ip"
-			return 1
-		fi
-	else
-		if [ -f "$op" ]; then return; fi
-		local dlp
-		dlp="$(dirname "$op")/tmp.$(basename "$op")"
-		if [ -f "$dlp" ]; then
-			while [ -f "$dlp" ]; do sleep 1; done
-			return
-		fi
-		if ! curl "${curl_opts[@]}" "$@" "$ip" -o "$dlp"; then
-			wpr "Request failed: $raw_ip"
-			[ "$raw_ip" != "$ip" ] && wpr "Sanitized URL: $ip"
-			return 1
-		else
-			mv -f "$dlp" "$op"
-		fi
-	fi
+  if [ -z "$ip" ]; then
+    wpr "Request failed: empty URL"
+    return 1
+  fi
+
+  local curl_opts=(
+    "-L" 
+    "--http2" 
+    "--compressed" 
+    "-c" "$TEMP_DIR/cookie.txt" 
+    "-b" "$TEMP_DIR/cookie.txt" 
+    "--connect-timeout" "10" 
+    "--retry" "1" 
+    "--fail"
+  )
+
+  if [ "$op" = "-" ]; then
+    curl_opts+=("-s" "-S")
+  else
+    if [ -t 2 ] || [ "${GITHUB_ACTIONS-}" = "true" ]; then
+      curl_opts+=("--progress-bar")
+    else
+      curl_opts+=("-s" "-S")
+    fi
+  fi
+
+  if [ "$op" = "-" ]; then
+    if ! curl "${curl_opts[@]}" "$@" "$ip"; then
+      wpr "Request failed: $raw_ip"
+      [ "$raw_ip" != "$ip" ] && wpr "Sanitized URL: $ip"
+      return 1
+    fi
+  else
+    if [ -f "$op" ]; then 
+      return 0
+    fi
+
+    local dlp="$(dirname "$op")/tmp.$(basename "$op")"
+
+    if [ -f "$dlp" ]; then
+      while [ -f "$dlp" ]; do sleep 1; done
+      return 0
+    fi
+
+    if ! curl "${curl_opts[@]}" "$@" "$ip" -o "$dlp"; then
+      wpr "Request failed: $raw_ip"
+      [ "$raw_ip" != "$ip" ] && wpr "Sanitized URL: $ip"
+      rm -f "$dlp"
+      return 1
+    fi
+
+    mv -f "$dlp" "$op"
+  fi
 }
 __UA_LIST__=(
 	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
