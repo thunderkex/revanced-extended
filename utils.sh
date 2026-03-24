@@ -78,6 +78,7 @@ abort() {
        fi
        exit 1
 }
+
 java() { env -i java --enable-native-access=ALL-UNNAMED "$@"; }
 
 get_prebuilts() {
@@ -547,11 +548,14 @@ merge_splits() {
 		epr "APKEditor error: $OP"
 		return 1
 	fi
-	# sign the merged apk properly
-	patch_apk "${bundle}.mzip" "${output}" "--exclusive" "${args[cli]}" "${args[ptjar]}"
-	local ret=$?
-	rm -f "${bundle}.mzip"
-	return $ret
+	# sign the merged stock apk
+	if ! OP=$(java -jar "$APKSIGNER" sign --ks ks-p12.keystore --ks-pass pass:123456789 --key-pass pass:123456789 --ks-key-alias jhc \
+		--out "${output}" "${output}-unsigned"); then
+		epr "apksigner error: $OP"
+		return 1
+	fi
+	rm "${output}.idsig" "${output}-unsigned" 2>/dev/null || :
+	return 0
 }
 
 # -------------------- apkmirror --------------------
