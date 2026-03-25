@@ -214,15 +214,11 @@ config_update() {
 			sources["$PATCHES_SRC/$PATCHES_VER"]=0
 			local rv_rel="https://api.github.com/repos/${PATCHES_SRC}/releases"
 			if [ "$PATCHES_VER" = "dev" ]; then
-				last_patches=$(gh_req "$rv_rel" - | jq -e -r '.[0]')
+				last_patches=$(gh_req "$rv_rel" - | jq -e -r '.[0]') || continue
 			elif [ "$PATCHES_VER" = "latest" ]; then
-				last_patches=$(gh_req "$rv_rel/latest" -)
+				last_patches=$(gh_req "$rv_rel/latest" -) || continue
 			else
-				last_patches=$(gh_req "$rv_rel/tags/${PATCHES_VER}" -)
-			fi
-			if [ -z "$last_patches" ]; then
-				wpr "Skipping '$table_name': failed to fetch releases from ${PATCHES_SRC} (${PATCHES_VER})"
-				continue
+				last_patches=$(gh_req "$rv_rel/tags/${ver}" -) || continue
 			fi
 			if ! last_patches=$(jq -e -r '.assets[] | select(.name | (endswith("asc") or endswith("json")) | not) | .name' <<<"$last_patches"); then
 				wpr "Skipping '$table_name': no valid assets found for ${PATCHES_SRC} (${PATCHES_VER})"
