@@ -56,7 +56,7 @@ continue-on-error = true
 # ======================== Revanced Apps ========================
 
 [Facebook-Ex]
-enabled = true
+enabled = false
 build-mode = "both"
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-2/facebook"
@@ -69,13 +69,13 @@ uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
 archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
 
 [Instagram-Ex]
-enabled = true
+enabled = false
 build-mode = "both"
 uptodown-dlurl = "https://instagram.en.uptodown.com/android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/instagram-instagram"
 
 [Lightroom-Ex]
-enabled = true
+enabled = false
 build-mode = "both"
 uptodown-dlurl = "https://adobe-lightroom-mobile.en.uptodown.com/android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/adobe/lightroom"
@@ -88,26 +88,26 @@ apkmirror-dlurl = "https://www.apkmirror.com/apk/amazon-mobile-llc/amazon-prime-
 uptodown-dlurl = "https://amazon-prime-video.en.uptodown.com/android"
 
 [Soundcloud-Ex]
-enabled = true
+enabled = false
 build-mode = "both"
 uptodown-dlurl = "https://soundcloud.en.uptodown.com/android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/soundcloud/soundcloud-soundcloud"
 
 [Spotify-Ex]
-enabled = true
+enabled = false
 build-mode = "both"
 # apkmirror-dlurl = "https://www.apkmirror.com/apk/spotify-ab/"
 uptodown-dlurl = "https://spotify.en.uptodown.com/android"
 archive-dlurl = "https://archive.org/download/geologically/apks/com.spotify.music/"
 
 [Strava-Ex]
-enabled = true
+enabled = false
 build-mode = "both"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/strava-inc/strava-running-and-cycling-gps/"
 uptodown-dlurl = "https://strava.en.uptodown.com/android"
 
 [TikTok]
-enabled = true
+enabled = false
 build-mode = "both"
 uptodown-dlurl = "https://tiktok.en.uptodown.com/android"
 apkmirror-dlurl = "https://apkmirror.com/apk/tiktok-pte-ltd/tik-tok-including-musical-ly"
