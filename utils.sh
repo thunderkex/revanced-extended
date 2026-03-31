@@ -612,8 +612,8 @@ dl_apkmirror() {
 					break 2
 				fi
 			done
-			[ -z "$dlurl" ] && return 1
-			resp=$(req_ref "$dlurl" - "$release_url")
+			if [ -z "$dlurl" ]; then return 1; fi
+			resp=$(req "$dlurl" -)
 		fi
 		local btn_url
 		btn_url=$(echo "$resp" | $HTMLQ --base https://www.apkmirror.com --attribute href "a.btn") || return 1
