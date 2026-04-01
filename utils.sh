@@ -191,8 +191,13 @@ config_update() {
 			else
 				last_patches=$(gh_req "$rv_rel/tags/${PATCHES_VER}" -)
 			fi
+			if [ -z "$last_patches" ]; then
+				wpr "Skipping '$table_name': failed to fetch releases from ${PATCHES_SRC} (${PATCHES_VER})"
+				continue
+			fi
 			if ! last_patches=$(jq -e -r '.assets[] | select(.name | (endswith("asc") or endswith("json")) | not) | .name' <<<"$last_patches"); then
-				abort "config_update error: '$last_patches'"
+				wpr "Skipping '$table_name': no valid assets found for ${PATCHES_SRC} (${PATCHES_VER})"
+				continue
 			fi
 			if [ "$last_patches" ]; then
 				if ! OP=$(grep "^Patches: ${PATCHES_SRC%%/*}/" build.md | grep -m1 "$last_patches"); then
