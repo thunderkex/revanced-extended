@@ -55,69 +55,72 @@ continue-on-error = true
 
 # ======================== Revanced Apps ========================
 
-[Facebook-Ex]
-enabled = false
+[Google-Photos-Ex]
+enabled = true
 build-mode = "both"
+patches-source = "RookieEnough/De-ReVanced"
+cli-source = "MorpheApp/morphe-cli"
+uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
+arch = "arm64-v8a"
+
+[Google-Recorder-Ex]
+enabled = true
+build-mode = "both"
+patches-source = "RookieEnough/De-ReVanced"
+cli-source = "MorpheApp/morphe-cli"
+uptodown-dlurl = "https://opnemer.en.uptodown.com/android"
+arch = "arm64-v8a"
+
+[Instagram-Ex]
+enabled = true
+build-mode = "both"
+patches-source = "crimera/piko"
+patches-version = "dev"
+cli-source = "MorpheApp/morphe-cli"
+uptodown-dlurl = "https://instagram.en.uptodown.com/android"
+excluded-patches = "'Unlock developer options'"
+arch = "arm64-v8a"
+
+[Strava-Ex]
+enabled = true
+build-mode = "both"
+patches-source = "RookieEnough/De-ReVanced"
+cli-source = "MorpheApp/morphe-cli"
+uptodown-dlurl = "https://strava.en.uptodown.com/android"
+arch = "arm64-v8a"
+
+[Threads-Ex]
+enabled = true
+build-mode = "both"
+patches-source = "RookieEnough/De-ReVanced"
+cli-source = "MorpheApp/morphe-cli"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/threads/"
+uptodown-dlurl = "https://threads.en.uptodown.com/android"
+
+[Facebook-Ex]
+enabled = true
+build-mode = "both"
+patches-source = "RookieEnough/De-ReVanced"
+cli-source = "MorpheApp/morphe-cli"
 uptodown-dlurl = "https://facebook.en.uptodown.com/android"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/facebook-2/facebook"
 
-[Gphotos-Ex]
-enabled = false
-build-mode = "both"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/photos/"
-uptodown-dlurl = "https://google-photos.en.uptodown.com/android"
-archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.google.android.apps.photos"
-
-[Instagram-Ex]
-enabled = false
-build-mode = "both"
-uptodown-dlurl = "https://instagram.en.uptodown.com/android"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/instagram-instagram"
-
-[Lightroom-Ex]
-enabled = false
-build-mode = "both"
-uptodown-dlurl = "https://adobe-lightroom-mobile.en.uptodown.com/android"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/adobe/lightroom"
-archive-dlurl = "https://archive.org/download/geologically/apks/com.adobe.lrmobile/"
-
-[PrimeVideo-Ex]
-enabled = false
-build-mode = "apk"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/amazon-mobile-llc/amazon-prime-video/"
-uptodown-dlurl = "https://amazon-prime-video.en.uptodown.com/android"
-
-[Soundcloud-Ex]
-enabled = false
-build-mode = "both"
-uptodown-dlurl = "https://soundcloud.en.uptodown.com/android"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/soundcloud/soundcloud-soundcloud"
-
-[Spotify-Ex]
-enabled = false
-build-mode = "both"
-# apkmirror-dlurl = "https://www.apkmirror.com/apk/spotify-ab/"
-uptodown-dlurl = "https://spotify.en.uptodown.com/android"
-archive-dlurl = "https://archive.org/download/geologically/apks/com.spotify.music/"
-
-[Strava-Ex]
-enabled = false
-build-mode = "both"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/strava-inc/strava-running-and-cycling-gps/"
-uptodown-dlurl = "https://strava.en.uptodown.com/android"
-
 [TikTok]
-enabled = false
+enabled = true
 build-mode = "both"
+patches-source = "RookieEnough/De-ReVanced"
+cli-source = "MorpheApp/morphe-cli"
 uptodown-dlurl = "https://tiktok.en.uptodown.com/android"
 apkmirror-dlurl = "https://apkmirror.com/apk/tiktok-pte-ltd/tik-tok-including-musical-ly"
 archive-dlurl = "https://archive.org/download/geologically/apks/com.zhiliaoapp.musically/"
 
-[Threads-Ex]
-enabled = false
-build-mode = "apk"
-apkmirror-dlurl = "https://www.apkmirror.com/apk/instagram/threads/"
-uptodown-dlurl = "https://threads.en.uptodown.com/android"
+[Soundcloud-Ex]
+enabled = true
+build-mode = "both"
+patches-source = "RookieEnough/De-ReVanced"
+cli-source = "MorpheApp/morphe-cli"
+uptodown-dlurl = "https://soundcloud.en.uptodown.com/android"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/soundcloud/soundcloud-soundcloud"
 
 # ======================== Extended/Morphed Apps ========================
 
@@ -163,8 +166,9 @@ enabled = true
 build-mode = "both"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter/"
 archive-dlurl = "https://archive.org/download/geologically/apks/com.twitter.android"
-uptodown-dlurl = "https://twitter.id.uptodown.com/android"
+uptodown-dlurl = "https://twitter.en.uptodown.com/android"
 patches-source = "crimera/piko"
+cli-source = "MorpheApp/morphe-cli"
 included-patches = "'Disable chirp font' 'Hide Banner' 'Hide FAB' 'Hide promote button' 'Dynamic color' 'Hide Community Notes' 'Control video auto scroll' 'Remove premium upsell' 'Delete from database'"
 excluded-patches = "'Customize side bar items' 'Disunify xchat system' 'Enable Undo Posts' 'Show post source label'"
 
@@ -206,5 +210,31 @@ patches-source = "crimera/piko"
 cli-source = "MorpheApp/morphe-cli"
 included-patches = "'Disable chirp font' 'Hide Banner' 'Hide FAB' 'Hide promote button' 'Dynamic color' 'Hide Community Notes' 'Control video auto scroll' 'Remove premium upsell' 'Delete from database'"
 patches-version = "dev"
+
+# ==========================================================================
+
+# ======================== Disabled ========================
+
+[Lightroom-Ex]
+enabled = false
+build-mode = "both"
+uptodown-dlurl = "https://adobe-lightroom-mobile.en.uptodown.com/android"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/adobe/lightroom"
+archive-dlurl = "https://archive.org/download/geologically/apks/com.adobe.lrmobile/"
+
+[PrimeVideo-Ex]
+enabled = false
+build-mode = "both"
+patches-source = "RookieEnough/De-ReVanced"
+cli-source = "MorpheApp/morphe-cli"
+apkmirror-dlurl = "https://www.apkmirror.com/apk/amazon-mobile-llc/amazon-prime-video/"
+uptodown-dlurl = "https://amazon-prime-video.en.uptodown.com/android"
+
+[Spotify-Ex]
+enabled = false
+build-mode = "both"
+# apkmirror-dlurl = "https://www.apkmirror.com/apk/spotify-ab/"
+uptodown-dlurl = "https://spotify.en.uptodown.com/android"
+archive-dlurl = "https://archive.org/download/geologically/apks/com.spotify.music/"
 
 # ==========================================================================
