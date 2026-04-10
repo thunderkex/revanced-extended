@@ -481,14 +481,6 @@ merge_splits() {
 		epr "APKEditor error: $OP"
 		return 1
 	fi
-	# this is required because of apksig
-	mkdir "${bundle}-zip"
-	unzip -qo "${bundle}.mzip" -d "${bundle}-zip"
-	(
-		cd "${bundle}-zip" || abort
-		zip -0rq "${CWD}/${bundle}.zip" .
-	)
-
 	# sign the merged stock apk
 	if ! OP=$(java -jar "$APKSIGNER" sign --ks ks-p12.keystore --ks-pass pass:123456789 --key-pass pass:123456789 --ks-key-alias jhc \
 		--out "${output}" "${output}-unsigned"); then
