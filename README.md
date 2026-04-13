@@ -77,15 +77,15 @@
 <!-- DOWNLOADS_START -->
 ## 📥 Download ReVanced Extended APKs & Modules
 
-> **Last Updated:** 2026-03-10 17:09:51 UTC
+> **Last Updated:** 2026-04-13 04:07:15 UTC
 
 ### 📝 Recent Changes
 
-- [`4583c71`](https://github.com/thunderkex/revanced-extended/commit/4583c71) 📝 Update downloads [skip ci] (2026-03-09)
-- [`a7b466f`](https://github.com/thunderkex/revanced-extended/commit/a7b466f) fix build configurator (2026-03-09)
-- [`7a68c5c`](https://github.com/thunderkex/revanced-extended/commit/7a68c5c) include pack-name from configuration (2026-03-09)
-- [`8002f4d`](https://github.com/thunderkex/revanced-extended/commit/8002f4d) Add configurator revpack update JSON generation (2026-03-09)
-- [`1ffeb12`](https://github.com/thunderkex/revanced-extended/commit/1ffeb12) update RevPack logic (2026-03-09)
+- [`ab5c327`](https://github.com/thunderkex/revanced-extended/commit/ab5c327) Fix syntax error in generate-readme-downloads.sh regex (2026-04-13)
+- [`2363d5b`](https://github.com/thunderkex/revanced-extended/commit/2363d5b) Fix build.md auto-generation (2026-04-13)
+- [`100345c`](https://github.com/thunderkex/revanced-extended/commit/100345c) add curl progress options and URL sanitization functions (2026-04-13)
+- [`0a4f7d7`](https://github.com/thunderkex/revanced-extended/commit/0a4f7d7) fix: correct version formatting in dl_archive function (2026-04-10)
+- [`ad73e2d`](https://github.com/thunderkex/revanced-extended/commit/ad73e2d) remove unnecessary unzip step in merge_splits function (2026-04-10)
 
 ### 🔗 Quick Links
 
@@ -127,42 +127,73 @@
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 🎁 Bundle | v20260310 | 🌐 All | 390M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260310.zip) |
+| 🎁 Bundle | v20260413 | 🌐 All | 1.4G | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260413.zip) |
+
+### 🎨 RevPack — Custom Builds *(latest 3)*
+
+> Built via [RevPack Configurator](https://thunderkex.github.io/revanced-extended/). Preserved alongside standard builds.
+
+| Type | Built | Architecture | Size | Download |
+|:----:|:-----:|:------------:|:----:|:--------:|
+| 🎨 Custom | 2026-03-17 08:59 | 🌐 All |  | [![Download](https://img.shields.io/badge/⬇_Download-7C4DFF?style=flat-square)]() |
 
 ---
 
-### ![YouTube Music](https://img.shields.io/badge/YouTube_Music-FF0000?style=flat-square&logo=youtubemusic&logoColor=white)
+### ![Google Photos](https://img.shields.io/badge/Google_Photos-4285F4?style=flat-square&logo=googlephotos&logoColor=white)
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 📦 APK | v8.44.54 | 📱 arm64-v8a | 74M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/music-ex-morphed-revanced-v8.44.54-arm64-v8a.apk) |
-| 🧩 Module | v8.44.54 | 📱 arm64-v8a | 59M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/music-ex-morphed-revanced-module-v8.44.54-arm64-v8a.zip) |
+| 📦 APK | v7.71.0 | 📱 arm64-v8a | 120M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/google-photos-ex-revanced-v7.71.0.896539910-arm64-v8a.apk) |
+| 🧩 Module | v7.71.0 | 📱 arm64-v8a | 208M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/google-photos-ex-revanced-module-v7.71.0.896539910-arm64-v8a.zip) |
 
-### ![Reddit](https://img.shields.io/badge/Reddit-FF4500?style=flat-square&logo=reddit&logoColor=white)
-
-| Type | Version | Architecture | Size | Download |
-|:----:|:-------:|:------------:|:----:|:--------:|
-| 📦 APK | v2026.04.0 | 📱 arm64-v8a | 102M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/reddit-ex-revanced-v2026.04.0-arm64-v8a.apk) |
-| 🧩 Module | v2026.04.0 | 📱 arm64-v8a | 146M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/reddit-ex-revanced-module-v2026.04.0-arm64-v8a.zip) |
-
-### ![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=flat-square&logo=youtube&logoColor=white)
+### ![google-recorder-ex-revanced-v4.2.20260307.895737626](https://img.shields.io/badge/google-recorder-ex-revanced-v4.2.20260307.895737626-3DDC84?style=flat-square&logo=android&logoColor=white)
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 📦 APK | v20.44.38 | 📱 arm64-v8a | 95M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/youtube-ex-morphed-revanced-v20.44.38-arm64-v8a.apk) |
-| 🧩 Module | v20.44.38 | 📱 arm64-v8a | 186M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/youtube-ex-morphed-revanced-module-v20.44.38-arm64-v8a.zip) |
+| 📦 APK | v4.2.20260307 | 📱 arm64-v8a | 49M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/google-recorder-ex-revanced-v4.2.20260307.895737626-arm64-v8a.apk) |
+
+### ![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=flat-square&logo=instagram&logoColor=white)
+
+| Type | Version | Architecture | Size | Download |
+|:----:|:-------:|:------------:|:----:|:--------:|
+| 📦 APK | v423.0.0 | 📱 arm64-v8a | 136M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-v423.0.0.47.66-arm64-v8a.apk) |
+| 🧩 Module | v423.0.0 | 📱 arm64-v8a | 239M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-module-v423.0.0.47.66-arm64-v8a.zip) |
+
+### ![Strava](https://img.shields.io/badge/Strava-FC4C02?style=flat-square&logo=strava&logoColor=white)
+
+| Type | Version | Architecture | Size | Download |
+|:----:|:-------:|:------------:|:----:|:--------:|
+| 📦 APK | vN/A | 📱 arm64-v8a | 139M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/strava-ex-revanced-v458.12-arm64-v8a.apk) |
+| 🧩 Module | vN/A | 📱 arm64-v8a | 205M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/strava-ex-revanced-module-v458.12-arm64-v8a.zip) |
+
+### ![TikTok](https://img.shields.io/badge/TikTok-000000?style=flat-square&logo=tiktok&logoColor=white)
+
+| Type | Version | Architecture | Size | Download |
+|:----:|:-------:|:------------:|:----:|:--------:|
+| 📦 APK | v43.8.3 | 📱 arm64-v8a | 372M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/tiktok-revanced-v43.8.3-arm64-v8a.apk) |
+| 🧩 Module | v43.8.3 | 📱 arm64-v8a | 617M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/tiktok-revanced-module-v43.8.3-arm64-v8a.zip) |
+
+### ![google-recorder-ex-revanced-module-v4.2.20260307.895737626](https://img.shields.io/badge/google-recorder-ex-revanced-module-v4.2.20260307.895737626-3DDC84?style=flat-square&logo=android&logoColor=white)
+
+| Type | Version | Architecture | Size | Download |
+|:----:|:-------:|:------------:|:----:|:--------:|
+| 🧩 Module | v4.2.20260307 | 📱 arm64-v8a | 67M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/google-recorder-ex-revanced-module-v4.2.20260307.895737626-arm64-v8a.zip) |
 
 <details>
 <summary>🔐 <b>File Checksums (MD5)</b></summary>
 
 ```
-94a793b507440996ad4c55b86e879b5c  music-ex-morphed-revanced-v8.44.54-arm64-v8a.apk
-a9a5c4bdf0230ffa19cc916d8073f6b1  reddit-ex-revanced-v2026.04.0-arm64-v8a.apk
-6e4cf1a606066da77948f062ce054796  youtube-ex-morphed-revanced-v20.44.38-arm64-v8a.apk
-77a33f4f876ad88b77ed422579aaba6a  music-ex-morphed-revanced-module-v8.44.54-arm64-v8a.zip
-e5624a0d5a0a8717a3ba25030744ad57  reddit-ex-revanced-module-v2026.04.0-arm64-v8a.zip
-c8fcb9a638f3ec4b2025987cd9e83eea  revpack-v20260310.zip
-e71934cbaa87cdead8bd1929e9e1e51e  youtube-ex-morphed-revanced-module-v20.44.38-arm64-v8a.zip
+08161580920fce5009154d96785e99d6  google-photos-ex-revanced-v7.71.0.896539910-arm64-v8a.apk
+6dd4adc973134b050e4059863eb765c6  google-recorder-ex-revanced-v4.2.20260307.895737626-arm64-v8a.apk
+18b2d7dc6cf172ca05dd05de6fccb06f  instagram-ex-revanced-v423.0.0.47.66-arm64-v8a.apk
+801b5716ff7fda4b695b773440daf026  strava-ex-revanced-v458.12-arm64-v8a.apk
+bf68b87f86c1b65a5a4e8d3ae426b89e  tiktok-revanced-v43.8.3-arm64-v8a.apk
+f1af93d47937516a48742e6d263bc912  google-photos-ex-revanced-module-v7.71.0.896539910-arm64-v8a.zip
+5d20dfbea8bc938bf7a5924cee1f54bb  google-recorder-ex-revanced-module-v4.2.20260307.895737626-arm64-v8a.zip
+a4ffed5860da36591ee8563b275aa4a0  instagram-ex-revanced-module-v423.0.0.47.66-arm64-v8a.zip
+67abcb052d7ff952645efaec9a6d08ac  revpack-v20260413.zip
+2baa9968567ca628bc5374c5914183c0  strava-ex-revanced-module-v458.12-arm64-v8a.zip
+1f4c26bd55930cba366f16412d04ae48  tiktok-revanced-module-v43.8.3-arm64-v8a.zip
 ```
 
 </details>

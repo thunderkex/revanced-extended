@@ -1,0 +1,28 @@
+# app_name	type_key	arch	version	size	download_url
+Facebook	apk	arm64-v8a	490.0.0		
+Facebook	module	arm64-v8a	490.0.0		
+Google Photos	apk	arm64-v8a	7.66.0		
+Google Photos	module	arm64-v8a	7.66.0		
+Instagram	apk	arm64-v8a	423.0.0		
+Instagram	module	arm64-v8a	423.0.0		
+Reddit	apk	arm64-v8a	2026.04.0		
+Reddit	module	arm64-v8a	2026.04.0		
+RevPack	bundle	all	20260413		
+RevPack	custom-202603170859	all	202603170859		
+SoundCloud	apk	arm64-v8a	2025.05.27		
+SoundCloud	module	arm64-v8a	2025.05.27		
+Spotify	apk	arm64-v8a	9.0.96		
+Spotify	module	arm64-v8a	9.0.96		
+Strava	apk	arm64-v8a	N/A		
+Strava	module	arm64-v8a	N/A		
+TikTok	apk	arm64-v8a	43.8.3		
+TikTok	module	arm64-v8a	43.8.3		
+X (Twitter)	apk	arm64-v8a	10.86.0		
+YouTube	apk	arm64-v8a	20.45.36		
+YouTube	module	arm64-v8a	20.45.36		
+YouTube Music	apk	arm64-v8a	8.44.54		
+YouTube Music	module	arm64-v8a	8.44.54		
+google-recorder-ex-revanced-module-v4.2.20260307.895737626	module	arm64-v8a	4.2.20260307		
+google-recorder-ex-revanced-v4.2.20260307.895737626	apk	arm64-v8a	4.2.20260307		
+lightroom-ex	apk	arm64-v8a	9.3.0		
+lightroom-ex-revanced-module	module	arm64-v8a	9.3.0		
