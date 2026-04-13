@@ -6,10 +6,6 @@ Patches: ReVanced/patches-6.1.0.rvp
 Soundcloud-Ex: 2025.05.27-release
 Patches: ReVanced/patches-6.1.0.rvp
 Spotify-Ex: 9.0.96.819
-Patches: ReVanced/patches-6.1.0.rvp
-Strava-Ex: 455.11
-Patches: crimera/patches-3.0.0.mpp
-TikTok: 36.5.4
 Patches: MorpheApp/patches-1.22.0.mpp
 Music-Ex-morphed: 8.44.54
 Patches: MorpheApp/patches-1.22.0.mpp
@@ -17,3 +13,13 @@ reddit-Ex: 2026.04.0
 Patches: anddea/patches-4.0.0.mpp
 Youtube-Ex-morphed: 20.05.46
 Patches: anddea/patches-4.0.0.mpp
+Patches: RookieEnough/patches-1.0.3.mpp
+Google-Photos-Ex: 7.71.0.896539910
+Patches: RookieEnough/patches-1.0.3.mpp
+Google-Recorder-Ex: 4.2.20260307.895737626
+Patches: crimera/patches-3.2.0-dev.5.mpp
+Instagram-Ex: 423.0.0.47.66
+Patches: RookieEnough/patches-1.0.3.mpp
+Strava-Ex: 458.12
+Patches: RookieEnough/patches-1.0.3.mpp
+TikTok: 43.8.3
