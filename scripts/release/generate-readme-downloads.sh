@@ -118,7 +118,7 @@ init_cache_from_readme() {
             _rsz=$(echo   "${_rcols[4]:-}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
             _rdl=$(echo   "${_rcols[5]:-}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
             local _rurl=""
-            [[ "$_rdl" =~ \]\(([^)]+)\)[[:space:]]*$ ]] && _rurl="${BASH_REMATCH[1]}"
+            _rurl=$(echo "$_rdl" | sed -n 's/.*]\(([^)]*)\).*/\1/p')
             [[ -z "$_rurl" ]] && continue
             [[ "$_rver" == "—" ]] && continue
             local _rver_clean="${_rver#v}"
