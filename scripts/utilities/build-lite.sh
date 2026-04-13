@@ -21,6 +21,14 @@ TEMP_DIR="${TEMP_DIR:-temp}"
 APKEDITOR_JAR="${TEMP_DIR}/apkeditor.jar"
 APKEDITOR_URL="https://github.com/REAndroid/APKEditor/releases/download/V1.4.2/APKEditor-1.4.2.jar"
 
+curl_progress_opts() {
+    if [ -t 2 ] || [ "${GITHUB_ACTIONS-}" = "true" ]; then
+        echo "--progress-bar"
+    else
+        echo "-sS"
+    fi
+}
+
 # Configuration from environment (passed from config.toml via build.sh)
 KEEP_LANGUAGES="${LITE_LANGUAGES:-en}"
 KEEP_DPIS="${LITE_DPI:-xxhdpi,xxxhdpi,nodpi}"
@@ -34,7 +42,7 @@ download_apkeditor() {
     if [ ! -f "$APKEDITOR_JAR" ]; then
         pr "Downloading APKEditor..."
         mkdir -p "$(dirname "$APKEDITOR_JAR")"
-        curl -sL "$APKEDITOR_URL" -o "$APKEDITOR_JAR" || {
+        curl $(curl_progress_opts) -L "$APKEDITOR_URL" -o "$APKEDITOR_JAR" || {
             epr "Failed to download APKEditor"
             return 1
         }

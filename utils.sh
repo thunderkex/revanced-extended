@@ -44,10 +44,34 @@ wpr() {
 	echo >&2 -e "\033[0;33m[!] ${1}\033[0m"
 	if [ "${GITHUB_REPOSITORY-}" ]; then echo >&2 -e "::warning::utils.sh [!] ${1}\n"; fi
 }
+
+sanitize_url() {
+	local url="$1"
+	url="${url#${url%%[![:space:]]*}}"
+	url="${url%${url##*[![:space:]]}}"
+	url="${url//$'\r'/}"
+	url="${url//$'\n'/}"
+	url="${url//$'\t'/}"
+	if [ "${url:0:1}" = '"' ] && [ "${url: -1}" = '"' ]; then
+		url="${url:1:${#url}-2}"
+	elif [ "${url:0:1}" = "'" ] && [ "${url: -1}" = "'" ]; then
+		url="${url:1:${#url}-2}"
+	fi
+	url="${url// /%20}"
+
+echo "$url"
+}
+
 abort() {
 	epr "ABORT: ${1-}"
 	rm -rf ./${TEMP_DIR}/*tmp.* ./${TEMP_DIR}/*/*tmp.* ./${TEMP_DIR}/*-temporary-files
-	kill -n 9 0
+	set +e
+	if command -v pkill >/dev/null 2>&1; then
+		pkill -P $$ 2>/dev/null || true
+	else
+		kill -9 $(jobs -pr 2>/dev/null) 2>/dev/null || true
+	fi
+	exit 1
 }
 java() { env -i java --enable-native-access=ALL-UNNAMED "$@"; }
 
@@ -233,9 +257,28 @@ config_update() {
 _req() {
 	local ip="$1" op="$2"
 	shift 2
+	local raw_ip="$ip"
+	ip="$(sanitize_url "$ip")"
+	if [ -z "$ip" ]; then
+		wpr "Request failed: empty URL"
+		return 1
+	fi
+	local curl_opts=("-L" "--http2" "--compressed" "-c" "$TEMP_DIR/cookie.txt" "-b" "$TEMP_DIR/cookie.txt" "--connect-timeout" "10" "--retry" "0")
 	if [ "$op" = - ]; then
-		if ! curl -L --http2 --compressed -c "$TEMP_DIR/cookie.txt" -b "$TEMP_DIR/cookie.txt" --connect-timeout 10 --retry 0 -s -S "$@" "$ip"; then
-			wpr "Request failed: $ip"
+		curl_opts+=("-s" "-S")
+	else
+		if [ -t 2 ] || [ "${GITHUB_ACTIONS-}" = "true" ]; then
+			curl_opts+=("--progress-bar")
+		else
+			curl_opts+=("-s" "-S")
+		fi
+	fi
+
+	if [ "$op" = - ]; then
+		if ! curl "${curl_opts[@]}" "$@" "$ip"; then
+			wpr "Request failed: $raw_ip"
+			[ "$raw_ip" != "$ip" ] && wpr "Sanitized URL: $ip"
+			return 1
 		fi
 	else
 		if [ -f "$op" ]; then return; fi
@@ -245,8 +288,10 @@ _req() {
 			while [ -f "$dlp" ]; do sleep 1; done
 			return
 		fi
-		if ! curl -L --http2 --compressed -c "$TEMP_DIR/cookie.txt" -b "$TEMP_DIR/cookie.txt" --connect-timeout 10 --retry 0 -s -S "$@" "$ip" -o "$dlp"; then
-			wpr "Request failed: $ip"
+		if ! curl "${curl_opts[@]}" "$@" "$ip" -o "$dlp"; then
+			wpr "Request failed: $raw_ip"
+			[ "$raw_ip" != "$ip" ] && wpr "Sanitized URL: $ip"
+			return 1
 		else
 			mv -f "$dlp" "$op"
 		fi
