@@ -57,17 +57,17 @@
 
 | App | Patches Source | Status |
 |:---:|:--------------|:------:|
-| ![YouTube Music](https://img.shields.io/badge/YouTube_Music-FF0000?style=flat-square&logo=youtube-music&logoColor=white) | [MorpheApp](https://github.com/MorpheApp/morphe-patches) | ✅ Active |
-| ![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=flat-square&logo=youtube&logoColor=white) | [MorpheApp](https://github.com/MorpheApp/morphe-patches) | ✅ Active |
-| ![Reddit](https://img.shields.io/badge/Reddit-FF4500?style=flat-square&logo=reddit&logoColor=white) | [MorpheApp](https://github.com/MorpheApp/morphe-patches) | ✅ Active |
+| ![YouTube Music](https://img.shields.io/badge/YouTube_Music-FF0000?style=flat-square&logo=youtube-music&logoColor=white) | [anddea](https://github.com/anddea/revanced-patches) | ✅ Active |
+| ![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=flat-square&logo=youtube&logoColor=white) | [anddea](https://github.com/anddea/revanced-patches) | ✅ Active |
+| ![Reddit](https://img.shields.io/badge/Reddit-FF4500?style=flat-square&logo=reddit&logoColor=white) | [anddea](https://github.com/anddea/revanced-patches) | ✅ Active |
 | ![X (Twitter)](https://img.shields.io/badge/X_(Twitter)-000000?style=flat-square&logo=x&logoColor=white) | [crimera](https://github.com/crimera/piko) | ✅ Active |
-| ![Facebook](https://img.shields.io/badge/Facebook-1877F2?style=flat-square&logo=facebook&logoColor=white) | [revanced](https://github.com/revanced) | ✅ Active |
-| ![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=flat-square&logo=instagram&logoColor=white) | [revanced](https://github.com/revanced) | ✅ Active |
-| ![Spotify](https://img.shields.io/badge/Spotify-1DB954?style=flat-square&logo=spotify&logoColor=white) | [revanced](https://github.com/revanced) | ✅ Active |
-| ![TikTok](https://img.shields.io/badge/TikTok-000000?style=flat-square&logo=tiktok&logoColor=white) | [revanced](https://github.com/revanced) | ✅ Active |
-| ![Google Photos](https://img.shields.io/badge/Google_Photos-4285F4?style=flat-square&logo=googlephotos&logoColor=white) | [revanced](https://github.com/revanced) | ✅ Active |
-| ![SoundCloud](https://img.shields.io/badge/SoundCloud-FF3300?style=flat-square&logo=soundcloud&logoColor=white) | [revanced](https://github.com/revanced) | ✅ Active |
-| ![Strava](https://img.shields.io/badge/Strava-FF7F00?style=flat-square&logo=strava&logoColor=white) | [revanced](https://github.com/revanced) | ✅ Active |
+| ![Facebook](https://img.shields.io/badge/Facebook-1877F2?style=flat-square&logo=facebook&logoColor=white) | [De-ReVanced](https://github.com/RookieEnough/De-ReVanced) | ✅ Active |
+| ![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=flat-square&logo=instagram&logoColor=white) | [De-ReVanced](https://github.com/RookieEnough/De-ReVanced) | ✅ Active |
+| ![Spotify](https://img.shields.io/badge/Spotify-1DB954?style=flat-square&logo=spotify&logoColor=white) | [De-ReVanced](https://github.com/RookieEnough/De-ReVanced) | ✅ Active |
+| ![TikTok](https://img.shields.io/badge/TikTok-000000?style=flat-square&logo=tiktok&logoColor=white) | [De-ReVanced](https://github.com/RookieEnough/De-ReVanced) | ✅ Active |
+| ![Google Photos](https://img.shields.io/badge/Google_Photos-4285F4?style=flat-square&logo=googlephotos&logoColor=white) | [De-ReVanced](https://github.com/RookieEnough/De-ReVanced) | ✅ Active |
+| ![SoundCloud](https://img.shields.io/badge/SoundCloud-FF3300?style=flat-square&logo=soundcloud&logoColor=white) | [De-ReVanced](https://github.com/RookieEnough/De-ReVanced) | ✅ Active |
+| ![Strava](https://img.shields.io/badge/Strava-FF7F00?style=flat-square&logo=strava&logoColor=white) | [De-ReVanced](https://github.com/RookieEnough/De-ReVanced) | ✅ Active |
 | ![RevPack](https://img.shields.io/badge/RevPack-7C4DFF?style=flat-square&logo=android&logoColor=white) | All of the above | ✅ Bundle |
 
 > 💡 Enable more apps and custom patches by editing `config.toml` (see [CONFIG.md](CONFIG.md))
