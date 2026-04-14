@@ -17,9 +17,9 @@ Patches: RookieEnough/patches-1.0.3.mpp
 Google-Photos-Ex: 7.71.0.896539910
 Patches: RookieEnough/patches-1.0.3.mpp
 Google-Recorder-Ex: 4.2.20260307.895737626
-Patches: crimera/patches-3.2.0-dev.5.mpp
-Instagram-Ex: 423.0.0.47.66
 Patches: RookieEnough/patches-1.0.3.mpp
 Strava-Ex: 458.12
 Patches: RookieEnough/patches-1.0.3.mpp
 TikTok: 43.8.3
+Patches: crimera/patches-3.2.0-dev.5.mpp
+Instagram-Ex: 423.0.0.47.66
