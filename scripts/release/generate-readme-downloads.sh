@@ -258,6 +258,7 @@ get_app_logo() {
         "SoundCloud") logo="soundcloud"; color="FF3300" ;;
         "Google Photos") logo="googlephotos"; color="4285F4" ;;
         "Strava") logo="strava"; color="FC4C02" ;;
+        "Google Recorder") logo="google"; color="4285F4" ;;
         *) logo="android"; color="3DDC84" ;;
     esac
     echo "![${app}](https://img.shields.io/badge/${app// /_}-${color}?style=flat-square&logo=${logo}&logoColor=white)"
@@ -851,28 +852,51 @@ update_readme() {
     local repo_url="$1"
     local downloads_content
     downloads_content=$(generate_downloads_section "$repo_url")
-    
+
     if [[ ! -f "$README_FILE" ]]; then
         warn "README.md not found, creating new file"
         echo -e "$downloads_content" > "$README_FILE"
         return
     fi
-    
+
     local start_marker="<!-- DOWNLOADS_START -->"
     local end_marker="<!-- DOWNLOADS_END -->"
-    
+
     if grep -q "$start_marker" "$README_FILE" && grep -q "$end_marker" "$README_FILE"; then
-        local temp_file
-        temp_file=$(mktemp)
-        
-        awk -v start="$start_marker" -v end="$end_marker" -v content="$downloads_content" '
-            $0 ~ start { print; print content; skip=1; next }
-            $0 ~ end { skip=0 }
-            !skip { print }
-        ' "$README_FILE" > "$temp_file"
-        
-        mv "$temp_file" "$README_FILE"
-        log "Updated downloads section in README.md"
+        local before after current_section
+        before=$(awk "/$start_marker/ {exit} {print}" "$README_FILE")
+        after=$(awk "/$end_marker/ {found=1} found {print}" "$README_FILE")
+        current_section=$(awk "/$start_marker/{flag=1;next}/$end_marker/{flag=0}flag" "$README_FILE")
+
+        declare -A seen_files
+        while read -r line; do
+            fname=$(echo "$line" | grep -oE "\| [^|]+\.(apk|zip) \|" | awk '{print $2}')
+            if [[ -n "$fname" ]]; then
+                seen_files["$fname"]="$line"
+            fi
+        done < <(echo "$current_section")
+
+        merged_section=""
+        while read -r newline; do
+            nfname=$(echo "$newline" | grep -oE "\| [^|]+\.(apk|zip) \|" | awk '{print $2}')
+            if [[ -n "$nfname" ]]; then
+                seen_files["$nfname"]="$newline"
+            fi
+        done < <(echo "$downloads_content" | grep -E "\| [^|]+\.(apk|zip) \|")
+
+        for k in "${!seen_files[@]}"; do
+            merged_section+="${seen_files[$k]}\n"
+        done
+
+        {
+            echo "$before"
+            echo "$start_marker"
+            echo -e "$merged_section"
+            echo "$end_marker"
+            echo "$after" | tail -n +2
+        } > "$README_FILE.tmp"
+        mv "$README_FILE.tmp" "$README_FILE"
+        log "Merged downloads section in README.md"
     else
         {
             echo ""
