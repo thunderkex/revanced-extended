@@ -63,15 +63,19 @@ echo "$url"
 }
 
 abort() {
-	epr "ABORT: ${1-}"
-	rm -rf ./${TEMP_DIR}/*tmp.* ./${TEMP_DIR}/*/*tmp.* ./${TEMP_DIR}/*-temporary-files
-	set +e
-	if command -v pkill >/dev/null 2>&1; then
-		pkill -P $$ 2>/dev/null || true
-	else
-		kill -9 $(jobs -pr 2>/dev/null) 2>/dev/null || true
-	fi
-	exit 1
+       epr "ABORT: ${1-}"
+       rm -rf ./${TEMP_DIR}/*tmp.* ./${TEMP_DIR}/*/*tmp.* ./${TEMP_DIR}/*-temporary-files
+       set +e
+       # If CONTINUE_ON_ERROR is set and true, return 1 instead of exiting
+       if [ "${CONTINUE_ON_ERROR-}" = "true" ]; then
+	       return 1
+       fi
+       if command -v pkill >/dev/null 2>&1; then
+	       pkill -P $$ 2>/dev/null || true
+       else
+	       kill -9 $(jobs -pr 2>/dev/null) 2>/dev/null || true
+       fi
+       exit 1
 }
 java() { env -i java --enable-native-access=ALL-UNNAMED "$@"; }
 
