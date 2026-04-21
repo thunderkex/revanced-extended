@@ -21,5 +21,5 @@ Patches: RookieEnough/patches-1.0.3.mpp
 Strava-Ex: 458.12
 Patches: RookieEnough/patches-1.0.3.mpp
 TikTok: 43.8.3
-Patches: crimera/patches-3.2.0-dev.5.mpp
+Patches: crimera/patches-3.3.0-dev.1.mpp
 Instagram-Ex: 423.0.0.47.66
