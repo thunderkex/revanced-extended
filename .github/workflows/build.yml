@@ -509,15 +509,18 @@ jobs:
             cp -f CHANGELOG.md /tmp/CHANGELOG.md
           fi
           
-          git checkout -f update || git switch --discard-changes --orphan update
-          if [ -f build.md ] && [ -s build.md ]; then
+          git switch -f update || git switch --orphan update
+
+          if [ -s build.md ]; then
             python3 - <<'PYEOF'
           with open('build.md') as f:
               old = [l.rstrip() for l in f if l.strip()]
           with open('build.tmp') as f:
               new = [l.rstrip() for l in f if l.strip()]
+
           rebuilt = {l.split('/')[0][9:] for l in new if l.startswith('Patches: ')}
           new_apps = {l.split(':')[0] for l in new if not l.startswith('Patches: ')}
+
           kept = []
           i = 0
           while i < len(old):
@@ -526,13 +529,16 @@ jobs:
                   src = line.split('/')[0][9:]
                   has_app = i + 1 < len(old) and not old[i + 1].startswith('Patches: ')
                   app_name = old[i + 1].split(':')[0] if has_app else None
+                  
                   if src not in rebuilt and (app_name is None or app_name not in new_apps):
                       kept.append(line)
                       if has_app:
                           kept.append(old[i + 1])
                   i += 2 if has_app else 1
               else:
+                  kept.append(line)
                   i += 1
+
           with open('build.md', 'w') as f:
               f.write('\n'.join(kept + new) + '\n')
           PYEOF
