@@ -873,10 +873,25 @@ build_rv() {
 			return 0
 		fi
 	fi
-	if [ ! -f "${stock_apk}.apkm" ] && ! OP=$(check_sig "$stock_apk" "$pkg_name" 2>&1) && ! grep -qFx "ERROR: Missing META-INF/MANIFEST.MF" <<<"$OP"; then
-		epr "Not building $table, apk signature mismatch '$stock_apk': $OP"
-		return 0
+
+	local sig_op
+	if [ -f "${stock_apk}.apkm" ]; then
+		rm -rf "${stock_apk}-zip" || :
+		unzip -j "${stock_apk}.apkm" -d "${stock_apk}-zip" >/dev/null
+		for a in "${stock_apk}"-zip/*.apk; do
+			if ! sig_op=$(check_sig "$a" "$pkg_name" 2>&1); then
+				epr "Not building $table, apk signature mismatch '$a': $sig_op"
+				return 0
+			fi
+		done
+		rm -rf "${stock_apk}-zip" || :
+	else
+		if ! sig_op=$(check_sig "$stock_apk" "$pkg_name" 2>&1); then
+			epr "Not building $table, apk signature mismatch '$stock_apk': $sig_op"
+			return 0
+		fi
 	fi
+	log "${table}: ${version}"
 
 	local microg_patch
 	microg_patch=$(grep "^Name: " <<<"$list_patches" | grep -i "gmscore\|microg" || :) microg_patch=${microg_patch#*: }
