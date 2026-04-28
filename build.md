@@ -6,8 +6,6 @@ Patches: ReVanced/patches-6.1.0.rvp
 Soundcloud-Ex: 2025.05.27-release
 Patches: ReVanced/patches-6.1.0.rvp
 Spotify-Ex: 9.0.96.819
-Patches: crimera/patches-3.3.0-dev.1.mpp
-Instagram-Ex: 423.0.0.47.66
 Patches: anddea/patches-4.0.0.mpp
 Music-Ex-morphed: 8.30.54
 Patches: RookieEnough/patches-1.0.3.mpp
@@ -16,3 +14,5 @@ Patches: anddea/patches-4.0.0.mpp
 Youtube-Ex-morphed: 20.05.46
 Patches: anddea/patches-4.0.0.mpp
 reddit-Ex: 2025.12.1
+Patches: crimera/patches-3.3.0-dev.2.mpp
+Instagram-Ex: 426.0.0.37.68
