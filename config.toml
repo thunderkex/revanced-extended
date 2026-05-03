@@ -162,13 +162,15 @@ apkmirror-dlurl = "https://apkmirror.com/apk/redditinc/reddit"
 archive-dlurl = "https://archive.org/download/geologically/apks/com.reddit.frontpage"
 
 [X-piko]
-enabled = false
+enabled = true
 build-mode = "both"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/x-corp/twitter/"
 archive-dlurl = "https://archive.org/download/geologically/apks/com.twitter.android"
 uptodown-dlurl = "https://twitter.en.uptodown.com/android"
 patches-source = "crimera/piko"
 cli-source = "MorpheApp/morphe-cli"
+version = "11.81.0-release.0"
+#include-stock = "split"
 included-patches = "'Disable chirp font' 'Hide Banner' 'Hide FAB' 'Hide promote button' 'Dynamic color' 'Hide Community Notes' 'Control video auto scroll' 'Remove premium upsell' 'Delete from database'"
 excluded-patches = "'Customize side bar items' 'Disunify xchat system' 'Enable Undo Posts' 'Show post source label'"
 
