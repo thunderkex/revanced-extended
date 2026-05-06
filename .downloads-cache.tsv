@@ -7,7 +7,7 @@ Instagram	apk	arm64-v8a	426.0.0
 Instagram	module	arm64-v8a	426.0.0		
 Reddit	apk	arm64-v8a	2025.12.1		
 Reddit	module	arm64-v8a	2025.12.1		
-RevPack	bundle	all	20260428		
+RevPack	bundle	all	20260506		
 RevPack	custom-202603170859	all	202603170859		
 SoundCloud	apk	arm64-v8a	2025.05.27		
 SoundCloud	module	arm64-v8a	2025.05.27		
@@ -17,7 +17,8 @@ Strava	apk	arm64-v8a	N/A
 Strava	module	arm64-v8a	N/A		
 TikTok	apk	arm64-v8a	43.8.3		
 TikTok	module	arm64-v8a	43.8.3		
-X (Twitter)	apk	arm64-v8a	10.86.0		
+X (Twitter)	apk	arm64-v8a	11.81.0		
+X (Twitter)	module	arm64-v8a	11.81.0		
 YouTube	apk	arm64-v8a	20.05.46		
 YouTube	module	arm64-v8a	20.05.46		
 YouTube Music	apk	arm64-v8a	8.30.54		
