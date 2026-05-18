@@ -587,6 +587,7 @@ jobs:
           TG_TOKEN: ${{ secrets.TG_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
           SINGLE_RELEASE: ${{ inputs.single_release }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: ${{ env.TG_TOKEN != null && inputs.from_configurator != true }}
         run: |
           cd build || { echo "build folder not found"; exit 1; }
@@ -596,16 +597,19 @@ jobs:
           MODULES=""
           REVPACK=""
           ARCH="${{ inputs.target_arch || 'arm64-v8a' }}"
-          
+
           # Use appropriate release tag
           if [ "${SINGLE_RELEASE:-true}" != "false" ]; then
             RELEASE_TAG="latest-build"
           else
             RELEASE_TAG="${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}"
           fi
-          
+
+          declare -A BUILT_FILES
           for OUTPUT in *; do
+            [ -f "$OUTPUT" ] || continue
             DL_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${RELEASE_TAG}/${OUTPUT}"
+            BUILT_FILES["$OUTPUT"]=1
             if [[ $OUTPUT = revpack-* ]]; then
               REVPACK+="${NL}📦[${OUTPUT}](${DL_URL})"
             elif [[ $OUTPUT = *.apk ]]; then
@@ -614,6 +618,23 @@ jobs:
               MODULES+="${NL}📦[${OUTPUT}](${DL_URL})"
             fi
           done
+
+          # Include all other assets already in the release (from previous partial builds)
+          RELEASE_ASSETS=$(gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${RELEASE_TAG}" 2>/dev/null | \
+            jq -r '.assets[] | select(.name | test("\\.(apk|zip)$")) | .name' 2>/dev/null || true)
+          while IFS= read -r ASSET_NAME; do
+            [[ -z "$ASSET_NAME" ]] && continue
+            [[ -n "${BUILT_FILES[$ASSET_NAME]+x}" ]] && continue
+            DL_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${RELEASE_TAG}/${ASSET_NAME}"
+            if [[ "$ASSET_NAME" = revpack-* ]]; then
+              REVPACK+="${NL}📦[${ASSET_NAME}](${DL_URL})"
+            elif [[ "$ASSET_NAME" = *.apk ]]; then
+              APKS+="${NL}📦[${ASSET_NAME}](${DL_URL})"
+            elif [[ "$ASSET_NAME" = *.zip ]]; then
+              MODULES+="${NL}📦[${ASSET_NAME}](${DL_URL})"
+            fi
+          done <<< "$RELEASE_ASSETS"
+
           MODULES=${MODULES#"$NL"}
           APKS=${APKS#"$NL"}
           REVPACK=${REVPACK#"$NL"}

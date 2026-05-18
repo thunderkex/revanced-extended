@@ -342,7 +342,7 @@ generate_downloads_section() {
         if [[ -z "${app_files[$APP_NAME]+x}" ]]; then
             apps_order+=("$APP_NAME")
         fi
-        app_files["$APP_NAME"]+="local:${file}|"
+        app_files["$APP_NAME"]+="local:${file}"$'\n'
     done
 
     if [[ "${USE_RELEASE_ASSETS:-false}" == "true" ]]; then
@@ -367,7 +367,7 @@ generate_downloads_section() {
             if [[ -z "${app_files[$APP_NAME]+x}" ]]; then
                 apps_order+=("$APP_NAME")
             fi
-            app_files["$APP_NAME"]+="release:${_rname}|||${_rsize}|||${_rurl}|"
+            app_files["$APP_NAME"]+="release:${_rname}|||${_rsize}|||${_rurl}"$'\n'
         done <<< "$_release_lines"
     fi
 
@@ -376,7 +376,7 @@ generate_downloads_section() {
 
     local __app __entry __fn __fsz __furl __tk
     for __app in "${apps_order[@]}"; do
-        IFS='|' read -ra _up_entries <<< "${app_files[$__app]}"
+        mapfile -t _up_entries <<< "${app_files[$__app]}"
         for __entry in "${_up_entries[@]}"; do
             [[ -z "$__entry" ]] && continue
             if [[ "$__entry" == local:* ]]; then
@@ -436,7 +436,7 @@ generate_downloads_section() {
         local __cov=0
         if [[ -n "${app_files[$__ca]+x}" ]]; then
             local __te
-            IFS='|' read -ra _cov_entries <<< "${app_files[$__ca]}"
+            mapfile -t _cov_entries <<< "${app_files[$__ca]}"
             for __te in "${_cov_entries[@]}"; do
                 [[ -z "$__te" ]] && continue
                 local __tfn
@@ -458,7 +458,7 @@ generate_downloads_section() {
 
         if [[ $__cov -eq 0 ]]; then
             [[ -z "${app_files[$__ca]+x}" ]] && apps_order+=("$__ca")
-            app_files["$__ca"]+="cached:${__cv}|||${__csz3}|||${__curl3}|||${__ct}|||${__carch}|"
+            app_files["$__ca"]+="cached:${__cv}|||${__csz3}|||${__curl3}|||${__ct}|||${__carch}"$'\n'
         fi
     done
 
@@ -474,7 +474,7 @@ generate_downloads_section() {
 
     if [[ -n "${app_files[RevPack]+x}" ]]; then
         local revpack_rows=""
-        IFS='|' read -ra _entries <<< "${app_files[RevPack]}"
+        mapfile -t _entries <<< "${app_files[RevPack]}"
         for _entry in "${_entries[@]}"; do
             [[ -z "$_entry" ]] && continue
             local filename size download_url
@@ -555,7 +555,7 @@ generate_downloads_section() {
         app_logo=$(get_app_logo "$app")
         local app_rows=""
 
-        IFS='|' read -ra _entries <<< "${app_files[$app]}"
+        mapfile -t _entries <<< "${app_files[$app]}"
         for _entry in "${_entries[@]}"; do
             [[ -z "$_entry" ]] && continue
 
@@ -687,7 +687,7 @@ EOF
         if [[ -z "${app_files[$APP_NAME]+x}" ]]; then
             apps_order+=("$APP_NAME")
         fi
-        app_files["$APP_NAME"]+="local:${file}|"
+        app_files["$APP_NAME"]+="local:${file}"$'\n'
     done
 
     if [[ "${USE_RELEASE_ASSETS:-false}" == "true" ]]; then
@@ -708,13 +708,13 @@ EOF
             if [[ -z "${app_files[$APP_NAME]+x}" ]]; then
                 apps_order+=("$APP_NAME")
             fi
-            app_files["$APP_NAME"]+="release:${_rname}|||${_rsize}|||${_rurl}|"
+            app_files["$APP_NAME"]+="release:${_rname}|||${_rsize}|||${_rurl}"$'\n'
         done <<< "$_release_lines"
     fi
 
     if [[ -n "${app_files[RevPack]+x}" ]]; then
         local revpack_rows=""
-        IFS='|' read -ra _entries <<< "${app_files[RevPack]}"
+        mapfile -t _entries <<< "${app_files[RevPack]}"
         for _entry in "${_entries[@]}"; do
             [[ -z "$_entry" ]] && continue
             local filename size download_url
@@ -790,7 +790,7 @@ EOF
         app_logo=$(get_app_logo "$app")
         local app_rows=""
 
-        IFS='|' read -ra _entries <<< "${app_files[$app]}"
+        mapfile -t _entries <<< "${app_files[$app]}"
         for _entry in "${_entries[@]}"; do
             [[ -z "$_entry" ]] && continue
 
@@ -863,44 +863,25 @@ update_readme() {
     local end_marker="<!-- DOWNLOADS_END -->"
 
     if grep -q "$start_marker" "$README_FILE" && grep -q "$end_marker" "$README_FILE"; then
-        local before after current_section
+        local before after
         before=$(awk "/$start_marker/ {exit} {print}" "$README_FILE")
-        after=$(awk "/$end_marker/ {found=1} found {print}" "$README_FILE")
-        current_section=$(awk "/$start_marker/{flag=1;next}/$end_marker/{flag=0}flag" "$README_FILE")
-
-        declare -A seen_files
-        while read -r line; do
-            fname=$(echo "$line" | grep -oE "\| [^|]+\.(apk|zip) \|" | awk '{print $2}')
-            if [[ -n "$fname" ]]; then
-                seen_files["$fname"]="$line"
-            fi
-        done < <(echo "$current_section")
-
-        merged_section=""
-        while read -r newline; do
-            nfname=$(echo "$newline" | grep -oE "\| [^|]+\.(apk|zip) \|" | awk '{print $2}')
-            if [[ -n "$nfname" ]]; then
-                seen_files["$nfname"]="$newline"
-            fi
-        done < <(echo "$downloads_content" | grep -E "\| [^|]+\.(apk|zip) \|")
-
-        for k in "${!seen_files[@]}"; do
-            merged_section+="${seen_files[$k]}\n"
-        done
+        after=$(awk "/$end_marker/ {found=1; next} found {print}" "$README_FILE")
 
         {
             echo "$before"
             echo "$start_marker"
-            echo -e "$merged_section"
+            echo ""
+            echo -e "$downloads_content"
             echo "$end_marker"
-            echo "$after" | tail -n +2
+            echo "$after"
         } > "$README_FILE.tmp"
         mv "$README_FILE.tmp" "$README_FILE"
-        log "Merged downloads section in README.md"
+        log "Updated downloads section in README.md"
     else
         {
             echo ""
             echo "$start_marker"
+            echo ""
             echo -e "$downloads_content"
             echo "$end_marker"
         } >> "$README_FILE"
