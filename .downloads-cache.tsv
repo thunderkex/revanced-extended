@@ -1,17 +1,13 @@
 # app_name	type_key	arch	version	size	download_url
 Facebook	apk	arm64-v8a	490.0.0		
 Facebook	module	arm64-v8a	490.0.0		
-Google Photos	apk	arm64-v8a	7.66.0		
-Google Photos	module	arm64-v8a	7.66.0		
-google-recorder-ex-revanced-module-v4.2.20260307.895737626	module	arm64-v8a	4.2.20260307		
-google-recorder-ex-revanced-v4.2.20260307.895737626	apk	arm64-v8a	4.2.20260307		
+Google Photos	apk	arm64-v8a	7.76.0		
+Google Photos	module	arm64-v8a	7.76.0		
 Instagram	apk	arm64-v8a	426.0.0		
 Instagram	module	arm64-v8a	426.0.0		
-lightroom-ex	apk	arm64-v8a	9.3.0		
-lightroom-ex-revanced-module	module	arm64-v8a	9.3.0		
 Reddit	apk	arm64-v8a	2025.12.1		
 Reddit	module	arm64-v8a	2025.12.1		
-RevPack	bundle	all	20260506		
+RevPack	bundle	all	20260519		
 RevPack	custom-202603170859	all	202603170859		
 SoundCloud	apk	arm64-v8a	2025.05.27		
 SoundCloud	module	arm64-v8a	2025.05.27		
@@ -23,7 +19,15 @@ TikTok	apk	arm64-v8a	43.8.3
 TikTok	module	arm64-v8a	43.8.3		
 X (Twitter)	apk	arm64-v8a	11.81.0		
 X (Twitter)	module	arm64-v8a	11.81.0		
-YouTube	apk	arm64-v8a	20.05.46	0	https://github.com/thunderkex/revanced-extended/releases/download/latest-build/youtube-revanced-v20.05.46-arm64-v8a.apk
-YouTube	module	arm64-v8a	20.05.46	0	https://github.com/thunderkex/revanced-extended/releases/download/latest-build/youtube-revanced-module-v20.05.46-arm64-v8a.zip
+YouTube	apk	arm64-v8a	20.05.46		
+YouTube	module	arm64-v8a	20.05.46		
 YouTube Music	apk	arm64-v8a	8.30.54		
 YouTube Music	module	arm64-v8a	8.30.54		
+google-recorder-ex-revanced-module-v4.2.20260307.895737626	module	arm64-v8a	4.2.20260307		
+google-recorder-ex-revanced-module-v4.2.20260307.900600387-arm64-v8a.zip	66MB	arm64-v8a	4.2.20260307		
+google-recorder-ex-revanced-module-v4.2.20260409.913516467-arm64-v8a.zip	66MB	arm64-v8a	4.2.20260409		
+google-recorder-ex-revanced-v4.2.20260307.895737626	apk	arm64-v8a	4.2.20260307		
+google-recorder-ex-revanced-v4.2.20260307.900600387-arm64-v8a.apk	48MB	arm64-v8a	4.2.20260307		
+google-recorder-ex-revanced-v4.2.20260409.913516467-arm64-v8a.apk	48MB	arm64-v8a	4.2.20260409		
+lightroom-ex	apk	arm64-v8a	9.3.0		
+lightroom-ex-revanced-module	module	arm64-v8a	9.3.0		

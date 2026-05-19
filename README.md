@@ -76,6 +76,100 @@
 # Dont use LITE variants for now
 <!-- DOWNLOADS_START -->
 
+## 📥 Download ReVanced Extended APKs & Modules
+
+> **Last Updated:** 2026-05-19 18:15:44 UTC
+
+### 📝 Recent Changes
+
+- [`d09097a`](https://github.com/thunderkex/revanced-extended/commit/d09097a) update (2026-05-18)
+- [`8f45a09`](https://github.com/thunderkex/revanced-extended/commit/8f45a09) 📝 Update downloads [skip ci] (2026-05-06)
+- [`a87fba9`](https://github.com/thunderkex/revanced-extended/commit/a87fba9) fix abort (2026-05-04)
+- [`9fabd50`](https://github.com/thunderkex/revanced-extended/commit/9fabd50) fix NORB (2026-05-04)
+- [`4b02a15`](https://github.com/thunderkex/revanced-extended/commit/4b02a15) get_prebuilts fix minor bug (2026-05-04)
+
+### 🔗 Quick Links
+
+| Resource | Link |
+|:---------|:-----|
+| 📦 All Releases | [![Releases](https://img.shields.io/badge/All_Releases-black?style=flat-square&logo=github)](https://github.com/thunderkex/revanced-extended/releases) |
+| 🔄 Latest Build | [![Latest](https://img.shields.io/badge/Latest_Build-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/tag/latest-build) |
+| 📱 MicroG RE | [![MicroG](https://img.shields.io/badge/MicroG_RE-green?style=flat-square)](https://github.com/MorpheApp/MicroG-RE/releases) |
+
+<details>
+<summary>📋 <b>Requirements & Installation</b></summary>
+
+#### Non-Root Installation (Ad-Blocking, Customization)
+1. Install [MicroG RE](https://github.com/MorpheApp/MicroG-RE/releases) for Google login support
+2. Download the APK for your device architecture (ARM64, ARM32, x86, Universal)
+3. Install the APK using your package manager
+
+#### Root Installation (Magisk/KernelSU)
+1. Download the `.zip` module file for your device
+2. Install via Magisk/KernelSU app
+3. Reboot your device
+4. Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to prevent unwanted Play Store updates
+
+#### Architecture Guide (Device Compatibility)
+| Arch | Description | Devices |
+|:----:|:------------|:--------|
+| 📱 ARM64 | 64-bit ARM | Most modern Android phones (2017+) |
+| 📟 ARM32 | 32-bit ARM | Older Android phones, some tablets |
+| 💻 x86_64 | 64-bit Intel | Chromebooks, emulators |
+| 🌐 Universal | All architectures | Works everywhere (larger APK size) |
+
+</details>
+
+---
+
+### ![RevPack](https://img.shields.io/badge/RevPack-7C4DFF?style=flat-square&logo=android&logoColor=white) — All-in-One Bundle
+
+> Contains all patched Magisk/KernelSU module zips in a single flashable archive.
+
+| Type | Version | Architecture | Size | Download |
+|:----:|:-------:|:------------:|:----:|:--------:|
+| 🎁 Bundle | v20260519 | 🌐 All | 192M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260519.zip) |
+
+### 🎨 RevPack — Custom Builds *(latest 3)*
+
+> Built via [RevPack Configurator](https://thunderkex.github.io/revanced-extended/). Preserved alongside standard builds.
+
+| Type | Built | Architecture | Size | Download |
+|:----:|:-----:|:------------:|:----:|:--------:|
+| 🎨 Custom | 2026-03-17 08:59 | 🌐 All |  | [![Download](https://img.shields.io/badge/⬇_Download-7C4DFF?style=flat-square)]() |
+
+---
+
+### ![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=flat-square&logo=instagram&logoColor=white)
+
+| Type | Version | Architecture | Size | Download |
+|:----:|:-------:|:------------:|:----:|:--------:|
+| 📦 APK | v426.0.0 | 📱 arm64-v8a | 131M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-v426.0.0.37.68-arm64-v8a.apk) |
+| 🧩 Module | v426.0.0 | 📱 arm64-v8a | 239M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-module-v426.0.0.37.68-arm64-v8a.zip) |
+
+### ![X (Twitter)](https://img.shields.io/badge/X_(Twitter)-000000?style=flat-square&logo=x&logoColor=white)
+
+| Type | Version | Architecture | Size | Download |
+|:----:|:-------:|:------------:|:----:|:--------:|
+| 📦 APK | v11.81.0 | 📱 arm64-v8a | 165M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/x-piko-revanced-v11.81.0-release.0-arm64-v8a.apk) |
+| 🧩 Module | v11.81.0 | 📱 arm64-v8a | 247M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/x-piko-revanced-module-v11.81.0-release.0-arm64-v8a.zip) |
+
+<details>
+<summary>🔐 <b>File Checksums (MD5)</b></summary>
+
+```
+388a6c62e2fc2788f6d21526f446a6ee  instagram-ex-revanced-v426.0.0.37.68-arm64-v8a.apk
+f523ae7b69e5415e4bcf4c55e0d290a4  x-piko-revanced-v11.81.0-release.0-arm64-v8a.apk
+028b1c0d5a057845244609bdeb8e74d5  instagram-ex-revanced-module-v426.0.0.37.68-arm64-v8a.zip
+509895363268ccd3804d69029f215337  revpack-v20260519.zip
+422344cf9adf255984916fa2bbfe12a7  x-piko-revanced-module-v11.81.0-release.0-arm64-v8a.zip
+```
+
+</details>
+
+---
+
+<sub>📝 This section is automatically generated after each successful build.</sub>
 <!-- DOWNLOADS_END -->
 
 ---
