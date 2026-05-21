@@ -78,15 +78,15 @@
 
 ## 📥 Download ReVanced Extended APKs & Modules
 
-> **Last Updated:** 2026-05-19 18:15:44 UTC
+> **Last Updated:** 2026-05-21 04:13:17 UTC
 
 ### 📝 Recent Changes
 
+- [`e808979`](https://github.com/thunderkex/revanced-extended/commit/e808979) 📝 Update downloads [skip ci] (2026-05-19)
 - [`d09097a`](https://github.com/thunderkex/revanced-extended/commit/d09097a) update (2026-05-18)
 - [`8f45a09`](https://github.com/thunderkex/revanced-extended/commit/8f45a09) 📝 Update downloads [skip ci] (2026-05-06)
 - [`a87fba9`](https://github.com/thunderkex/revanced-extended/commit/a87fba9) fix abort (2026-05-04)
 - [`9fabd50`](https://github.com/thunderkex/revanced-extended/commit/9fabd50) fix NORB (2026-05-04)
-- [`4b02a15`](https://github.com/thunderkex/revanced-extended/commit/4b02a15) get_prebuilts fix minor bug (2026-05-04)
 
 ### 🔗 Quick Links
 
@@ -122,47 +122,22 @@
 
 ---
 
-### ![RevPack](https://img.shields.io/badge/RevPack-7C4DFF?style=flat-square&logo=android&logoColor=white) — All-in-One Bundle
-
-> Contains all patched Magisk/KernelSU module zips in a single flashable archive.
-
-| Type | Version | Architecture | Size | Download |
-|:----:|:-------:|:------------:|:----:|:--------:|
-| 🎁 Bundle | v20260519 | 🌐 All | 192M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260519.zip) |
-
 ### 🎨 RevPack — Custom Builds *(latest 3)*
 
 > Built via [RevPack Configurator](https://thunderkex.github.io/revanced-extended/). Preserved alongside standard builds.
 
 | Type | Built | Architecture | Size | Download |
 |:----:|:-----:|:------------:|:----:|:--------:|
-| 🎨 Custom | 2026-03-17 08:59 | 🌐 All |  | [![Download](https://img.shields.io/badge/⬇_Download-7C4DFF?style=flat-square)]() |
+| 🎨 Custom | 2026-05-21 04:12 | 🌐 All |  | [![Download](https://img.shields.io/badge/⬇_Download-7C4DFF?style=flat-square)]() |
+| 🎨 Custom | 2026-05-21 04:12 | 🌐 All |  | [![Download](https://img.shields.io/badge/⬇_Download-7C4DFF?style=flat-square)]() |
 
 ---
-
-### ![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=flat-square&logo=instagram&logoColor=white)
-
-| Type | Version | Architecture | Size | Download |
-|:----:|:-------:|:------------:|:----:|:--------:|
-| 📦 APK | v426.0.0 | 📱 arm64-v8a | 131M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-v426.0.0.37.68-arm64-v8a.apk) |
-| 🧩 Module | v426.0.0 | 📱 arm64-v8a | 239M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-module-v426.0.0.37.68-arm64-v8a.zip) |
-
-### ![X (Twitter)](https://img.shields.io/badge/X_(Twitter)-000000?style=flat-square&logo=x&logoColor=white)
-
-| Type | Version | Architecture | Size | Download |
-|:----:|:-------:|:------------:|:----:|:--------:|
-| 📦 APK | v11.81.0 | 📱 arm64-v8a | 165M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/x-piko-revanced-v11.81.0-release.0-arm64-v8a.apk) |
-| 🧩 Module | v11.81.0 | 📱 arm64-v8a | 247M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/x-piko-revanced-module-v11.81.0-release.0-arm64-v8a.zip) |
 
 <details>
 <summary>🔐 <b>File Checksums (MD5)</b></summary>
 
 ```
-388a6c62e2fc2788f6d21526f446a6ee  instagram-ex-revanced-v426.0.0.37.68-arm64-v8a.apk
-f523ae7b69e5415e4bcf4c55e0d290a4  x-piko-revanced-v11.81.0-release.0-arm64-v8a.apk
-028b1c0d5a057845244609bdeb8e74d5  instagram-ex-revanced-module-v426.0.0.37.68-arm64-v8a.zip
-509895363268ccd3804d69029f215337  revpack-v20260519.zip
-422344cf9adf255984916fa2bbfe12a7  x-piko-revanced-module-v11.81.0-release.0-arm64-v8a.zip
+b3288c8e888d57e120bbfba9fc47d17d  revpack-all-v20260521-custom-202605210412.zip
 ```
 
 </details>
