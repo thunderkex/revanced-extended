@@ -78,15 +78,15 @@
 
 ## 📥 Download ReVanced Extended APKs & Modules
 
-> **Last Updated:** 2026-05-21 04:13:17 UTC
+> **Last Updated:** 2026-05-22 17:59:40 UTC
 
 ### 📝 Recent Changes
 
+- [`ba6fb45`](https://github.com/thunderkex/revanced-extended/commit/ba6fb45) 📝 Update downloads [skip ci] (2026-05-21)
 - [`e808979`](https://github.com/thunderkex/revanced-extended/commit/e808979) 📝 Update downloads [skip ci] (2026-05-19)
 - [`d09097a`](https://github.com/thunderkex/revanced-extended/commit/d09097a) update (2026-05-18)
 - [`8f45a09`](https://github.com/thunderkex/revanced-extended/commit/8f45a09) 📝 Update downloads [skip ci] (2026-05-06)
 - [`a87fba9`](https://github.com/thunderkex/revanced-extended/commit/a87fba9) fix abort (2026-05-04)
-- [`9fabd50`](https://github.com/thunderkex/revanced-extended/commit/9fabd50) fix NORB (2026-05-04)
 
 ### 🔗 Quick Links
 
@@ -122,6 +122,14 @@
 
 ---
 
+### ![RevPack](https://img.shields.io/badge/RevPack-7C4DFF?style=flat-square&logo=android&logoColor=white) — All-in-One Bundle
+
+> Contains all patched Magisk/KernelSU module zips in a single flashable archive.
+
+| Type | Version | Architecture | Size | Download |
+|:----:|:-------:|:------------:|:----:|:--------:|
+| 🎁 Bundle | v20260522 | 🌐 All | 121M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260522.zip) |
+
 ### 🎨 RevPack — Custom Builds *(latest 3)*
 
 > Built via [RevPack Configurator](https://thunderkex.github.io/revanced-extended/). Preserved alongside standard builds.
@@ -129,15 +137,23 @@
 | Type | Built | Architecture | Size | Download |
 |:----:|:-----:|:------------:|:----:|:--------:|
 | 🎨 Custom | 2026-05-21 04:12 | 🌐 All |  | [![Download](https://img.shields.io/badge/⬇_Download-7C4DFF?style=flat-square)]() |
-| 🎨 Custom | 2026-05-21 04:12 | 🌐 All |  | [![Download](https://img.shields.io/badge/⬇_Download-7C4DFF?style=flat-square)]() |
 
 ---
+
+### ![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=flat-square&logo=instagram&logoColor=white)
+
+| Type | Version | Architecture | Size | Download |
+|:----:|:-------:|:------------:|:----:|:--------:|
+| 📦 APK | v426.0.0 | 📱 arm64-v8a | 131M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-v426.0.0.37.68-arm64-v8a.apk) |
+| 🧩 Module | v426.0.0 | 📱 arm64-v8a | 239M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-module-v426.0.0.37.68-arm64-v8a.zip) |
 
 <details>
 <summary>🔐 <b>File Checksums (MD5)</b></summary>
 
 ```
-b3288c8e888d57e120bbfba9fc47d17d  revpack-all-v20260521-custom-202605210412.zip
+d889ccb4b985ed3fca5cbced2acbea89  instagram-ex-revanced-v426.0.0.37.68-arm64-v8a.apk
+99a77547e6868c3b22f6e1943565add2  instagram-ex-revanced-module-v426.0.0.37.68-arm64-v8a.zip
+f02414ed5f4d6436cf2f5e87f14ef34d  revpack-v20260522.zip
 ```
 
 </details>
