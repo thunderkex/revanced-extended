@@ -52,9 +52,8 @@ TikTok: 43.6.2
 Instagram-Ex: 426.0.0.37.68
 Instagram-Ex: 426.0.0.37.68
 X-piko: 11.81.0-release.0
-Patches: crimera/patches-3.4.0-dev.2.mpp
+Instagram-Ex: 426.0.0.37.68
+X-piko: 11.81.0-release.0
+Patches: crimera/patches-3.4.1-dev.1.mpp
 Instagram-Ex: 426.0.0.37.68
 Instagram-Ex: 426.0.0.37.68
-Patches: crimera/patches-3.4.0.mpp
-X-piko: 11.81.0-release.0
-X-piko: 11.81.0-release.0
