@@ -78,15 +78,15 @@
 
 ## 📥 Download ReVanced Extended APKs & Modules
 
-> **Last Updated:** 2026-06-05 18:05:34 UTC
+> **Last Updated:** 2026-06-12 18:13:24 UTC
 
 ### 📝 Recent Changes
 
+- [`a119040`](https://github.com/thunderkex/revanced-extended/commit/a119040) Update excluded patches in config.toml (2026-06-12)
+- [`7d107ce`](https://github.com/thunderkex/revanced-extended/commit/7d107ce) 📝 Update downloads [skip ci] (2026-06-05)
 - [`c15a057`](https://github.com/thunderkex/revanced-extended/commit/c15a057) 📝 Update downloads [skip ci] (2026-06-05)
 - [`3862710`](https://github.com/thunderkex/revanced-extended/commit/3862710) update config (2026-06-05)
 - [`85e25dc`](https://github.com/thunderkex/revanced-extended/commit/85e25dc) 📝 Update downloads [skip ci] (2026-05-23)
-- [`677d30f`](https://github.com/thunderkex/revanced-extended/commit/677d30f) 📝 Update downloads [skip ci] (2026-05-22)
-- [`ba6fb45`](https://github.com/thunderkex/revanced-extended/commit/ba6fb45) 📝 Update downloads [skip ci] (2026-05-21)
 
 ### 🔗 Quick Links
 
@@ -128,7 +128,7 @@
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 🎁 Bundle | v20260605 | 🌐 All | 192M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260605.zip) |
+| 🎁 Bundle | v20260612 | 🌐 All | 122M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260612.zip) |
 
 ### 🎨 RevPack — Custom Builds *(latest 3)*
 
@@ -147,22 +147,13 @@
 | 📦 APK | v430.0.0 | 📱 arm64-v8a | 131M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-v430.0.0.53.80-arm64-v8a.apk) |
 | 🧩 Module | v430.0.0 | 📱 arm64-v8a | 239M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-module-v430.0.0.53.80-arm64-v8a.zip) |
 
-### ![X (Twitter)](https://img.shields.io/badge/X_(Twitter)-000000?style=flat-square&logo=x&logoColor=white)
-
-| Type | Version | Architecture | Size | Download |
-|:----:|:-------:|:------------:|:----:|:--------:|
-| 📦 APK | v11.81.0 | 📱 arm64-v8a | 165M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/x-piko-revanced-v11.81.0-release.0-arm64-v8a.apk) |
-| 🧩 Module | v11.81.0 | 📱 arm64-v8a | 247M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/x-piko-revanced-module-v11.81.0-release.0-arm64-v8a.zip) |
-
 <details>
 <summary>🔐 <b>File Checksums (MD5)</b></summary>
 
 ```
-7b4e7d1163d562ce6404fe8808fb1245  instagram-ex-revanced-v430.0.0.53.80-arm64-v8a.apk
-141827dfe84fc40880e028ac4989e4fb  x-piko-revanced-v11.81.0-release.0-arm64-v8a.apk
-f2a913ab91043343030e064569cae5ad  instagram-ex-revanced-module-v430.0.0.53.80-arm64-v8a.zip
-319f75d17abb67da1399fa9846fd9db4  revpack-v20260605.zip
-88ebe37bc4bcc9285094dc816f8cc4b4  x-piko-revanced-module-v11.81.0-release.0-arm64-v8a.zip
+20cc56b45831af4dc5acd3d4eff07c44  instagram-ex-revanced-v430.0.0.53.80-arm64-v8a.apk
+da74844a227c89bfb6f26217e5678623  instagram-ex-revanced-module-v430.0.0.53.80-arm64-v8a.zip
+fc6f411538701ec8427b6eff7bc3b1f6  revpack-v20260612.zip
 ```
 
 </details>
