@@ -78,7 +78,7 @@ patches-source = "crimera/piko"
 patches-version = "dev"
 cli-source = "MorpheApp/morphe-cli"
 uptodown-dlurl = "https://instagram.en.uptodown.com/android"
-excluded-patches = "'Unlock developer options' 'Disable double tap like'"
+excluded-patches = "'Unlock developer options' 'Disable double tap like' 'Save media comment'"
 arch = "arm64-v8a"
 
 [Strava-Ex]
