@@ -1,6 +1,6 @@
 ### 📥 Available APKs
 
-> **Last Updated:** 2026-06-14 17:26:22 UTC
+> **Last Updated:** 2026-06-15 19:55:29 UTC
 
 ### ![RevPack](https://img.shields.io/badge/RevPack-7C4DFF?style=flat-square&logo=android&logoColor=white) — All-in-One Bundle
 
@@ -8,7 +8,7 @@
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 🎁 Bundle | v20260614 | 🌐 All | 122M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260614.zip) |
+| 🎁 Bundle | v20260615 | 🌐 All | 71M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260615.zip) |
 
 ### 🎨 RevPack — Custom Builds *(latest 3)*
 
@@ -20,10 +20,10 @@
 
 ---
 
-### ![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=flat-square&logo=instagram&logoColor=white)
+### ![X (Twitter)](https://img.shields.io/badge/X_(Twitter)-000000?style=flat-square&logo=x&logoColor=white)
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 📦 APK | v430.0.0 | 📱 arm64-v8a | 131M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-v430.0.0.53.80-arm64-v8a.apk) |
-| 🧩 Module | v430.0.0 | 📱 arm64-v8a | 239M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-module-v430.0.0.53.80-arm64-v8a.zip) |
+| 📦 APK | v11.81.0 | 📱 arm64-v8a | 165M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/x-piko-revanced-v11.81.0-release.0-arm64-v8a.apk) |
+| 🧩 Module | v11.81.0 | 📱 arm64-v8a | 247M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/x-piko-revanced-module-v11.81.0-release.0-arm64-v8a.zip) |
 
