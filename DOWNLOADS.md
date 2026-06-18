@@ -1,6 +1,6 @@
 ### 📥 Available APKs
 
-> **Last Updated:** 2026-06-17 18:27:19 UTC
+> **Last Updated:** 2026-06-18 18:31:48 UTC
 
 ### ![RevPack](https://img.shields.io/badge/RevPack-7C4DFF?style=flat-square&logo=android&logoColor=white) — All-in-One Bundle
 
@@ -8,7 +8,7 @@
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 🎁 Bundle | v20260617 | 🌐 All | 122M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260617.zip) |
+| 🎁 Bundle | v20260618 | 🌐 All | 122M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260618.zip) |
 
 ### 🎨 RevPack — Custom Builds *(latest 3)*
 
