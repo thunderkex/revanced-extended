@@ -86,7 +86,7 @@ jobs:
       PACK_NAME: ${{ steps.build_config.outputs.PACK_NAME }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
