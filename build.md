@@ -65,6 +65,10 @@ X-piko: 11.81.0-release.0
 Patches: anddea/patches-4.1.0.mpp
 Youtube-Ex-morphed: 20.51.39
 Youtube-Ex-morphed: 20.51.39
-Patches: crimera/patches-3.5.1-dev.1.mpp
+Instagram-Ex: 430.0.0.53.80
+Patches: crimera/patches-3.6.0-dev.1.mpp
 Instagram-Ex: 430.0.0.53.80
 Instagram-Ex: 430.0.0.53.80
+Patches: crimera/patches-3.6.0.mpp
+X-piko: 11.81.0-release.0
+X-piko: 11.81.0-release.0

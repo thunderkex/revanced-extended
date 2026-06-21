@@ -1,6 +1,6 @@
 ### 📥 Available APKs
 
-> **Last Updated:** 2026-06-18 18:31:48 UTC
+> **Last Updated:** 2026-06-21 17:46:20 UTC
 
 ### ![RevPack](https://img.shields.io/badge/RevPack-7C4DFF?style=flat-square&logo=android&logoColor=white) — All-in-One Bundle
 
@@ -8,7 +8,7 @@
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 🎁 Bundle | v20260618 | 🌐 All | 122M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260618.zip) |
+| 🎁 Bundle | v20260621 | 🌐 All | 122M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260621.zip) |
 
 ### 🎨 RevPack — Custom Builds *(latest 3)*
 
@@ -24,6 +24,6 @@
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 📦 APK | v430.0.0 | 📱 arm64-v8a | 131M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-v430.0.0.53.80-arm64-v8a.apk) |
+| 📦 APK | v430.0.0 | 📱 arm64-v8a | 132M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-v430.0.0.53.80-arm64-v8a.apk) |
 | 🧩 Module | v430.0.0 | 📱 arm64-v8a | 239M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/instagram-ex-revanced-module-v430.0.0.53.80-arm64-v8a.zip) |
 
