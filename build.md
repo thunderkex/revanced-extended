@@ -68,6 +68,10 @@ Youtube-Ex-morphed: 20.51.39
 Instagram-Ex: 430.0.0.53.80
 Instagram-Ex: 430.0.0.53.80
 X-piko: 11.81.0-release.0
-Patches: crimera/patches-3.7.0-dev.2.mpp
+Instagram-Ex: 430.0.0.53.80
+Patches: crimera/patches-3.7.0-dev.3.mpp
 Instagram-Ex: 430.0.0.53.80
 Instagram-Ex: 430.0.0.53.80
+Patches: crimera/patches-3.6.0.mpp
+X-piko: 11.81.0-release.0
+X-piko: 11.81.0-release.0
