@@ -78,15 +78,15 @@
 
 ## 📥 Download ReVanced Extended APKs & Modules
 
-> **Last Updated:** 2026-06-25 18:17:01 UTC
+> **Last Updated:** 2026-06-26 17:56:59 UTC
 
 ### 📝 Recent Changes
 
+- [`a752594`](https://github.com/thunderkex/revanced-extended/commit/a752594) 📝 Update downloads [skip ci] (2026-06-25)
 - [`cc37c93`](https://github.com/thunderkex/revanced-extended/commit/cc37c93) 📝 Update downloads [skip ci] (2026-06-22)
 - [`5782b9a`](https://github.com/thunderkex/revanced-extended/commit/5782b9a) 📝 Update downloads [skip ci] (2026-06-21)
 - [`43ff264`](https://github.com/thunderkex/revanced-extended/commit/43ff264) 📝 Update downloads [skip ci] (2026-06-18)
 - [`5a56ccd`](https://github.com/thunderkex/revanced-extended/commit/5a56ccd) 📝 Update downloads [skip ci] (2026-06-17)
-- [`dca9e1d`](https://github.com/thunderkex/revanced-extended/commit/dca9e1d) 📝 Update downloads [skip ci] (2026-06-16)
 
 ### 🔗 Quick Links
 
@@ -128,7 +128,7 @@
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 🎁 Bundle | v20260625 | 🌐 All | 125M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260625.zip) |
+| 🎁 Bundle | v20260626 | 🌐 All | 125M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260626.zip) |
 
 ### 🎨 RevPack — Custom Builds *(latest 3)*
 
@@ -151,9 +151,9 @@
 <summary>🔐 <b>File Checksums (MD5)</b></summary>
 
 ```
-5e439d4b2ea38186fa90c9021f6832fe  instagram-ex-revanced-v435.0.0.37.76-arm64-v8a.apk
-ec09827bedc239a29e50e3233e51b303  instagram-ex-revanced-module-v435.0.0.37.76-arm64-v8a.zip
-1973f841e510e64b4bc32e3131616543  revpack-v20260625.zip
+e1e028de6e095acbc28563ffd1dac555  instagram-ex-revanced-v435.0.0.37.76-arm64-v8a.apk
+f500b8c30ae6e30740b27427c7b4ecbb  instagram-ex-revanced-module-v435.0.0.37.76-arm64-v8a.zip
+4a602c0c4468bdc2653ead58cfb0c954  revpack-v20260626.zip
 ```
 
 </details>
