@@ -72,9 +72,11 @@ Instagram-Ex: 430.0.0.53.80
 Instagram-Ex: 430.0.0.53.80
 X-piko: 11.81.0-release.0
 Instagram-Ex: 435.0.0.37.76
-Patches: crimera/patches-3.7.0-dev.7.mpp
+Instagram-Ex: 435.0.0.37.76
+X-piko: 11.81.0-release.0
+Patches: crimera/patches-3.7.0-dev.9.mpp
 Instagram-Ex: 435.0.0.37.76
 Instagram-Ex: 435.0.0.37.76
-Patches: crimera/patches-3.6.0.mpp
+Patches: crimera/patches-3.7.0.mpp
 X-piko: 11.81.0-release.0
 X-piko: 11.81.0-release.0
