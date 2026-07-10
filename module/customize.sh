@@ -97,24 +97,16 @@ install() {
 
 		if ! op=$(pmex install-commit "$SES"); then
 			ui_print "$op"
-			if echo "$op" | grep -q -e INSTALL_FAILED_VERSION_DOWNGRADE -e INSTALL_FAILED_UPDATE_INCOMPATIBLE; then
-				ui_print "* Handling install error"
-				pmex uninstall-system-updates "$PKG_NAME"
-					if ! BASEPATH=$(pmex path "$PKG_NAME"); then
-					BASEPATH=${BASEPATH##*:} BASEPATH=${BASEPATH%/*}
-					if [ "${BASEPATH:1:4}" != data ]; then IS_SYS=true; fi
-						ui_print "* Clearing residual package data..."
-						pmex uninstall "$PKG_NAME" >/dev/null 2>&1 || true
-						continue
-					fi
-				BASEPATH=${BASEPATH##*:} BASEPATH=${BASEPATH%/*}
-				if [ "${BASEPATH:1:4}" != data ]; then IS_SYS=true; fi
-				if [ "$IS_SYS" = true ]; then
-					SCNM="/data/adb/post-fs-data.d/$PKG_NAME-uninstall.sh"
-					if [ -f "$SCNM" ]; then
-						ui_print "* Remove the old module. Reboot and reflash!"
-						ui_print ""
-						install_err=" "
+			if echo "$op" | grep -q -e INSTALL_FAILED_VERSION_DOWNGRADE -e INSTALL_FAILED_UPDATE_INCOMPATIBLE -e INSTALL_FAILED_DUPLICATE; then
+				ui_print "* Uninstalling..."
+				ex_unins_arg=""
+				if echo "$op" | grep -q INSTALL_FAILED_DUPLICATE; then
+					ex_unins_arg="-k"
+				fi
+				if ! op=$(pmex uninstall --user 0 $ex_unins_arg "$PKG_NAME"); then
+					ui_print "$op"
+					if [ $IT = 2 ]; then
+						install_err="ERROR: pm uninstall failed."
 						break
 					fi
 					mkdir -p /data/adb/rvhc/empty /data/adb/post-fs-data.d
@@ -196,8 +188,7 @@ if [ "$KSU" ]; then
 	if [ "$UID" ]; then
 		if ! OP=$("${MODPATH:?}/bin/$ARCH/ksu_profile" "$UID" "$PKG_NAME" 2>&1); then
 			ui_print "  $OP"
-			ui_print "* Because you are using a fork of KernelSU, "
-			ui_print "  you need to go to your root manager app and"
+			ui_print "  In your root manager app,"
 			ui_print "  disable 'Unmount modules' for $PKG_NAME"
 		fi
 	else
