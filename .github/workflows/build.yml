@@ -490,7 +490,7 @@ jobs:
           git checkout -f update || git switch --discard-changes --orphan update
           cp -f "/tmp/${UPDATE_JSON_NAME}" "./${UPDATE_JSON_NAME}"
 
-      - uses: stefanzweifel/git-auto-commit-action@v7.1.0
+      - uses: stefanzweifel/git-auto-commit-action@v7.2.0
         if: ${{ inputs.from_configurator == true }}
         with:
           branch: update
@@ -659,7 +659,7 @@ jobs:
           POST="https://api.telegram.org/bot${TG_TOKEN}/sendMessage"
           curl -X POST --data-urlencode "parse_mode=Markdown" --data-urlencode "disable_web_page_preview=true" --data-urlencode "text=${MSG}" --data-urlencode "message_thread_id=26772" --data-urlencode "chat_id=${CHAT_ID}" "$POST"
 
-      - uses: stefanzweifel/git-auto-commit-action@v7.1.0
+      - uses: stefanzweifel/git-auto-commit-action@v7.2.0
         if: ${{ inputs.from_configurator != true }}
         with:
           branch: update
