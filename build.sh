@@ -81,6 +81,7 @@ LITE_COMPRESSION=$(toml_get "$main_config_t" lite-compression) || LITE_COMPRESSI
 DEFAULT_ARCH="${TARGET_ARCH:-$DEFAULT_ARCH}"
 BUILD_LITE="${BUILD_LITE_ENV:-$BUILD_LITE}"
 
+PARALLEL_JOBS=1 # TODO: multiple jobs were broken by recent cli versions. and i cant bother to fix it so instead, i disable it.
 REMOVE_RV_INTEGRATIONS_CHECKS=$(toml_get "$main_config_t" remove-rv-integrations-checks) || REMOVE_RV_INTEGRATIONS_CHECKS="true"
 DEF_PATCHES_VER=$(toml_get "$main_config_t" patches-version) || DEF_PATCHES_VER="latest"
 DEF_CLI_VER=$(toml_get "$main_config_t" cli-version) || DEF_CLI_VER="latest"
