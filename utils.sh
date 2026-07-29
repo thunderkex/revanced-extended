@@ -445,6 +445,7 @@ prepare_browser_headers() {
 			-H "Accept-Encoding: gzip, deflate, br"
 			-H "Upgrade-Insecure-Requests: 1"
 		)
+	fi
 }
 req() {
 	local ua
