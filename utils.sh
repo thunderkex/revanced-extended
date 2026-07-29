@@ -314,7 +314,9 @@ _req() {
       return 1
     fi
 
-    mv -f "$dlp" "$op"
+	if [ "$dlp" != - ]; then
+		mv -f "$dlp" "$op"
+	fi
   fi
 }
 __UA_LIST__=(
@@ -443,14 +445,6 @@ prepare_browser_headers() {
 			-H "Accept-Encoding: gzip, deflate, br"
 			-H "Upgrade-Insecure-Requests: 1"
 		)
-	if ! curl -L -c "$TEMP_DIR/cookie.txt" -b "$TEMP_DIR/cookie.txt" --connect-timeout 10 --retry 1 --fail -s -S "$@" "$ip" -o "$dlp"; then
-		epr "Request failed: $ip"
-		if [ "$dlp" != - ]; then rm -f "$dlp"; fi
-		return 1
-	fi
-	if [ "$dlp" != - ]; then
-		mv -f "$dlp" "$op"
-	fi
 }
 req() {
 	local ua
