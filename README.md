@@ -78,15 +78,15 @@
 
 ## 📥 Download ReVanced Extended APKs & Modules
 
-> **Last Updated:** 2026-07-29 17:24:18 UTC
+> **Last Updated:** 2026-08-03 17:58:31 UTC
 
 ### 📝 Recent Changes
 
+- [`e47a19f`](https://github.com/thunderkex/revanced-extended/commit/e47a19f) 📝 Update downloads [skip ci] (2026-07-29)
 - [`45d5816`](https://github.com/thunderkex/revanced-extended/commit/45d5816) fix: add missing fi to close if statement (2026-07-29)
 - [`dd56345`](https://github.com/thunderkex/revanced-extended/commit/dd56345) fixup (2026-07-29)
 - [`1c41eb4`](https://github.com/thunderkex/revanced-extended/commit/1c41eb4) module: MODULE_HOT_INSTALL_REQUEST (2026-07-26)
 - [`aaa6762`](https://github.com/thunderkex/revanced-extended/commit/aaa6762) fix get_patch_last_supported_ver (2026-07-25)
-- [`e96bb5e`](https://github.com/thunderkex/revanced-extended/commit/e96bb5e) disable parallel_jobs (2026-07-23)
 
 ### 🔗 Quick Links
 
@@ -128,7 +128,7 @@
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 🎁 Bundle | v20260729 | 🌐 All | 134M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260729.zip) |
+| 🎁 Bundle | v20260803 | 🌐 All | 134M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260803.zip) |
 
 ### 🎨 RevPack — Custom Builds *(latest 3)*
 
@@ -151,9 +151,9 @@
 <summary>🔐 <b>File Checksums (MD5)</b></summary>
 
 ```
-4fb7916bafd267fe824b278a2f5c5a4c  instagram-ex-revanced-v439.0.0.37.89-arm64-v8a.apk
-93bf332537e4954e1602466108644395  instagram-ex-revanced-module-v439.0.0.37.89-arm64-v8a.zip
-61e6e2cf855f01f2130e39f1b2a48a2b  revpack-v20260729.zip
+28e8e5c4979ecdd1580ae4c5cd53a4a4  instagram-ex-revanced-v439.0.0.37.89-arm64-v8a.apk
+f8e4ec2177434d15c1aa971e85150749  instagram-ex-revanced-module-v439.0.0.37.89-arm64-v8a.zip
+26ea53e158a382cc16a75c723b98e9e1  revpack-v20260803.zip
 ```
 
 </details>
