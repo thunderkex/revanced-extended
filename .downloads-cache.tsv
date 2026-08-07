@@ -7,7 +7,7 @@ Instagram	apk	arm64-v8a	439.0.0
 Instagram	module	arm64-v8a	439.0.0		
 Reddit	apk	arm64-v8a	2025.12.1		
 Reddit	module	arm64-v8a	2025.12.1		
-RevPack	bundle	all	20260805		
+RevPack	bundle	all	20260807		
 RevPack	custom-202603170859	all	202603170859		
 RevPack	custom-202605210412	all	202605210412		
 SoundCloud	apk	arm64-v8a	2025.05.27		
@@ -22,19 +22,21 @@ X (Twitter)	apk	arm64-v8a	11.81.0
 X (Twitter)	module	arm64-v8a	11.81.0		
 YouTube	apk	arm64-v8a	20.51.39		
 YouTube	module	arm64-v8a	20.51.39		
-YouTube Music	apk	arm64-v8a	8.30.54		
-YouTube Music	module	arm64-v8a	8.30.54		
+YouTube Music	apk	arm64-v8a	9.15.51		
+YouTube Music	module	arm64-v8a	9.15.51		
 google-recorder-ex-revanced-module-v4.2.20260307.895737626	module	arm64-v8a	4.2.20260307		
 google-recorder-ex-revanced-module-v4.2.20260307.900600387-arm64-v8a.zip	66MB	arm64-v8a	4.2.20260307		
 google-recorder-ex-revanced-module-v4.2.20260409.913516467-arm64-v8a.zip	66MB	arm64-v8a	4.2.20260409		
 google-recorder-ex-revanced-module-v4.2.20260409.913516467-arm64-v8a.zip	66MB	arm64-v8a	4.2.20260409		
 google-recorder-ex-revanced-module-v4.2.20260521.944858113	module	arm64-v8a	4.2.20260521	68M	https://github.com/thunderkex/revanced-extended/releases/download/latest-build/google-recorder-ex-revanced-module-v4.2.20260521.944858113-arm64-v8a.zip
 google-recorder-ex-revanced-module-v4.2.20260521.944858113-arm64-v8a.zip	67MB	arm64-v8a	4.2.20260521		
+google-recorder-ex-revanced-module-v4.2.20260521.944858113-arm64-v8a.zip	67MB	arm64-v8a	4.2.20260521		
 google-recorder-ex-revanced-v4.2.20260307.895737626	apk	arm64-v8a	4.2.20260307		
 google-recorder-ex-revanced-v4.2.20260307.900600387-arm64-v8a.apk	48MB	arm64-v8a	4.2.20260307		
 google-recorder-ex-revanced-v4.2.20260409.913516467-arm64-v8a.apk	48MB	arm64-v8a	4.2.20260409		
 google-recorder-ex-revanced-v4.2.20260409.913516467-arm64-v8a.apk	48MB	arm64-v8a	4.2.20260409		
 google-recorder-ex-revanced-v4.2.20260521.944858113	apk	arm64-v8a	4.2.20260521	51M	https://github.com/thunderkex/revanced-extended/releases/download/latest-build/google-recorder-ex-revanced-v4.2.20260521.944858113-arm64-v8a.apk
+google-recorder-ex-revanced-v4.2.20260521.944858113-arm64-v8a.apk	50MB	arm64-v8a	4.2.20260521		
 google-recorder-ex-revanced-v4.2.20260521.944858113-arm64-v8a.apk	50MB	arm64-v8a	4.2.20260521		
 lightroom-ex	apk	arm64-v8a	9.3.0		
 lightroom-ex-revanced-module	module	arm64-v8a	9.3.0		

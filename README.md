@@ -78,15 +78,15 @@
 
 ## 📥 Download ReVanced Extended APKs & Modules
 
-> **Last Updated:** 2026-08-05 17:55:03 UTC
+> **Last Updated:** 2026-08-07 17:08:02 UTC
 
 ### 📝 Recent Changes
 
+- [`2e2f37d`](https://github.com/thunderkex/revanced-extended/commit/2e2f37d) 📝 Update downloads [skip ci] (2026-08-05)
 - [`5f761b9`](https://github.com/thunderkex/revanced-extended/commit/5f761b9) 📝 Update downloads [skip ci] (2026-08-03)
 - [`e47a19f`](https://github.com/thunderkex/revanced-extended/commit/e47a19f) 📝 Update downloads [skip ci] (2026-07-29)
 - [`45d5816`](https://github.com/thunderkex/revanced-extended/commit/45d5816) fix: add missing fi to close if statement (2026-07-29)
 - [`dd56345`](https://github.com/thunderkex/revanced-extended/commit/dd56345) fixup (2026-07-29)
-- [`1c41eb4`](https://github.com/thunderkex/revanced-extended/commit/1c41eb4) module: MODULE_HOT_INSTALL_REQUEST (2026-07-26)
 
 ### 🔗 Quick Links
 
@@ -128,7 +128,7 @@
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 🎁 Bundle | v20260805 | 🌐 All | 223M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260805.zip) |
+| 🎁 Bundle | v20260807 | 🌐 All | 69M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/revpack-v20260807.zip) |
 
 ### 🎨 RevPack — Custom Builds *(latest 3)*
 
@@ -140,43 +140,29 @@
 
 ---
 
-### ![Google Photos](https://img.shields.io/badge/Google_Photos-4285F4?style=flat-square&logo=googlephotos&logoColor=white)
+### ![YouTube Music](https://img.shields.io/badge/YouTube_Music-FF0000?style=flat-square&logo=youtubemusic&logoColor=white)
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 📦 APK | v7.87.0 | 📱 arm64-v8a | 123M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/google-photos-ex-revanced-v7.87.0.957333026-arm64-v8a.apk) |
-| 🧩 Module | v7.87.0 | 📱 arm64-v8a | 218M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/google-photos-ex-revanced-module-v7.87.0.957333026-arm64-v8a.zip) |
+| 📦 APK | v9.15.51 | 📱 arm64-v8a | 76M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/music-ex-morphed-revanced-v9.15.51-arm64-v8a.apk) |
+| 🧩 Module | v9.15.51 | 📱 arm64-v8a | 65M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/music-ex-morphed-revanced-module-v9.15.51-arm64-v8a.zip) |
 
-### ![google-recorder-ex-revanced-v4.2.20260521.944858113](https://img.shields.io/badge/google-recorder-ex-revanced-v4.2.20260521.944858113-3DDC84?style=flat-square&logo=android&logoColor=white)
-
-| Type | Version | Architecture | Size | Download |
-|:----:|:-------:|:------------:|:----:|:--------:|
-| 📦 APK | v4.2.20260521 | 📱 arm64-v8a | 51M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/google-recorder-ex-revanced-v4.2.20260521.944858113-arm64-v8a.apk) |
-
-### ![TikTok](https://img.shields.io/badge/TikTok-000000?style=flat-square&logo=tiktok&logoColor=white)
+### ![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=flat-square&logo=youtube&logoColor=white)
 
 | Type | Version | Architecture | Size | Download |
 |:----:|:-------:|:------------:|:----:|:--------:|
-| 📦 APK | v43.6.2 | 📱 arm64-v8a | 338M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/tiktok-revanced-v43.6.2-arm64-v8a.apk) |
-| 🧩 Module | v43.6.2 | 📱 arm64-v8a | 580M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/tiktok-revanced-module-v43.6.2-arm64-v8a.zip) |
-
-### ![google-recorder-ex-revanced-module-v4.2.20260521.944858113](https://img.shields.io/badge/google-recorder-ex-revanced-module-v4.2.20260521.944858113-3DDC84?style=flat-square&logo=android&logoColor=white)
-
-| Type | Version | Architecture | Size | Download |
-|:----:|:-------:|:------------:|:----:|:--------:|
-| 🧩 Module | v4.2.20260521 | 📱 arm64-v8a | 68M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/google-recorder-ex-revanced-module-v4.2.20260521.944858113-arm64-v8a.zip) |
+| 📦 APK | v20.51.39 | 📱 arm64-v8a | 92M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/youtube-ex-morphed-revanced-v20.51.39-arm64-v8a.apk) |
+| 🧩 Module | v20.51.39 | 📱 arm64-v8a | 190M | [![Download](https://img.shields.io/badge/⬇_Download-blue?style=flat-square)](https://github.com/thunderkex/revanced-extended/releases/download/latest-build/youtube-ex-morphed-revanced-module-v20.51.39-arm64-v8a.zip) |
 
 <details>
 <summary>🔐 <b>File Checksums (MD5)</b></summary>
 
 ```
-7b1e3d25b20fe29a831b48c46a5d3774  google-photos-ex-revanced-v7.87.0.957333026-arm64-v8a.apk
-4c92ca7b16ad675167b08c01695ddc7c  google-recorder-ex-revanced-v4.2.20260521.944858113-arm64-v8a.apk
-be2c7b13cd959a0db60f58108aabaad9  tiktok-revanced-v43.6.2-arm64-v8a.apk
-432cbb5e5feffcec7f3136af17c52994  google-photos-ex-revanced-module-v7.87.0.957333026-arm64-v8a.zip
-53abe68a8731720d8b5614b3106b2a79  google-recorder-ex-revanced-module-v4.2.20260521.944858113-arm64-v8a.zip
-0a0577a59ce77df8c14232eda9b36d53  revpack-v20260805.zip
-3d49e00190b639c0b1dd7d26cdeab20a  tiktok-revanced-module-v43.6.2-arm64-v8a.zip
+2f263d88c9affed374c56805da7696c8  music-ex-morphed-revanced-v9.15.51-arm64-v8a.apk
+6377f0b5ee191de16c0348bd24fadba5  youtube-ex-morphed-revanced-v20.51.39-arm64-v8a.apk
+c243aaa1e6a3ee68e148128d50937fcc  music-ex-morphed-revanced-module-v9.15.51-arm64-v8a.zip
+4501e0ca04346031a84aaf0c9e25cbc5  revpack-v20260807.zip
+060e221506802db33c1039a23701fbe5  youtube-ex-morphed-revanced-module-v20.51.39-arm64-v8a.zip
 ```
 
 </details>
