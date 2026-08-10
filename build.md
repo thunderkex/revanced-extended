@@ -44,12 +44,8 @@ X-piko: 11.81.0-release.0
 Instagram-Ex: 430.0.0.53.80
 X-piko: 11.81.0-release.0
 Instagram-Ex: 430.0.0.53.80
-Patches: anddea/patches-4.1.0.mpp
-Music-Ex-morphed: 8.30.54
 Music-Ex-morphed: 8.30.54
 X-piko: 11.81.0-release.0
-Patches: anddea/patches-4.1.0.mpp
-Youtube-Ex-morphed: 20.51.39
 Youtube-Ex-morphed: 20.51.39
 Instagram-Ex: 430.0.0.53.80
 Instagram-Ex: 430.0.0.53.80
@@ -88,6 +84,12 @@ Strava-Ex: 475.11
 Patches: RookieEnough/patches-1.1.0.mpp
 TikTok: 43.6.2
 TikTok: 43.6.2
-Patches: crimera/patches-3.8.0.mpp
 X-piko: 11.81.0-release.0
-X-piko: 11.81.0-release.0
+Patches: crimera/patches-3.9.0-dev.4.mpp
+Instagram-Ex: 439.0.0.37.89
+Patches: anddea/patches-4.2.0.mpp
+Music-Ex-morphed: 9.15.51
+Music-Ex-morphed: 9.15.51
+Patches: anddea/patches-4.2.0.mpp
+Youtube-Ex-morphed: 20.51.39
+Youtube-Ex-morphed: 20.51.39
