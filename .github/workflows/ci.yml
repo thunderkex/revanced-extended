@@ -85,7 +85,7 @@ jobs:
       PACK_EXCLUDE_APPS: ${{ steps.build_config.outputs.PACK_EXCLUDE_APPS }}
       PACK_NAME: ${{ steps.build_config.outputs.PACK_NAME }}
     steps:
-      - uses: actions/setup-java@v5
+      - uses: actions/setup-java@v6
         with:
           distribution: "zulu"
           java-version: "21"
