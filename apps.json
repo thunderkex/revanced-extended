@@ -1,0 +1,702 @@
+{
+  "apps": [
+    {
+      "architectures": [
+        "arm64-v8a",
+        "armeabi-v7a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "adguard",
+      "mode": "install",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.adguard.android",
+      "patch_source": "none",
+      "patches": []
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "battery_guru",
+      "mode": "patch",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.paget96.batteryguru",
+      "patch_source": "revanced",
+      "patches": [
+        "unlock-premium"
+      ]
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "brave_browser",
+      "mode": "patch",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.brave.browser",
+      "patch_source": "revanced",
+      "patches": [
+        "disable-update-check"
+      ]
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "camscanner",
+      "mode": "patch",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.intsig.camscanner",
+      "patch_source": "revanced",
+      "patches": [
+        "unlock-premium"
+      ]
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "eyecon_caller",
+      "mode": "patch",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.eyecon.global",
+      "patch_source": "revanced",
+      "patches": [
+        "unlock-premium"
+      ]
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "facebook",
+      "mode": "both",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.facebook.katana",
+      "patch_source": "de_revanced",
+      "patches": []
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "fx_file_explorer",
+      "mode": "patch",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "nextapp.fx",
+      "patch_source": "revanced",
+      "patches": [
+        "unlock-pro"
+      ]
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "google_news",
+      "mode": "patch",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.google.android.apps.magazines",
+      "patch_source": "revanced",
+      "patches": [
+        "hide-ads"
+      ]
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [
+        "microg"
+      ],
+      "enabled": true,
+      "id": "google_photos",
+      "mode": "both",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.google.android.apps.photos",
+      "patch_source": "de_revanced",
+      "patches": []
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "google_recorder",
+      "mode": "both",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.google.android.apps.recorder",
+      "patch_source": "de_revanced",
+      "patches": []
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "instagram",
+      "mode": "both",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.instagram.android",
+      "patch_source": "piko",
+      "patches": []
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "lightroom",
+      "mode": "both",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.adobe.lrmobile",
+      "patch_source": "none",
+      "patches": []
+    },
+    {
+      "architectures": [
+        "arm64-v8a",
+        "armeabi-v7a",
+        "x86",
+        "x86_64"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "microg",
+      "mode": "install",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "app.revanced.android.gms",
+      "patch_source": "none",
+      "patches": []
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "myfitnesspal",
+      "mode": "patch",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.myfitnesspal.android",
+      "patch_source": "revanced",
+      "patches": [
+        "unlock-premium"
+      ]
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "nova_launcher",
+      "mode": "patch",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.teslacoilsw.launcher",
+      "patch_source": "revanced",
+      "patches": [
+        "unlock-prime"
+      ]
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "photomath",
+      "mode": "both",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.microblink.photomath",
+      "patch_source": "de_revanced",
+      "patches": []
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "pixiv",
+      "mode": "both",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "jp.pxv.android",
+      "patch_source": "de_revanced",
+      "patches": []
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "prime_video",
+      "mode": "both",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.amazon.avod.thirdpartyclient",
+      "patch_source": "de_revanced",
+      "patches": []
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "proton_vpn",
+      "mode": "patch",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "ch.protonvpn.android",
+      "patch_source": "revanced",
+      "patches": [
+        "unlock-plus"
+      ]
+    },
+    {
+      "architectures": [
+        "arm64-v8a",
+        "armeabi-v7a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "psiphon",
+      "mode": "patch",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.psiphon3.subscription",
+      "patch_source": "revanced",
+      "patches": [
+        "unlock-subscription"
+      ]
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "rar",
+      "mode": "patch",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.rarlab.rar",
+      "patch_source": "revanced",
+      "patches": [
+        "unlock-premium"
+      ]
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "reddit",
+      "mode": "both",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.reddit.frontpage",
+      "patch_source": "morphe_patches",
+      "patches": []
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "smart_launcher",
+      "mode": "patch",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "ginlemon.flowerfree",
+      "patch_source": "revanced",
+      "patches": [
+        "unlock-pro"
+      ]
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "solid_explorer",
+      "mode": "patch",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "pl.solidexplorer2",
+      "patch_source": "revanced",
+      "patches": [
+        "unlock-trial"
+      ]
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "soundcloud",
+      "mode": "both",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.soundcloud.android",
+      "patch_source": "de_revanced",
+      "patches": []
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "spotify",
+      "mode": "both",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.spotify.music",
+      "patch_source": "none",
+      "patches": []
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "strava",
+      "mode": "both",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.strava",
+      "patch_source": "de_revanced",
+      "patches": []
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "tasker",
+      "mode": "patch",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "net.dinglisch.android.taskerm",
+      "patch_source": "revanced",
+      "patches": [
+        "unlock-purchase"
+      ]
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "terabox",
+      "mode": "patch",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.dubox.drive",
+      "patch_source": "revanced",
+      "patches": [
+        "hide-ads",
+        "unlock-premium"
+      ]
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "threads",
+      "mode": "both",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.instagram.barcelona",
+      "patch_source": "de_revanced",
+      "patches": []
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "tiktok",
+      "mode": "both",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.zhiliaoapp.musically",
+      "patch_source": "de_revanced",
+      "patches": []
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "truecaller",
+      "mode": "patch",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.truecaller",
+      "patch_source": "revanced",
+      "patches": [
+        "hide-ads",
+        "unlock-premium"
+      ]
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "waze",
+      "mode": "patch",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.waze",
+      "patch_source": "revanced",
+      "patches": [
+        "hide-ads"
+      ]
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "wps_office",
+      "mode": "patch",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "cn.wps.moffice_eng",
+      "patch_source": "revanced",
+      "patches": [
+        "remove-ads",
+        "unlock-premium"
+      ]
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "x_piko",
+      "mode": "both",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.twitter.android",
+      "patch_source": "piko",
+      "patches": []
+    },
+    {
+      "architectures": [
+        "arm64-v8a",
+        "x86_64"
+      ],
+      "dependencies": [
+        "microg"
+      ],
+      "enabled": true,
+      "id": "youtube",
+      "mode": "both",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.google.android.youtube",
+      "patch_source": "anddea",
+      "patches": []
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [
+        "microg"
+      ],
+      "enabled": true,
+      "id": "youtube_morphed",
+      "mode": "both",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.google.android.youtube",
+      "patch_source": "morphe_patches",
+      "patches": []
+    },
+    {
+      "architectures": [
+        "arm64-v8a",
+        "x86_64"
+      ],
+      "dependencies": [
+        "microg"
+      ],
+      "enabled": true,
+      "id": "youtube_music",
+      "mode": "both",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.google.android.apps.youtube.music",
+      "patch_source": "anddea",
+      "patches": []
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [
+        "microg"
+      ],
+      "enabled": true,
+      "id": "youtube_music_morphed",
+      "mode": "both",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.google.android.apps.youtube.music",
+      "patch_source": "morphe_patches",
+      "patches": []
+    },
+    {
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "dependencies": [],
+      "enabled": true,
+      "id": "zalo",
+      "mode": "patch",
+      "module": {
+        "bundle": true,
+        "single": true
+      },
+      "package": "com.zing.zalo",
+      "patch_source": "revanced",
+      "patches": [
+        "hide-ads"
+      ]
+    }
+  ]
+}
