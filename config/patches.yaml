@@ -1,0 +1,13 @@
+patches:
+  hide-ads:
+    enabled: true
+  sponsorblock:
+    enabled: true
+    options:
+      default_categories: [sponsor, selfpromo, interaction, intro, outro, preview, filler]
+  return-youtube-dislike:
+    enabled: true
+  theme:
+    enabled: true
+    options:
+      theme: dark

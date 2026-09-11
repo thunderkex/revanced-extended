@@ -1,0 +1,37 @@
+cli:
+  repo: MorpheApp/morphe-desktop
+  asset_pattern: "morphe-*-all.jar"
+
+patch_sources:
+  anddea:
+    repo: anddea/revanced-patches
+    asset_pattern: "*.mpp"
+    branch: dev
+
+  de_revanced:
+    repo: RookieEnough/De-Vanced
+    asset_pattern: "*.mpp"
+
+  piko:
+    repo: crimera/piko
+    asset_pattern: "*.mpp"
+
+  morphe_patches:
+    repo: MorpheApp/morphe-patches
+    asset_pattern: "*.mpp"
+
+  rvx_morphed:
+    repo: wchill/rvx-morphed
+    asset_pattern: "*.mpp"
+
+  revanced:
+    repo: RookieEnough/De-Vanced
+    asset_pattern: "*.mpp"
+
+apk_sources:
+  uptodown:
+    base_url: https://uptodown.com
+  apkmirror:
+    base_url: https://www.apkmirror.com
+  archive:
+    base_url: https://archive.org/download/geologically/apks

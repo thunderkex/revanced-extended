@@ -1,0 +1,24 @@
+module:
+  id: revancex
+  name: "ReVanceX"
+  version: "1.0"
+  min_magisk: 20400
+  min_kernelsu: 10200
+
+  structure:
+    - META-INF/com/google/android/update-binary
+    - META-INF/com/google/android/updater-script
+    - module.prop
+    - customize.sh
+    - system/app/
+
+  update_binary: templates/update-binary
+  updater_script: templates/updater-script
+  customize_sh: templates/customize.sh
+
+  prop:
+    id: revancex
+    name: "ReVanceX Bundle"
+    author: "Thunderkex"
+    description: "Patched apps bundle"
+    updateJson: ""
