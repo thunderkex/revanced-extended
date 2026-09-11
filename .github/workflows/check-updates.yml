@@ -1,0 +1,68 @@
+name: Check Patch Updates
+
+on:
+  schedule:
+    - cron: '0 */3 * * *'  # Run every 3 hours
+  workflow_dispatch:
+    inputs:
+      force_build:
+        description: 'Force trigger auto-build workflow'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      has_updates: ${{ steps.poll.outputs.has_updates }}
+      changed_apps: ${{ steps.poll.outputs.changed_apps }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download CLI Binary
+        run: |
+          mkdir -p bin
+          CLI_URL="https://github.com/${{ github.repository }}/releases/latest/download/revancex-linux-x86_64.tar.gz"
+          if ! curl -sSLf "$CLI_URL" | tar -xz -C bin/; then
+            echo "Direct latest fetch failed, resolving release tag via API..."
+            CLI_TAG=$(curl -sSL -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases" | jq -r '[.[] | select(.assets[]?.name == "revancex-linux-x86_64.tar.gz")][0].tag_name // "v1.0.3"')
+            curl -sSLf "https://github.com/${{ github.repository }}/releases/download/${CLI_TAG}/revancex-linux-x86_64.tar.gz" | tar -xz -C bin/
+          fi
+          chmod +x bin/revancex*
+          echo "$PWD/bin" >> $GITHUB_PATH
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Poll patch repositories for updates
+        id: poll
+        run: |
+          if [ "${{ inputs.force_build }}" = "true" ]; then
+            echo "has_updates=true" >> $GITHUB_OUTPUT
+            echo "changed_apps=all" >> $GITHUB_OUTPUT
+          else
+            OUTPUT=$(revancex check-updates --json)
+            echo "$OUTPUT"
+            HAS_UPDATES=$(echo "$OUTPUT" | jq -r '.has_updates // false')
+            CHANGED_APPS=$(echo "$OUTPUT" | jq -r '.changed_apps // [] | join(",")')
+            [ -z "$CHANGED_APPS" ] && [ "$HAS_UPDATES" = "true" ] && CHANGED_APPS="all"
+            echo "has_updates=$HAS_UPDATES" >> $GITHUB_OUTPUT
+            echo "changed_apps=$CHANGED_APPS" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger Auto Build Workflow
+        if: steps.poll.outputs.has_updates == 'true'
+        run: |
+          APPS_TO_BUILD="${{ steps.poll.outputs.changed_apps }}"
+          [ -z "$APPS_TO_BUILD" ] && APPS_TO_BUILD="all"
+          echo "Updates detected, triggering auto-build for: $APPS_TO_BUILD"
+          gh workflow run auto-build.yml --ref "${{ github.ref_name }}" -f apps="$APPS_TO_BUILD" || echo "Note: Triggering workflows via action requires a token with 'workflow' scope."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
